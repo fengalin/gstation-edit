@@ -552,16 +552,23 @@
   <object class="GtkWindow" id="midi-select-dlg">
     <property name="width_request">400</property>
     <property name="can_focus">False</property>
-    <property name="border_width">5</property>
+    <property name="is_focus">True</property>
     <property name="title" translatable="yes">J-Station MIDI port selection</property>
+    <property name="resizable">False</property>
     <property name="modal">True</property>
     <property name="window_position">mouse</property>
+    <property name="skip_taskbar_hint">True</property>
+    <property name="skip_pager_hint">True</property>
     <child>
       <object class="GtkBox" id="midi-select-box">
         <property name="visible">True</property>
         <property name="can_focus">False</property>
+        <property name="margin_left">10</property>
+        <property name="margin_right">10</property>
+        <property name="margin_top">10</property>
+        <property name="margin_bottom">10</property>
         <property name="orientation">vertical</property>
-        <property name="spacing">2</property>
+        <property name="spacing">5</property>
         <child>
           <object class="GtkGrid">
             <property name="visible">True</property>
@@ -632,7 +639,6 @@
             <child>
               <object class="GtkSpinButton" id="midi-channel-spbtn">
                 <property name="visible">True</property>
-                <property name="sensitive">False</property>
                 <property name="can_focus">True</property>
                 <property name="halign">start</property>
                 <property name="max_length">2</property>
@@ -665,7 +671,6 @@
             <child>
               <object class="GtkSpinButton" id="sysex-device-id-spbtn">
                 <property name="visible">True</property>
-                <property name="sensitive">False</property>
                 <property name="can_focus">True</property>
                 <property name="halign">start</property>
                 <property name="max_length">2</property>
@@ -705,6 +710,7 @@
           <object class="GtkButtonBox" id="buttonbox1">
             <property name="visible">True</property>
             <property name="can_focus">False</property>
+            <property name="spacing">5</property>
             <property name="homogeneous">True</property>
             <child>
               <object class="GtkButton" id="midi-cancel-btn">
@@ -830,8 +836,8 @@
     <property name="page_size">10</property>
   </object>
   <object class="GtkWindow" id="jstation-edit-window">
-    <property name="width_request">1800</property>
-    <property name="height_request">700</property>
+    <property name="width_request">1600</property>
+    <property name="height_request">650</property>
     <property name="visible">True</property>
     <property name="can_focus">False</property>
     <property name="icon_name">multimedia-volume-control</property>
@@ -841,6 +847,9 @@
       <object class="GtkPaned" id="paned1">
         <property name="visible">True</property>
         <property name="can_focus">True</property>
+        <property name="margin_left">5</property>
+        <property name="margin_right">5</property>
+        <property name="margin_bottom">5</property>
         <property name="hexpand">True</property>
         <property name="vexpand">True</property>
         <child>
@@ -1235,25 +1244,6 @@
               </object>
               <packing>
                 <property name="left_attach">1</property>
-                <property name="top_attach">2</property>
-              </packing>
-            </child>
-            <child>
-              <object class="GtkToggleButton" id="compressor-btn">
-                <property name="width_request">30</property>
-                <property name="height_request">20</property>
-                <property name="visible">True</property>
-                <property name="can_focus">True</property>
-                <property name="receives_default">True</property>
-                <property name="halign">center</property>
-                <property name="valign">start</property>
-                <property name="margin_left">2</property>
-                <property name="margin_right">2</property>
-                <property name="use_stock">True</property>
-                <signal name="toggled" handler="on_compressor-btn_toggled" swapped="no"/>
-              </object>
-              <packing>
-                <property name="left_attach">0</property>
                 <property name="top_attach">2</property>
               </packing>
             </child>
@@ -2476,6 +2466,25 @@
               <packing>
                 <property name="left_attach">0</property>
                 <property name="top_attach">3</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkToggleButton" id="compressor-btn">
+                <property name="width_request">30</property>
+                <property name="height_request">20</property>
+                <property name="visible">True</property>
+                <property name="can_focus">True</property>
+                <property name="receives_default">True</property>
+                <property name="halign">center</property>
+                <property name="valign">start</property>
+                <property name="margin_left">2</property>
+                <property name="margin_right">2</property>
+                <property name="use_stock">True</property>
+                <signal name="toggled" handler="on_compressor-btn_toggled" swapped="no"/>
+              </object>
+              <packing>
+                <property name="left_attach">0</property>
+                <property name="top_attach">2</property>
               </packing>
             </child>
             <child>
