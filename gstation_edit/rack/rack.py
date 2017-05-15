@@ -18,8 +18,6 @@
 # with this program.    If not, see <http://www.gnu.org/licenses/>.
 
 
-# TODO: this should probably be moved to a high level gui module
-
 from gi.repository import Gtk
 
 from midi_select_dlg import *

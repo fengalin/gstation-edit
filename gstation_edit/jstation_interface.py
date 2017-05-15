@@ -50,8 +50,6 @@ class JStationInterface:
     def __init__(self, rack):
         # instanciate response events in order for them to be available to the factory
         # and define the callback function for processing
-        # TODO: move code of callback in the messages using some sort of
-        #       a context for data
         CCMidiEvent(callback=self.one_parameter_cc_callback)
         PrgChangeEvent(callback=self.program_change_callback )
         WhoAmIResponse(callback=self.who_am_i_callback)
