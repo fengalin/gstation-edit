@@ -1,0 +1,33 @@
+#!/usr/bin/python
+#
+# this file is part of gstation-edit
+# Copyright (C) F LAIGNEL 2009 <fengalin@free.fr>
+#
+# gstation-edit is free software: you can redistribute it and/or modify it
+# under the terms of the GNU General Public License as published by the
+# Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# gstation-edit is distributed in the hope that it will be useful, but
+# WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+# See the GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License along
+# with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+import gi
+gi.require_version('Gtk', '3.0')
+from gi.repository import Gtk
+
+from app import GStationEdit
+try:
+  from app import GStationEdit
+  # if running from sources and import fails
+  # make sure to have a valid py_alsa_seq available as a package
+except:
+  from gstation_edit.app import GStationEdit
+
+if __name__ == "__main__":
+  gstation_edit = GStationEdit()
+  Gtk.main()
