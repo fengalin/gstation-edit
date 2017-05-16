@@ -29,8 +29,6 @@ class MidiSelectDlg:
         self.gtk_builder = gtk_builder
 
         self.gtk_dlg = self.get_widget('midi-select-dlg')
-        # set the MIDI dialog as modal for main window
-        self.gtk_dlg.set_transient_for(self.main_window.gtk_window)
 
         self.midi_select_msg_lbl = self.get_widget('midi-select_message-lbl')
         self.midi_in_cbx = self.get_widget('midi-in-cbx')
