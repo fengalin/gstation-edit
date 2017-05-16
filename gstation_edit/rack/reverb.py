@@ -68,7 +68,7 @@ class ReverbUnit(RackUnit):
                     str_value == 'Rattle \'n\' Boing':
                 sensitivity = False
 
-            self._reverb_diffusion.set_sensitivity(sensitivity)
-            self._reverb_density.set_sensitivity(sensitivity)
-            self._reverb_decay.set_sensitivity(sensitivity)
+            self._reverb_diffusion.set_sensitive(sensitivity)
+            self._reverb_density.set_sensitive(sensitivity)
+            self._reverb_decay.set_sensitive(sensitivity)
 

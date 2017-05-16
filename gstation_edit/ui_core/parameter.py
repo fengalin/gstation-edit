@@ -92,7 +92,7 @@ class Parameter:
         if self._widget_label != None:
             self._widget_label.set_text(widget_name)
 
-    def set_sensitivity(self, is_sensitive):
+    def set_sensitive(self, is_sensitive):
         self.is_sensitive = is_sensitive
         self._widget.set_sensitive(is_sensitive)
         if self._widget_label != None:
@@ -103,10 +103,7 @@ class Parameter:
             self._widget.set_value(self.value)
 
     def __str__(self):
-        if self.is_active == 1:
-            return "%s\t: value %d, in [ %d, %d] - signal: %s - param %d, "\
-                   "JStation nb %d"%(self.name, self.value,
-                     self.min_value, self.max_value, self.get_signal_name(),
-                     self.parameter_nb, self.jstation_command)
-        else:
-            return ''
+        return "%s: value %d, in [ %d, %d] - param %d, JStation nb %d"\
+                %(self.name, self.value, self.min_value, self.max_value,
+                 self.parameter_nb, self.jstation_command)
+

@@ -43,9 +43,9 @@ class GrpParameter(Parameter):
         for parameter in self.parameters.values():
             parameter.init_widget(gtk_builder)
 
-    def set_sensitivity(self, is_sensitive):
+    def set_sensitive(self, is_sensitive):
         for parameter in self.parameters.values():
-            parameter.set_sensitivity(is_sensitive)
+            parameter.set_sensitive(is_sensitive)
         self.is_sentitive = is_sensitive
 
     def send_parameter_value(self, parameter):

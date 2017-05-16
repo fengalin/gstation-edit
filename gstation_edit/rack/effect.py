@@ -79,21 +79,21 @@ class EffectUnit(RackUnit):
     def update_conf_from_parameter(self, parameter):
         if parameter == self._effect_type:
             str_value = parameter.str_value
-            option_sensitivity = 1
+            option_sensitivity = True
             speed_label = 'Speed:'
             depth_label = 'Depth:'
             option_label = 'PreDelay:'
             if str_value == 'Flanger':
-                option_label = 'Regen: '
+                option_label = 'Regen:'
             elif str_value == 'Tremolo' or str_value == 'Rotary Speaker':
-                option_sensitivity=0
+                option_sensitivity = False
             elif str_value == 'Pitch / Detune':
-                option_sensitivity = 0
+                option_sensitivity = False
                 speed_label = 'Pitch:'
                 depth_label = 'Detune:'
 
             self._speed.set_widget_label(speed_label)
             self._depth.set_widget_label(depth_label)
             self._option.set_widget_label(option_label)
-            self._option.set_sensitivity(option_sensitivity)
+            self._option.set_sensitive(option_sensitivity)
 

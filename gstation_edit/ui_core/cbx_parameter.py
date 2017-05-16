@@ -31,7 +31,9 @@ class CbxParameter(Parameter):
             tree_iter = self._widget.get_active_iter()
             if tree_iter != None:
                 model = self._widget.get_model()
-            return model[tree_iter][:1]
+                return model[tree_iter][:1][0]
+            else:
+                return ''
         else:
             return ''
 
