@@ -47,7 +47,7 @@ class JStationInterface:
                                  #            before a shudown request can be detected
     RESPONSE_TIMEOUT = 2 # s
 
-    def __init__(self, rack):
+    def __init__(self, main_window):
         # instanciate response events in order for them to be available to the factory
         # and define the callback function for processing
         CCMidiEvent(callback=self.one_parameter_cc_callback)
@@ -74,7 +74,7 @@ class JStationInterface:
         self.jstation_wait_for_events_thread = None
 
 
-        self.rack = rack
+        self.main_window = main_window
         self.is_disconnecting.clear()
 
         self.seq = alsaseq.Sequencer('hw',
@@ -258,13 +258,11 @@ class JStationInterface:
 
     def program_indices_callback(self, event):
         self.default_event_callback(event)
-        if None != self.rack:
-            self.rack.set_program_count(len(event.prg_indices))
+        self.main_window.set_program_count(len(event.prg_indices))
 
     def one_program_callback(self, event):
         self.default_event_callback(event)
-        if None != self.rack:
-            self.rack.receive_program_from_jstation(event.prg)
+        self.main_window.receive_program_from_jstation(event.prg)
 
     def end_bank_dump_callback(self, event):
         self.default_event_callback(event)
@@ -273,21 +271,18 @@ class JStationInterface:
 
     def one_parameter_cc_callback( self, event):
         self.default_event_callback(event)
-        if None != self.rack:
-            self.rack.update_parameter_from_jstation(event.param,
-                                                     event.value,
-                                                     is_cc=True)
+        self.main_window.update_parameter_from_jstation(event.param,
+                                                        event.value,
+                                                        is_cc=True)
 
     def program_change_callback(self, event):
         self.default_event_callback(event)
-        if None != self.rack:
-            self.rack.select_program_from_its_number(event.value)
+        self.main_window.select_program_from_its_number(event.value)
 
     def program_update_response(self, event):
         self.default_event_callback(event)
-        if None != self.rack:
-            # TODO: handle has changed also
-            self.rack.select_program_from_its_content(event.prg)
+        # TODO: handle has changed also
+        self.main_window.select_program_from_its_content(event.prg)
 
     def response_to_message_callback(self, event):
         self.is_response_received_cndt.acquire()
