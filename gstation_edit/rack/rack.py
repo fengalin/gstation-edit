@@ -33,6 +33,7 @@ from jstation_interface import *
 class Rack:
     def __init__(self, gtk_builder):
         self._gtk_builder = gtk_builder
+        self.main_window = self._gtk_builder.get_object('jstation-edit-window')
 
         self._programs = dict()
         self._program_count = 0
@@ -55,6 +56,7 @@ class Rack:
         self.init_parameters_dictionnaries()
 
     def connect(self):
+        # TODO: use a property file to store the midi connection ports
         self._midi_select_dlg.present()
 
     def request_bank_dump(self):

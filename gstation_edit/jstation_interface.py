@@ -68,6 +68,9 @@ class JStationInterface:
         self.receive_channel = -1
         self.sysex_channel = -1
 
+        self.js_port_in = None
+        self.js_port_out = None
+
         self.jstation_wait_for_events_thread = None
 
 
@@ -215,7 +218,7 @@ class JStationInterface:
             if 0 < len(event_list):
                 for seq_event in event_list:
                     if None != seq_event:
-#                            print('response from JStation: ' + str(seq_event))
+#                        print('response from JStation: %s'%(seq_event))
                         factory = MidiEventResponseFactory()
                         event = factory.get_event_from_seq_event(seq_event)
                         if None != event:

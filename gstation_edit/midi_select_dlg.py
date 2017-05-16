@@ -29,6 +29,9 @@ class MidiSelectDlg:
         self.gtk_builder = gtk_builder
 
         self.midi_select_dlg = self.get_widget('midi-select-dlg')
+        # set the MIDI dialog as modal for main window
+        self.midi_select_dlg.set_transient_for(self.rack.main_window)
+
         self.midi_select_msg_lbl = self.get_widget('midi-select_message-lbl')
         self.midi_in_cbx = self.get_widget('midi-in-cbx')
         self.midi_out_cbx = self.get_widget('midi-out-cbx')
@@ -137,6 +140,6 @@ class MidiSelectDlg:
 
     def attempt_to_connect(self, port_in, port_out):
         # TODO: read sysexchannel too
-        print('Attempt to connect to %s and %s'%(str(port_in), str(port_out)))
+        print('Attempt to connect to %s and %s'%(port_in, port_out))
         self.js_interface.connect(port_in, port_out, 1)
         return self.js_interface.is_connected
