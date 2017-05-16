@@ -1,5 +1,5 @@
 """
- gstation-edit Rack definition
+ gstation-edit MainWindow definition
 """
 # this file is part of gstation-edit
 # Copyright (C) F LAIGNEL 2009-2017 <fengalin@free.fr>
@@ -20,20 +20,20 @@
 
 from gi.repository import Gtk
 
-from midi_select_dlg import *
+from rack.amp import *
+from rack.compress_gate import *
+from rack.effect import *
+from rack.delay import *
+from rack.reverb import *
+from rack.wha_expression import *
 
-from amp import *
-from compress_gate import *
-from effect import *
-from delay import *
-from reverb import *
-from wha_expression import *
+from midi_select_dlg import *
 from jstation_interface import *
 
-class Rack:
+class MainWindow:
     def __init__(self, gtk_builder):
         self._gtk_builder = gtk_builder
-        self.main_window = self._gtk_builder.get_object('jstation-edit-window')
+        self.gtk_window = self._gtk_builder.get_object('jstation-edit-window')
 
         self._programs = dict()
         self._program_count = 0
@@ -309,5 +309,5 @@ class Rack:
         print('Paste clicked %s'%(arg))
 
 if __name__ == '__main__':
-    rack = Rack()
-    print(rack.get_signal_handlers())
+    main_window = MainWindow()
+    print(main_window.get_signal_handlers())

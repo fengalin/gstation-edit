@@ -24,7 +24,7 @@ gi.require_version('Gtk', '3.0')
 from gi.repository import Gtk
 from gi.repository import GObject
 
-from rack.rack import *
+from main_window import *
 
 try:
     from config import DATA_ROOT_DIR
@@ -43,19 +43,19 @@ class GStationEdit:
         self.gtk_builder.add_from_file(gtk_builder_file)
 
         self.is_valid = False
-        self.rack = Rack(self.gtk_builder)
+        self.main_window = MainWindow(self.gtk_builder)
 
         signal_handlers = dict()
         signal_handlers['on_jstation-edit-window_destroy'] = self.quit
-        signal_handlers.update(self.rack.get_signal_handlers())
+        signal_handlers.update(self.main_window.get_signal_handlers())
 
         self.gtk_builder.connect_signals(signal_handlers)
 
-        self.rack.connect()
+        self.main_window.connect()
 
     def quit(self, window):
         print('quitting gstation-edit')
-        self.rack.quit()
+        self.main_window.quit()
         Gtk.main_quit(window)
 
 if __name__ == "__main__":

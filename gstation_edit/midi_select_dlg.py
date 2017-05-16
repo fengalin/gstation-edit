@@ -23,14 +23,14 @@ from threading import Thread
 from midi.port import *
 
 class MidiSelectDlg:
-    def __init__(self, rack, js_interface, gtk_builder):
-        self.rack = rack
+    def __init__(self, main_window, js_interface, gtk_builder):
+        self.main_window = main_window
         self.js_interface = js_interface
         self.gtk_builder = gtk_builder
 
-        self.midi_select_dlg = self.get_widget('midi-select-dlg')
+        self.gtk_dlg = self.get_widget('midi-select-dlg')
         # set the MIDI dialog as modal for main window
-        self.midi_select_dlg.set_transient_for(self.rack.main_window)
+        self.gtk_dlg.set_transient_for(self.main_window.gtk_window)
 
         self.midi_select_msg_lbl = self.get_widget('midi-select_message-lbl')
         self.midi_in_cbx = self.get_widget('midi-in-cbx')
@@ -82,7 +82,7 @@ class MidiSelectDlg:
 
 
     def present(self):
-        self.midi_select_dlg.present()
+        self.gtk_dlg.present()
 
 
     def on_btn_connect_clicked(self, widget):
@@ -95,8 +95,8 @@ class MidiSelectDlg:
         port_out_cbx_index = self.midi_out_cbx.get_active()
         port_out = self.midi_port_out_list[port_out_cbx_index]
         if self.attempt_to_connect(port_in, port_out):
-            self.midi_select_dlg.hide()
-            self.rack.request_bank_dump()
+            self.gtk_dlg.hide()
+            self.main_window.request_bank_dump()
         else:
             self.midi_select_msg_lbl.set_text('Could not connect to J-Station')
         self.post_connection_actions()
@@ -118,25 +118,25 @@ class MidiSelectDlg:
                 break
 
         if is_connected:
-            self.midi_select_dlg.hide()
-            self.rack.request_bank_dump()
+            self.gtk_dlg.hide()
+            self.main_window.request_bank_dump()
         else:
             self.midi_select_msg_lbl.set_text('Could not connect to J-Station')
         self.post_connection_actions()
 
     def pre_connection_actions(self):
         # TDOO: fix cursor
-        #self.midi_select_dlg.set_cursor(Gtk.gdk.Cursor(Gtk.gdk.WATCH))
+        #self.gtk_dlg.set_cursor(Gtk.gdk.Cursor(Gtk.gdk.WATCH))
         self.midi_select_msg_lbl.set_text('')
-        self.midi_select_dlg.set_sensitive(False)
+        self.gtk_dlg.set_sensitive(False)
 
     def post_connection_actions(self):
         # TDOO: fix cursor
-        #self.midi_select_dlg.set_cursor(None)
-        self.midi_select_dlg.set_sensitive(True)
+        #self.gtk_dlg.set_cursor(None)
+        self.gtk_dlg.set_sensitive(True)
 
     def on_cancel_btn_clicked(self, widget):
-        self.midi_select_dlg.hide()
+        self.gtk_dlg.hide()
 
     def attempt_to_connect(self, port_in, port_out):
         # TODO: read sysexchannel too
