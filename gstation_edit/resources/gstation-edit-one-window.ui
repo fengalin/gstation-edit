@@ -671,10 +671,9 @@
             <property name="can_focus">False</property>
             <property name="hexpand">True</property>
             <property name="vexpand">True</property>
-            <property name="row_spacing">20</property>
             <property name="column_spacing">8</property>
             <child>
-              <object class="GtkBox">
+              <object class="GtkBox" id="amp-cabinet-selection">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
                 <property name="orientation">vertical</property>
@@ -749,11 +748,11 @@
               </object>
               <packing>
                 <property name="left_attach">1</property>
-                <property name="top_attach">1</property>
+                <property name="top_attach">2</property>
               </packing>
             </child>
             <child>
-              <object class="GtkBox">
+              <object class="GtkBox" id="amp-labels">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
                 <property name="vexpand">True</property>
@@ -836,11 +835,11 @@
               </object>
               <packing>
                 <property name="left_attach">2</property>
-                <property name="top_attach">1</property>
+                <property name="top_attach">2</property>
               </packing>
             </child>
             <child>
-              <object class="GtkBox">
+              <object class="GtkBox" id="amp-scales">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
                 <property name="hexpand">True</property>
@@ -950,12 +949,12 @@
               </object>
               <packing>
                 <property name="left_attach">3</property>
-                <property name="top_attach">1</property>
+                <property name="top_attach">2</property>
                 <property name="width">4</property>
               </packing>
             </child>
             <child>
-              <object class="GtkBox">
+              <object class="GtkBox" id="compressor-selection">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
                 <property name="orientation">vertical</property>
@@ -1031,11 +1030,11 @@
               </object>
               <packing>
                 <property name="left_attach">1</property>
-                <property name="top_attach">2</property>
+                <property name="top_attach">4</property>
               </packing>
             </child>
             <child>
-              <object class="GtkBox">
+              <object class="GtkBox" id="compressor-labels">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
                 <property name="orientation">vertical</property>
@@ -1087,11 +1086,11 @@
               </object>
               <packing>
                 <property name="left_attach">2</property>
-                <property name="top_attach">2</property>
+                <property name="top_attach">4</property>
               </packing>
             </child>
             <child>
-              <object class="GtkBox">
+              <object class="GtkBox" id="compressor-scales">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
                 <property name="orientation">vertical</property>
@@ -1147,7 +1146,7 @@
               </object>
               <packing>
                 <property name="left_attach">3</property>
-                <property name="top_attach">2</property>
+                <property name="top_attach">4</property>
               </packing>
             </child>
             <child>
@@ -1166,11 +1165,11 @@
               </object>
               <packing>
                 <property name="left_attach">4</property>
-                <property name="top_attach">2</property>
+                <property name="top_attach">4</property>
               </packing>
             </child>
             <child>
-              <object class="GtkBox">
+              <object class="GtkBox" id="gate-labels">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
                 <property name="orientation">vertical</property>
@@ -1221,11 +1220,11 @@
               </object>
               <packing>
                 <property name="left_attach">5</property>
-                <property name="top_attach">2</property>
+                <property name="top_attach">4</property>
               </packing>
             </child>
             <child>
-              <object class="GtkBox">
+              <object class="GtkBox" id="gate-scales">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
                 <property name="orientation">vertical</property>
@@ -1285,11 +1284,11 @@
               </object>
               <packing>
                 <property name="left_attach">6</property>
-                <property name="top_attach">2</property>
+                <property name="top_attach">4</property>
               </packing>
             </child>
             <child>
-              <object class="GtkBox">
+              <object class="GtkBox" id="effect-selection">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
                 <property name="orientation">vertical</property>
@@ -1330,11 +1329,11 @@
               </object>
               <packing>
                 <property name="left_attach">1</property>
-                <property name="top_attach">3</property>
+                <property name="top_attach">6</property>
               </packing>
             </child>
             <child>
-              <object class="GtkBox">
+              <object class="GtkBox" id="effect-labels">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
                 <property name="orientation">vertical</property>
@@ -1403,11 +1402,11 @@
               </object>
               <packing>
                 <property name="left_attach">2</property>
-                <property name="top_attach">3</property>
+                <property name="top_attach">6</property>
               </packing>
             </child>
             <child>
-              <object class="GtkBox">
+              <object class="GtkBox" id="effect-scales">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
                 <property name="orientation">vertical</property>
@@ -1494,7 +1493,7 @@
               </object>
               <packing>
                 <property name="left_attach">3</property>
-                <property name="top_attach">3</property>
+                <property name="top_attach">6</property>
                 <property name="width">4</property>
               </packing>
             </child>
@@ -1513,11 +1512,11 @@
               </object>
               <packing>
                 <property name="left_attach">0</property>
-                <property name="top_attach">4</property>
+                <property name="top_attach">8</property>
               </packing>
             </child>
             <child>
-              <object class="GtkBox">
+              <object class="GtkBox" id="delay-selection">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
                 <property name="orientation">vertical</property>
@@ -1558,11 +1557,11 @@
               </object>
               <packing>
                 <property name="left_attach">1</property>
-                <property name="top_attach">4</property>
+                <property name="top_attach">8</property>
               </packing>
             </child>
             <child>
-              <object class="GtkBox">
+              <object class="GtkBox" id="delay-labels">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
                 <property name="orientation">vertical</property>
@@ -1629,11 +1628,11 @@
               </object>
               <packing>
                 <property name="left_attach">2</property>
-                <property name="top_attach">4</property>
+                <property name="top_attach">8</property>
               </packing>
             </child>
             <child>
-              <object class="GtkBox">
+              <object class="GtkBox" id="delay-scales">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
                 <property name="orientation">vertical</property>
@@ -1717,7 +1716,7 @@
               </object>
               <packing>
                 <property name="left_attach">3</property>
-                <property name="top_attach">4</property>
+                <property name="top_attach">8</property>
                 <property name="width">4</property>
               </packing>
             </child>
@@ -1737,11 +1736,11 @@
               </object>
               <packing>
                 <property name="left_attach">0</property>
-                <property name="top_attach">5</property>
+                <property name="top_attach">10</property>
               </packing>
             </child>
             <child>
-              <object class="GtkBox">
+              <object class="GtkBox" id="reverb-selection">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
                 <property name="orientation">vertical</property>
@@ -1782,11 +1781,11 @@
               </object>
               <packing>
                 <property name="left_attach">1</property>
-                <property name="top_attach">5</property>
+                <property name="top_attach">10</property>
               </packing>
             </child>
             <child>
-              <object class="GtkBox">
+              <object class="GtkBox" id="reverb-labels">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
                 <property name="vexpand">True</property>
@@ -1854,11 +1853,11 @@
               </object>
               <packing>
                 <property name="left_attach">2</property>
-                <property name="top_attach">5</property>
+                <property name="top_attach">10</property>
               </packing>
             </child>
             <child>
-              <object class="GtkBox">
+              <object class="GtkBox" id="reverb-scales">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
                 <property name="orientation">vertical</property>
@@ -1945,7 +1944,7 @@
               </object>
               <packing>
                 <property name="left_attach">3</property>
-                <property name="top_attach">5</property>
+                <property name="top_attach">10</property>
                 <property name="width">4</property>
               </packing>
             </child>
@@ -1965,11 +1964,11 @@
               </object>
               <packing>
                 <property name="left_attach">0</property>
-                <property name="top_attach">6</property>
+                <property name="top_attach">12</property>
               </packing>
             </child>
             <child>
-              <object class="GtkBox">
+              <object class="GtkBox" id="wah-expression-selection">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
                 <property name="orientation">vertical</property>
@@ -2010,11 +2009,11 @@
               </object>
               <packing>
                 <property name="left_attach">1</property>
-                <property name="top_attach">6</property>
+                <property name="top_attach">12</property>
               </packing>
             </child>
             <child>
-              <object class="GtkBox">
+              <object class="GtkBox" id="wah-expression-labels">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
                 <property name="orientation">vertical</property>
@@ -2081,11 +2080,11 @@
               </object>
               <packing>
                 <property name="left_attach">2</property>
-                <property name="top_attach">6</property>
+                <property name="top_attach">12</property>
               </packing>
             </child>
             <child>
-              <object class="GtkBox">
+              <object class="GtkBox" id="wah-expression-scales">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
                 <property name="orientation">vertical</property>
@@ -2174,12 +2173,12 @@
               </object>
               <packing>
                 <property name="left_attach">3</property>
-                <property name="top_attach">6</property>
+                <property name="top_attach">12</property>
                 <property name="width">4</property>
               </packing>
             </child>
             <child>
-              <object class="GtkBox">
+              <object class="GtkBox" id="effect-btn-pre_post-box">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
                 <property name="orientation">vertical</property>
@@ -2252,7 +2251,7 @@
               </object>
               <packing>
                 <property name="left_attach">0</property>
-                <property name="top_attach">3</property>
+                <property name="top_attach">6</property>
               </packing>
             </child>
             <child>
@@ -2271,7 +2270,85 @@
               </object>
               <packing>
                 <property name="left_attach">0</property>
-                <property name="top_attach">2</property>
+                <property name="top_attach">4</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkSeparator" id="reverb-wha_expression-sep">
+                <property name="height_request">2</property>
+                <property name="visible">True</property>
+                <property name="can_focus">False</property>
+                <property name="margin_bottom">8</property>
+              </object>
+              <packing>
+                <property name="left_attach">0</property>
+                <property name="top_attach">11</property>
+                <property name="width">7</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkSeparator" id="delay-reverb-sep">
+                <property name="height_request">2</property>
+                <property name="visible">True</property>
+                <property name="can_focus">False</property>
+                <property name="margin_bottom">8</property>
+              </object>
+              <packing>
+                <property name="left_attach">0</property>
+                <property name="top_attach">9</property>
+                <property name="width">7</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkSeparator" id="effect-delay-sep">
+                <property name="height_request">2</property>
+                <property name="visible">True</property>
+                <property name="can_focus">False</property>
+                <property name="margin_bottom">8</property>
+              </object>
+              <packing>
+                <property name="left_attach">0</property>
+                <property name="top_attach">7</property>
+                <property name="width">7</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkSeparator" id="compressor-effect-sep">
+                <property name="height_request">2</property>
+                <property name="visible">True</property>
+                <property name="can_focus">False</property>
+                <property name="margin_bottom">8</property>
+              </object>
+              <packing>
+                <property name="left_attach">0</property>
+                <property name="top_attach">5</property>
+                <property name="width">7</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkSeparator" id="amp_cabinet-compressor-sep">
+                <property name="height_request">2</property>
+                <property name="visible">True</property>
+                <property name="can_focus">False</property>
+                <property name="margin_bottom">8</property>
+              </object>
+              <packing>
+                <property name="left_attach">0</property>
+                <property name="top_attach">3</property>
+                <property name="width">7</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkSeparator" id="utilities-amp_cabinet-sep">
+                <property name="height_request">2</property>
+                <property name="visible">True</property>
+                <property name="can_focus">False</property>
+                <property name="margin_bottom">8</property>
+              </object>
+              <packing>
+                <property name="left_attach">0</property>
+                <property name="top_attach">1</property>
+                <property name="width">7</property>
               </packing>
             </child>
             <child>
