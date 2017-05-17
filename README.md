@@ -58,7 +58,7 @@ Make sure your system includes the following dependencies:
 - pyalsa or python-alsa
 
 ## Runing from source
-The application can be run from the gstation_edit directory, just type:
+You can launch GStation-Edit from the download root directory:
 ``` bash
 $ ./gstation-edit
 ```
@@ -68,12 +68,12 @@ You can install gstation-edit in order to integrate with your DE.
 After the installation, there should be a "GStation-Edit" entry in
 the Audio and Video menu.
 ### User install
-From the dowloaded root directory:
+From the dowload root directory:
 ``` bash
 $ ./setup.py install --user
 ```
 ### System wide install
-From the dowloaded root directory:
+From the dowload root directory:
 ``` bash
 # sudo ./setup.py install
 ```
