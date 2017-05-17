@@ -16,17 +16,17 @@
 # You should have received a copy of the GNU General Public License along
 # with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+import traceback
+
 import gi
 gi.require_version('Gtk', '3.0')
 from gi.repository import Gtk
 
-from app import GStationEdit
 try:
-  from app import GStationEdit
-  # if running from sources and import fails
-  # make sure to have a valid py_alsa_seq available as a package
-except:
-  from gstation_edit.app import GStationEdit
+    from gstation_edit.app import GStationEdit
+except Exception as exc:
+    print("==> Failed to start GStation-Edit. Did you install py_alsa?")
+    print(traceback.format_exc())
 
 if __name__ == "__main__":
   gstation_edit = GStationEdit()

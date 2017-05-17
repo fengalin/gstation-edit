@@ -56,16 +56,17 @@ try:
     desktop_file_path = os.path.join(install_data_path,
                                      'applications',
                                      'gstation-edit.desktop')
-    desktop_file = file(desktop_file_path, 'rt')
+    desktop_file = file('gstation-edit.desktop', 'rt')
     lines = desktop_file.readlines()
     desktop_file.close()
     desktop_file = file(desktop_file_path, 'wt')
     for line in lines:
-      line = line.replace('%scripts_path%', install_scripts_path)
-      desktop_file.write(line)
+        line = line.replace('%scripts_path%', install_scripts_path)
+        desktop_file.write(line)
     desktop_file.close()
-except:
-    print('Problem while fixing gstation-edit.desktop path')
+except Exception as exc:
+    print('Problem while fixing gstation-edit.desktop path: %s'%(exc.strerror))
+    print('install_data_path: %s'%install_data_path)
   
 # Cleanup remove /build, and *.pyc files:
 print("Cleaning up...")

@@ -235,7 +235,7 @@ class JStationInterface:
 #            print('==> received %s'%(event))
             pass
         else:
-            print('event is invalid %s'(event))
+            print('event is invalid %s'%(event))
 
     def who_am_i_callback(self, event):
         self.default_event_callback(event)

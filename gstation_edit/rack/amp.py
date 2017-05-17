@@ -17,8 +17,8 @@
 # You should have received a copy of the GNU General Public License along
 # with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from ui_core.cbx_parameter import *
-from ui_core.scale_parameter import *
+from gstation_edit.ui_core.cbx_parameter import *
+from gstation_edit.ui_core.scale_parameter import *
 
 from rack_unit import *
 

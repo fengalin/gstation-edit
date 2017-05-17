@@ -29,7 +29,7 @@ from main_window import *
 try:
     from config import DATA_ROOT_DIR
 except:
-    DATA_ROOT_DIR = os.path.join('resources')
+    DATA_ROOT_DIR = os.path.join('gstation_edit', 'resources')
 
 sys.argv[0] = 'gstation-edit'
 
