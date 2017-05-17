@@ -49,7 +49,7 @@ The architecture could easily be adapted to previous version.
 I don't have a unit to test this (and I don't want to downgrade mine :).
 
 
-# How to run gstation-edit
+# How to run GStation-Edit
 ## Dependencies
 Make sure your system includes the following dependencies:
 - python-2.7 or higher
@@ -77,3 +77,40 @@ From the dowload root directory:
 ``` bash
 # sudo ./setup.py install
 ```
+
+
+# Troubleshooting (WIP)
+## Could not connect to J-Station
+There are many reasons for not being able to connect to J-Station. 
+This could range from a simple physical connection to conflicts
+with other MIDI devices.
+
+### Check the connection
+1. Make sure the MIDI OUT link from the computer is connected to
+the MIDI IN port on the J-Station and vice versa.
+2. Make sure the MIDI/J8 switch of the J-Station is switched to
+the right when looking at the back of the J-Station. The switch must
+be vertically aligned with the top mark next to the MIDI IN label.
+
+### Check that the MIDI interface is detected
+
+#### The main window and MIDI select dialog doesn't show up
+If nothing happens when you launch GStation-Edit (see **How to run
+GStation-Edit** above), you probably forgot to install a dependency. 
+This should be explicit on the command line if you run GStation-Edit
+from source (see **Runing from source** above).
+If you get something not that obvious, don't hesitate to drop me a message
+with the output from the command line.
+
+#### The main window shows up
+The MIDI ports detected by Py-ALSA should display In the comboboxes. 
+If the comboboxes are empty, you probably have an issue with your MIDI interface.
+Drop me a message with any relevant information if you think your MIDI interface
+is properly installed and recognized by the OS.
+
+If you can see the MIDI ports in the comboboxes but the connection fails when
+you try to auto-connect:
+- Disconnect any other MIDI device
+- Try different combinaisons with the MIDI and Sysex channels.
+Since I never met this situation, it is possible that GStaton-Edit is not robust
+to all cases. Send me a message with the details.
