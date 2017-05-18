@@ -52,9 +52,11 @@ I don't have a unit to test this (and I don't want to downgrade mine :).
 # How to run GStation-Edit
 ## Dependencies
 Make sure your system includes the following dependencies:
-- python-2.7 or higher
+- python-2.7 (Python 3 can't be used due to the dependency on PyAlsa which
+is stucked to Python 2)
 - GTK 3.16 or higher
 - gobject-introspection
+- python-gobject
 - pyalsa or python-alsa
 
 ## Runing from source
