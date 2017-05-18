@@ -17,13 +17,13 @@
 # You should have received a copy of the GNU General Public License along
 # with this program.    If not, see <http://www.gnu.org/licenses/>.
 
-from gstation_edit.ui_core.cbx_parameter import *
-from gstation_edit.ui_core.scale_parameter import *
-from gstation_edit.ui_core.btn_parameter import *
-from gstation_edit.ui_core.rdbtn_parameter import *
-from gstation_edit.ui_core.grp_parameter import *
+from ..ui_core.cbx_parameter import *
+from ..ui_core.scale_parameter import *
+from ..ui_core.btn_parameter import *
+from ..ui_core.rdbtn_parameter import *
+from ..ui_core.grp_parameter import *
 
-from rack_unit import *
+from .rack_unit import *
 
 class EffectUnit(RackUnit):
     def __init__(self, parent):

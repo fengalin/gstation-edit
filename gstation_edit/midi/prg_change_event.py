@@ -19,7 +19,7 @@
 
 from pyalsa import alsaseq
 
-from cc_event import *
+from .cc_event import *
 
 class PrgChangeEvent(CCMidiEvent):
     EVENT_TYPE = alsaseq.SEQ_EVENT_PGMCHANGE

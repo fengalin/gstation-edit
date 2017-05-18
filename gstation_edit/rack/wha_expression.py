@@ -17,11 +17,11 @@
 # You should have received a copy of the GNU General Public License along
 # with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from gstation_edit.ui_core.cbx_parameter import *
-from gstation_edit.ui_core.scale_parameter import *
-from gstation_edit.ui_core.btn_parameter import *
+from ..ui_core.cbx_parameter import *
+from ..ui_core.scale_parameter import *
+from ..ui_core.btn_parameter import *
 
-from rack_unit import *
+from .rack_unit import *
 
 class WhaExpressionUnit(RackUnit):
     def __init__(self, parent):
@@ -34,8 +34,8 @@ class WhaExpressionUnit(RackUnit):
                                                   max_value=3)
          self.wha_heel = ScaleParameter(parent=self,
                                         name='wha-heel',
-                                        parameter_nb = 07,
-                                        jstation_command = 10 )
+                                        parameter_nb=7,
+                                        jstation_command=10)
          self.wha_toe = ScaleParameter(parent=self,
                                        name='wha-toe',
                                        parameter_nb=8,
@@ -50,6 +50,6 @@ class WhaExpressionUnit(RackUnit):
                                           jstation_command=72)
          self.wah_expression_on_off_btn = BtnParameter(parent=self,
                                                        name='wah-expression',
-                                                       parameter_nb=05,
+                                                       parameter_nb=5,
                                                        jstation_command=8)
 

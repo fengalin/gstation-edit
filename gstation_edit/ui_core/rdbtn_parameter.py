@@ -17,7 +17,7 @@
 # You should have received a copy of the GNU General Public License along
 # with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from btn_parameter import *
+from .btn_parameter import *
 
 class RdBtnParameter(BtnParameter):
     def __init__(self, parent, name, parameter_nb, jstation_command,

@@ -19,8 +19,8 @@
 
 from pyalsa import alsaseq
 
-from event import *
-from event_resp_factory import *
+from .event import *
+from .event_resp_factory import *
 
 class CCMidiEvent(MidiEvent):
     EVENT_TYPE = alsaseq.SEQ_EVENT_CONTROLLER

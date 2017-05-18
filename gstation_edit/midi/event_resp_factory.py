@@ -17,7 +17,7 @@
 # You should have received a copy of the GNU General Public License along
 # with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from event import *
+from .event import *
 
 class MidiEventResponseFactory:
     event_classes = list()

@@ -20,7 +20,7 @@
 from gi.repository import Gtk
 from threading import Thread
 
-from midi.port import *
+from .midi.port import *
 
 class MidiSelectDlg:
     def __init__(self, main_window, js_interface, gtk_builder):

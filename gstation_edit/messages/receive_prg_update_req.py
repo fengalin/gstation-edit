@@ -17,7 +17,7 @@
 # You should have received a copy of the GNU General Public License along
 # with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from jstation_sysex_req import *
+from .jstation_sysex_req import *
 
 class ReceiveProgramUpdateRequest(JStationSysExRequest):
     def __init__(self, program, channel_id=0):

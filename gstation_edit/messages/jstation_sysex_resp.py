@@ -17,8 +17,8 @@
 # You should have received a copy of the GNU General Public License along
 # with this program.    If not, see <http://www.gnu.org/licenses/>.
 
-from gstation_edit.midi.sysex_event import *
-from gstation_edit.midi.event_resp_factory import *
+from ..midi.sysex_event import *
+from ..midi.event_resp_factory import *
 
 
 class JStationSysExResponse(SysExMidiEvent):

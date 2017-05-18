@@ -17,7 +17,7 @@
 # You should have received a copy of the GNU General Public License along
 # with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from gstation_edit.midi.sysex_event import *
+from ..midi.sysex_event import *
 
 class JStationSysExRequest(SysExMidiEvent):
     MANUFACTURER_ID = [0, 0, 0x10]

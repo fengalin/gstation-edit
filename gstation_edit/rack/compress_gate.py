@@ -17,11 +17,11 @@
 # You should have received a copy of the GNU General Public License along
 # with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from gstation_edit.ui_core.cbx_parameter import *
-from gstation_edit.ui_core.scale_parameter import *
-from gstation_edit.ui_core.btn_parameter import *
+from ..ui_core.cbx_parameter import *
+from ..ui_core.scale_parameter import *
+from ..ui_core.btn_parameter import *
 
-from rack_unit import *
+from .rack_unit import *
 
 class CompressorGateUnit(RackUnit):
     def __init__(self, parent):
@@ -29,28 +29,28 @@ class CompressorGateUnit(RackUnit):
 
         self._compressor_ratio = CbxParameter(parent=self,
                                               name='compressor-ratio',
-                                              parameter_nb=02,
-                                              jstation_command=03,
+                                              parameter_nb=2,
+                                              jstation_command=3,
                                               max_value=9)
         self._compressor_freq = CbxParameter(parent=self,
                                              name='compressor-freq',
-                                             parameter_nb=04,
-                                             jstation_command=05,
+                                             parameter_nb=4,
+                                             jstation_command=5,
                                              max_value=19)
         self._compressor_threshold = ScaleParameter(parent=self,
                                                     name='compressor-threshold',
-                                                    parameter_nb=01,
-                                                    jstation_command=02,
+                                                    parameter_nb=1,
+                                                    jstation_command=2,
                                                     max_value=50)
         self._compressor_gain = ScaleParameter(parent=self,
                                                name='compressor-gain',
-                                               parameter_nb=03,
-                                               jstation_command=04,
+                                               parameter_nb=3,
+                                               jstation_command=4,
                                                max_value=30)
         self._compressor_on_off_btn = BtnParameter(parent=self,
                                                    name='compressor',
-                                                   parameter_nb=00,
-                                                   jstation_command=01)
+                                                   parameter_nb=0,
+                                                   jstation_command=1)
 
         self._gate_threshold = ScaleParameter(parent=self,
                                               name='gate-threshold',

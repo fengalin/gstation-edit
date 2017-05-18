@@ -17,7 +17,7 @@
 # You should have received a copy of the GNU General Public License along
 # with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from jstation_sysex_resp import *
+from .jstation_sysex_resp import *
 
 class ToMessageResponse(JStationSysExResponse):
     PROCEDURE_ID = 0x7f

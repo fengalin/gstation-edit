@@ -20,15 +20,15 @@
 
 from gi.repository import Gtk
 
-from rack.amp import *
-from rack.compress_gate import *
-from rack.effect import *
-from rack.delay import *
-from rack.reverb import *
-from rack.wha_expression import *
+from .rack.amp import *
+from .rack.compress_gate import *
+from .rack.effect import *
+from .rack.delay import *
+from .rack.reverb import *
+from .rack.wha_expression import *
 
-from midi_select_dlg import *
-from jstation_interface import *
+from .midi_select_dlg import *
+from .jstation_interface import *
 
 class MainWindow:
     def __init__(self, gtk_builder):

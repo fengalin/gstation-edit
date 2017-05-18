@@ -17,8 +17,8 @@
 # You should have received a copy of the GNU General Public License along
 # with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from gstation_edit.program import *
-from jstation_sysex_resp import *
+from ..program import *
+from .jstation_sysex_resp import *
 
 class ProgramResponse(JStationSysExResponse):
     # constants to be defined in heirs:

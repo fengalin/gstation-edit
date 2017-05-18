@@ -22,25 +22,25 @@ from pyalsa import alsaseq
 from threading import Thread, Event, Condition
 import select
 
-from midi.port import *
-from midi.event_resp_factory import *
-from midi.cc_event import *
-from midi.prg_change_event import *
+from .midi.port import *
+from .midi.event_resp_factory import *
+from .midi.cc_event import *
+from .midi.prg_change_event import *
 
-from messages.who_am_i_req import *
-from messages.utility_settings_req import *
-from messages.bank_dump_req import *
-from messages.receive_prg_update_req import *
-from messages.request_prg_update_req import *
+from .messages.who_am_i_req import *
+from .messages.utility_settings_req import *
+from .messages.bank_dump_req import *
+from .messages.receive_prg_update_req import *
+from .messages.request_prg_update_req import *
 
-from messages.who_am_i_resp import *
-from messages.utility_settings_resp import *
-from messages.start_bank_dump_resp import *
-from messages.prg_indices_resp import *
-from messages.one_prg_resp import *
-from messages.end_bank_dump_resp import *
-from messages.to_msg_resp import *
-from messages.receive_prg_update_resp import *
+from .messages.who_am_i_resp import *
+from .messages.utility_settings_resp import *
+from .messages.start_bank_dump_resp import *
+from .messages.prg_indices_resp import *
+from .messages.one_prg_resp import *
+from .messages.end_bank_dump_resp import *
+from .messages.to_msg_resp import *
+from .messages.receive_prg_update_resp import *
 
 class JStationInterface:
     WAIT_SHUTDOWN_TIMEOUT = 1000 # ms - this one determines the longest period
