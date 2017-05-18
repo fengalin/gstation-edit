@@ -56,7 +56,7 @@ Make sure your system includes the following dependencies:
 is stucked to Python 2)
 - GTK 3.16 or higher
 - gobject-introspection
-- python-gobject
+- pygobject or python-gobject
 - pyalsa or python-alsa
 
 ## Runing from source
