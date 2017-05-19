@@ -34,13 +34,10 @@ class ReceiveProgramUpdateRequest(JStationSysExRequest):
             data = list()
             data.append(program_changed_flag)
             data += self.program.data
+            # TODO: check name length
             for index in range(0, len(self.program.name)):
                 data.append(ord(self.program.name[index]))
             data.append(0) # 0 ending for name
-            self.data_buffer = self.data_buffer + self.get_sysex_buffer(data)
+            self.data_buffer += self.get_sysex_buffer(data)
         else:
             print('Could not build ReceiveProgramUpdateRequest')
-
-    def __str__(self):
-        return "%s. Version: %d"%(self.__class__.__name__, self.m_version)
-

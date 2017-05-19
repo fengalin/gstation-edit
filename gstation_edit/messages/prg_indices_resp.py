@@ -39,7 +39,6 @@ class PRGIndicesResponse(JStationSysExResponse):
             self.is_valid = True
 
     def __str__(self):
-        return "%s. Version: %d, prg indexes: %s"%(self.__class__.__name__,
-                                                   self.version,
-                                                   str(self.m_prg_indices))
+        return "%s, prg indexes: %s"%(JStationSysExResponse.__str__(self),
+                                      str(self.prg_indices))
 

@@ -41,7 +41,5 @@ class StartBankDumpResponse(JStationSysExResponse):
                 self.is_valid = False
 
     def __str__(self):
-        return "%s. Version: %d, total length: %d"%(self.__class__.__name__,
-                                                    self.version,
-                                                    self.total_length)
-
+        return "%s, total length: %d"%(JStationSysExResponse.__str__(self),
+                                       self.total_length)

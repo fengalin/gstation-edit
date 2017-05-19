@@ -42,7 +42,7 @@ class ReceiveProgramUpdateResponse(ProgramResponse):
                 if 2 == self.version:
                     # extra changed flag in version 2
                     self.changed_flag = self.get_value_from_split_bytes(
-                        self.data_buffer[self.CHANGED_FLAG_POS : self.CHANGED_FLAG_POS+2]
+                        self.data_buffer[self.CHANGED_FLAG_POS: self.CHANGED_FLAG_POS+2]
                     )
                     self.PRG_DATA_POS = self.PRG_DATA_POS_V2
                     self.PRG_NAME_POS = self.PRG_NAME_POS_V2
@@ -56,8 +56,6 @@ class ReceiveProgramUpdateResponse(ProgramResponse):
                 self.is_valid = False
 
     def __str__(self):
-        return "%s. Version: %d, changed %d, %s"%(self.__class__.__name__,
-                                                 self.version,
-                                                 self.changed_flag,
-                                                 self.prg.__str__())
-
+        return "%s, changed %d, %s"%(ProgramResponse.__str__(self),
+                                     self.changed_flag,
+                                     self.prg.__str__())

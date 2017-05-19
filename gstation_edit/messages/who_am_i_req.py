@@ -42,6 +42,5 @@ class WhoAmIRequest(JStationSysExRequest):
                     print('Response on not defined for ReqWhoAmI SysEx')
 
     def __str__(self):
-        return "%s. Version: %d, response on %d"%(self.__class__.__name__,
-                                                  self.version,
-                                                  self.response_on)
+        return "%s, response on %d"%(self.JStationSysExRequest.__str__(self),
+                                     self.response_on)

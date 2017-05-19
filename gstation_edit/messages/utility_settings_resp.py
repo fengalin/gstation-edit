@@ -24,7 +24,7 @@ class UtilitySettingsResponse(JStationSysExResponse):
     EXPECTED_DATA_LEN = 6
     STEREO_MONO_POS = 12
     DRY_TRACK_POS = 14
-    DRY_TRACK_LEVEL_POS = 16
+    DIGITAL_OUT_LEVEL_POS = 16
     GLOBAL_CABINET_POS = 18
     MIDI_MERGE_POS = 20
     MIDI_CHANNEL_POS = 22
@@ -33,7 +33,7 @@ class UtilitySettingsResponse(JStationSysExResponse):
         JStationSysExResponse.__init__(self, callback, seq_event=seq_event)
         self.stereo_mono = -1
         self.dry_track = -1
-        self.dry_track_level = -1
+        self.digital_out_level = -1
         self.global_cabinet = -1
         self.midi_merge = -1
         self.midi_channel = -1
@@ -47,8 +47,8 @@ class UtilitySettingsResponse(JStationSysExResponse):
                 self.dry_track = self.get_value_from_split_bytes(
                     self.data_buffer[self.DRY_TRACK_POS : self.DRY_TRACK_POS+2]
                 )
-                self.dry_track_level = self.get_value_from_split_bytes(
-                    self.data_buffer[self.DRY_TRACK_LEVEL_POS : self.DRY_TRACK_LEVEL_POS+2]
+                self.digital_out_level = self.get_value_from_split_bytes(
+                    self.data_buffer[self.DIGITAL_OUT_LEVEL_POS : self.DIGITAL_OUT_LEVEL_POS+2]
                 )
                 self.global_cabinet = self.get_value_from_split_bytes(
                     self.data_buffer[self.GLOBAL_CABINET_POS : self.GLOBAL_CABINET_POS+2]
@@ -65,14 +65,11 @@ class UtilitySettingsResponse(JStationSysExResponse):
                 self.m_is_valid = False
 
     def __str__( self ):
-        return "%s. Version: %d, stereo mono: %d, dry track: %d, "\
-                "dry track level: %d, global cabinet: %d, "\
-                "midi merge: %d, midi channel: %d"%(self.__class__.__name__,
-                                                    self.version,
-                                                    self.stereo_mono,
-                                                    self.dry_track,
-                                                    self.dry_track_level,
-                                                    self.global_cabinet,
-                                                    self.midi_merge,
-                                                    self.midi_channel)
+        return "%s, stereo mono: %d, dry track: %d, "\
+                "digital out level: %d, global cabinet: %d, "\
+                "midi merge: %d, midi channel: %d"\
+                %(JStationSysExResponse.__str__(self),
+                  self.stereo_mono, self.dry_track,
+                  self.digital_out_level, self.global_cabinet,
+                  self.midi_merge, self.midi_channel)
 

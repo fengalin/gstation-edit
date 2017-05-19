@@ -52,3 +52,8 @@ class JStationSysExRequest(SysExMidiEvent):
         for value in data:
             sysex_buffer += self.get_split_bytes_from_value(value)
         return sysex_buffer
+
+    def __str__(self):
+        return "%s (%02x). Version: %d"%(self.__class__.__name__,
+                                         self.procedure_id,
+                                         self.version)

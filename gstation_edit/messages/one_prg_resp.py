@@ -46,7 +46,5 @@ class OneProgramResponse(ProgramResponse):
 
 
     def __str__(self):
-        return "%s. Version: %d, %s"%(self.__class__.__name__,
-                                      self.version,
-                                      self.prg.__str__())
+        return "%s, %s"%(ProgramResponse.__str__(self), self.prg.__str__())
 

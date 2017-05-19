@@ -72,5 +72,7 @@ class Program:
 
     def __str__( self ):
         return "Prg bank: %d, prg nb: %d, prg name: %s, prg data: %s"\
-                %(self.bank, self.number, self.name, str(self.data))
+                %(self.bank, self.number, self.name,
+                  ["%d: %d"%(index, self.data[index]) \
+                   for index in range(0, len(self.data))])
 

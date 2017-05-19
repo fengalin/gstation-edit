@@ -123,3 +123,7 @@ class JStationSysExResponse(SysExMidiEvent):
         else:
             print('Couldn''t find callback for %s'%(self.__class__.__name__))
 
+    def __str__(self):
+        return "%s (x%02x). Version: %d"%(self.__class__.__name__,
+                                         self.PROCEDURE_ID,
+                                         self.version)

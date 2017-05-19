@@ -53,10 +53,8 @@ class WhoAmIResponse(JStationSysExResponse):
                 self.is_valid = False
 
     def __str__(self):
-        return "%s. Version: %d, receive ch: %d, transmit ch: %d, "\
-                "sysex ch: %d"%(self.__class__.__name__,
-                                self.version,
-                                self.receive_channel,
-                                self.transmit_channel,
+        return "%s, receive ch: %d, transmit ch: %d, "\
+                "sysex ch: %d"%(JStationSysExResponse.__str__(self),
+                                self.receive_channel, self.transmit_channel,
                                 self.sysex_channel)
 

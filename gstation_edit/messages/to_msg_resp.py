@@ -43,7 +43,7 @@ class ToMessageResponse(JStationSysExResponse):
             self.is_valid = True
 
     def __str__(self):
-        return "%s. Version: %d, request procedure: %d, error code: %d"%(
-                    self.__class__.__name__, self.version,
-                    self.req_procedure, self.error_code)
+        return "%s, request procedure: %d, error code: %d"\
+                %(JStationSysExResponse.__str__(self),
+                  self.req_procedure, self.error_code)
 

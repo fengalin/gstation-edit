@@ -24,7 +24,3 @@ class EndBankDumpResponse(JStationSysExResponse):
 
     def __init__(self, callback=None, seq_event=None):
         JStationSysExResponse.__init__(self, callback=callback, seq_event=seq_event)
-
-    def __str__( self ):
-        return "%s. Version: %d"%(self.__class__.__name__, self.version)
-

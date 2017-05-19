@@ -23,10 +23,3 @@ class UtilitySettingsRequest(JStationSysExRequest):
     def __init__(self, channel_id=0):
         JStationSysExRequest.__init__(self, channel_id=channel_id,
                                       procedure_id=0x11, version=1)
-
-    def build_data_buffer(self):
-        JStationSysExRequest.build_data_buffer(self)
-
-    def __str__(self):
-        return "%s. Version: %d"%(self.__class__.__name__, self.version)
-
