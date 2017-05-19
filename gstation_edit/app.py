@@ -43,7 +43,7 @@ class GStationEdit:
         self.gtk_builder.add_from_file(gtk_builder_file)
 
         self.is_valid = False
-        self.main_window = MainWindow(self.gtk_builder)
+        self.main_window = MainWindow(sys.argv[0], self.gtk_builder)
 
         signal_handlers = dict()
         signal_handlers['on_jstation-edit-window_destroy'] = self.quit

@@ -31,7 +31,7 @@ from .midi_select_dlg import *
 from .jstation_interface import *
 
 class MainWindow:
-    def __init__(self, gtk_builder):
+    def __init__(self, app_name, gtk_builder):
         self._gtk_builder = gtk_builder
         self.gtk_window = self._gtk_builder.get_object('jstation-edit-window')
 
@@ -40,7 +40,7 @@ class MainWindow:
         self._current_program = None
         self._current_selected_iter = None
 
-        self._jstation_interface = JStationInterface(self)
+        self._jstation_interface = JStationInterface(app_name, self)
 
         self._units = list()
         self._units.append(CompressorGateUnit(self))
@@ -69,6 +69,7 @@ class MainWindow:
     def init_widgets(self):
         self._signal_handlers = dict()
         self.init_midi_select_dlg()
+        self.init_utilities_dlg()
         self.init_bank_list_widget()
         self.init_contextual_menu_widget()
         self.init_rename_dlg()
@@ -80,6 +81,15 @@ class MainWindow:
                                               self._jstation_interface,
                                               self._gtk_builder)
         self._signal_handlers.update(self._midi_select_dlg.get_signal_handlers())
+
+    def init_utilities_dlg(self):
+        # TODO: move the actual code to a dedicated file
+        #self._utilities_dlg = UtilitiesDlg(self,
+        #                                   self._jstation_interface,
+        #                                   self._gtk_builder)
+        #self._signal_handlers.update(self._utilities_dlg.get_signal_handlers())
+        pass
+
 
     def init_bank_list_widget(self):
         self._bank_list_widget = self._gtk_builder.get_object('bank-list-trv')

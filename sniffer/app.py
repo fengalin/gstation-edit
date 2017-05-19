@@ -39,7 +39,7 @@ class JStationSnifferApp:
         self.gtk_builder.add_from_file(gtk_builder_file)
 
         self.main_window = MidiSelectDlg(self,
-                                         JStationSniffer(),
+                                         JStationSniffer(sys.argv[0]),
                                          self.gtk_builder)
 
         signal_handlers = dict()

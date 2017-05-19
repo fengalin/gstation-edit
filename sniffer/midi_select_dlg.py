@@ -128,7 +128,7 @@ class MidiSelectDlg:
         # TDOO: fix cursor
         #self.gtk_dlg.set_cursor(Gtk.gdk.Cursor(Gtk.gdk.WATCH))
         self.midi_select_msg_lbl.set_text('')
-        self.gtk_dlg.set_sensitive(False)
+        #self.gtk_dlg.set_sensitive(False)
 
     def post_connection_actions(self):
         # TDOO: fix cursor

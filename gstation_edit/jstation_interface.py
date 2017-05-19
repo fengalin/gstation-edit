@@ -17,9 +17,9 @@
 # You should have received a copy of the GNU General Public License along
 # with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from pyalsa import alsaseq
-
 from threading import Thread, Event, Condition
+
+from pyalsa import alsaseq
 
 from .midi.port import *
 from .midi.event_resp_factory import *
@@ -46,7 +46,7 @@ class JStationInterface:
                                  #            before a shudown request can be detected
     RESPONSE_TIMEOUT = 2 # s
 
-    def __init__(self, main_window):
+    def __init__(self, app_name, main_window):
         # instanciate response events in order for them to be available to the factory
         # and define the callback function for processing
         CCMidiEvent(callback=self.one_parameter_cc_callback)
@@ -76,8 +76,7 @@ class JStationInterface:
         self.main_window = main_window
         self.is_disconnecting.clear()
 
-        self.seq = alsaseq.Sequencer('hw',
-                                     'gstation-edit',
+        self.seq = alsaseq.Sequencer('hw', app_name,
                                      alsaseq.SEQ_OPEN_DUPLEX,
                                      alsaseq.SEQ_NONBLOCK, 1)
         if self.seq == None:
@@ -122,16 +121,8 @@ class JStationInterface:
             (self.seq.client_id, self.port_out),
             (midi_port_in.client, midi_port_in.port)
         )
-        connect_info = self.seq.get_connect_info(
-            (self.seq.client_id, self.port_out),
-            (midi_port_in.client, midi_port_in.port)
-        )
         self.js_port_out = midi_port_out
         self.seq.connect_ports(
-            (midi_port_out.client, midi_port_out.port),
-            (self.seq.client_id, self.port_in)
-        )
-        connect_info = self.seq.get_connect_info(
             (midi_port_out.client, midi_port_out.port),
             (self.seq.client_id, self.port_in)
         )
