@@ -20,7 +20,6 @@
 from pyalsa import alsaseq
 
 from threading import Thread, Event, Condition
-import select
 
 from .midi.port import *
 from .midi.event_resp_factory import *
@@ -212,16 +211,17 @@ class JStationInterface:
 
 
     def wait_for_events(self):
+        factory = MidiEventResponseFactory()
         event_list = list()
         while not self.is_disconnecting.is_set():
             event_list = self.seq.receive_events(self.WAIT_SHUTDOWN_TIMEOUT, 1)
             if 0 < len(event_list):
                 for seq_event in event_list:
                     if None != seq_event:
-#                        print('response from JStation: %s'%(seq_event))
-                        factory = MidiEventResponseFactory()
+#                        print('==> Event from JStation: %s'%(seq_event))
                         event = factory.get_event_from_seq_event(seq_event)
                         if None != event:
+#                            print('Event recognized as: %s'%(event))
                             event.process()
                         else:
                             print('could not build event from response')
@@ -308,11 +308,3 @@ class JStationInterface:
     def send_command(self, command, value):
         success = False
         return self.send_event(CCMidiEvent(self.receive_channel, command, value))
-
-if __name__ == '__main__':
-    jstation_interface = JStationInterface(None)
-    jstation_interface.get_clients()
-    for midi_port in jstation_interface.midi_in_ports:
-        print(midi_port)
-    for midi_port in jstation_interface.midi_out_ports:
-        print(midi_port)

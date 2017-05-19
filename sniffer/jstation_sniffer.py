@@ -17,10 +17,7 @@
 # You should have received a copy of the GNU General Public License along
 # with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from pyalsa import alsaseq
-
-from threading import Thread, Event, Condition
-import select
+from threading import Thread
 
 from gstation_edit.jstation_interface import *
 
@@ -52,6 +49,7 @@ class JStationSniffer(JStationInterface):
 
 
     def sniff_events(self):
+        factory = MidiEventResponseFactory()
         event_list = list()
         while not self.is_disconnecting.is_set():
             event_list = self.seq.receive_events(self.WAIT_SHUTDOWN_TIMEOUT, 1)
@@ -59,7 +57,6 @@ class JStationSniffer(JStationInterface):
                 for seq_event in event_list:
                     if None != seq_event:
                         print('==> Received event: %s'%(seq_event))
-                        factory = MidiEventResponseFactory()
                         event = factory.get_event_from_seq_event(seq_event)
                         if None != event:
                             print('Event recognized as: %s'%(event))
