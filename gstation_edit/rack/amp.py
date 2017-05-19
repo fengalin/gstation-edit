@@ -61,7 +61,3 @@ class AmpUnit(RackUnit):
                                      parameter_nb=14,
                                      jstation_command=36,
                                      max_value=90)
-if __name__ == '__main__':
-    unit = AmpUnit()
-    unit.dump()
-    print(unit.get_signal_handlers())

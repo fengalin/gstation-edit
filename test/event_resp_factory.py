@@ -19,11 +19,12 @@
 
 from pyalsa import alsaseq
 
-from midi.event_resp_factory import *
-from midi.cc_event import *
-from messages.who_am_i_resp import *
+from gstation_edit.midi.event_resp_factory import *
+from gstation_edit.midi.cc_event import *
+from gstation_edit.messages.who_am_i_resp import *
 
 def test():
+    print('\n==== MidiEventResponseFactory test')
     sysex_data = [
             0xf0, 0, 0, 0x10, 0x7f, 0x54, 0x41,
             0, 1, 0, 3, 0, 0, 0, 0, 0, 0, 0, 1, 121, 0xf7

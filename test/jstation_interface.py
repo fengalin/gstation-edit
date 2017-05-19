@@ -1,5 +1,5 @@
 """
- gstation-edit WhoAmIRequest test
+ gstation-edit JStationInterface test
 """
 # this file is part of gstation-edit
 # Copyright (C) F LAIGNEL 2009-2017 <fengalin@free.fr>
@@ -17,14 +17,13 @@
 # You should have received a copy of the GNU General Public License along
 # with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from gstation_edit.messages.who_am_i_req import *
+from gstation_edit.jstation_interface import *
 
 def test():
-    print('\n==== WhoAmIRequest test')
-    sysex_event = WhoAmIRequest()
-    sysex_event.fill_seq_event()
-    is_valid = sysex_event.is_valid
-    print('event is valid ?: %d'%(is_valid))
-    if is_valid:
-        print(sysex_event.get_seq_event().get_data())
-        print(sysex_event.data_buffer)
+    print('\n==== JStationInterface test')
+    jstation_interface = JStationInterface(None)
+    jstation_interface.get_clients()
+    for midi_port in jstation_interface.midi_in_ports:
+        print(midi_port)
+    for midi_port in jstation_interface.midi_out_ports:
+        print(midi_port)
