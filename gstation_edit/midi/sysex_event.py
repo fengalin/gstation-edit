@@ -56,30 +56,3 @@ class SysExMidiEvent(MidiEvent):
         for data in self.data_buffer:
             check_sum = check_sum ^ data
         return check_sum
-
-    def get_value_from_split_bytes(self, split_bytes):
-        value = 0
-        split_bytes_range = len(split_bytes) / 2
-        for index in range(0, split_bytes_range):
-            byte_ = split_bytes[2*index + 1]
-            if 0 != split_bytes[2*index]:
-                byte_ += 0x80
-            value = value + (byte_ << (8*index))
-        return value
-
-    def get_split_bytes_from_value(self, value, expected_bytes=2):
-        split_bytes = list()
-        remainder = value
-        value_left_to_read = True
-        while value_left_to_read or expected_bytes>len(split_bytes):
-            current_byte = remainder & 0xff
-            if current_byte & 0x80:
-                split_bytes.append(1)
-            else:
-                split_bytes.append(0)
-            split_bytes.append(current_byte & 0x7f)
-            remainder = remainder >> 8
-            if 0 == remainder:
-                value_left_to_read = False
-
-        return split_bytes

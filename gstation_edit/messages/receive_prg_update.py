@@ -17,16 +17,39 @@
 # You should have received a copy of the GNU General Public License along
 # with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from .jstation_sysex_req import *
+from .jstation_sysex_event import *
+from .program import *
 
-class ReceiveProgramUpdateRequest(JStationSysExRequest):
-    def __init__(self, program, channel_id=0):
-        JStationSysExRequest.__init__(self, channel_id=channel_id,
-                                      procedure_id=0x61, version=2)
+class ReceiveProgramUpdate(JStationSysExEvent):
+    PROCEDURE_ID = 0x61
+    VERSION = 2
+
+    def __init__(self, channel=-1, seq_event=None, program=None):
+        JStationSysExEvent.__init__(self, channel, seq_event)
         self.program = program
 
+        if self.is_valid:
+            prg_data_len = self.read_next_bytes(4)
+
+            prg_buffer = self.data_buffer[self.data_index:]
+            if len(prg_buffer) >= prg_data_len:
+                has_changed = False
+                if self.VERSION == 2:
+                    has_changed = self.read_next_bytes(1)
+                    prg_buffer = self.data_buffer[self.data_index:]
+
+                self.program = Program(data_buffer=prg_buffer,
+                                       has_changed=has_changed)
+                self.is_valid = True
+            else:
+                self.is_valid = False
+                print('Inconsistent prg len declared (%d) '\
+                      'and available (%d)'%(prg_data_len, len(prg_data)))
+
+
+
     def build_data_buffer(self):
-        JStationSysExRequest.build_data_buffer(self)
+        JStationSysExEvent.build_data_buffer(self)
         if self.is_valid:
             program_changed_flag = 0
             if self.program.has_changed:
@@ -41,3 +64,8 @@ class ReceiveProgramUpdateRequest(JStationSysExRequest):
             self.data_buffer += self.get_sysex_buffer(data)
         else:
             print('Could not build ReceiveProgramUpdateRequest')
+
+
+    def __str__(self):
+        return "%s, %s"%(JStationSysExEvent.__str__(self),
+                         self.program.__str__())

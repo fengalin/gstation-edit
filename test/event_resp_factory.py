@@ -36,7 +36,7 @@ def test():
     sysex_evt_data['ext'] = sysex_data;
     sysex_seq_event.set_data(sysex_evt_data);
 
-    factory = MidiEventResponseFactory()
+    factory = MidiEventFactory()
     sysex_event = factory.get_event_from_seq_event(sysex_seq_event)
     if None != sysex_event:
         print(sysex_event.is_valid)

@@ -20,7 +20,6 @@
 from pyalsa import alsaseq
 
 from .event import *
-from .event_resp_factory import *
 
 class CCMidiEvent(MidiEvent):
     EVENT_TYPE = alsaseq.SEQ_EVENT_CONTROLLER
@@ -28,46 +27,34 @@ class CCMidiEvent(MidiEvent):
     PARAM_KEY = 'control.param'
     VALUE_KEY = 'control.value'
 
-    # class memeber
-    callbacks = dict()
-
-    class __metaclass__(type):
-        def __init__(class_, name, bases, dict):
-            MidiEventResponseFactory.register_midi_event(class_, bases)
-
+    @classmethod
     def is_event(class_, seq_event):
         result = False
         if class_.EVENT_TYPE == seq_event.type:
             result = True
         return result
-    is_event = classmethod(is_event)
 
-    def __init__(self, channel=-1, param=-1, value=-1,
-                 callback=None, seq_event=None):
+
+    def __init__(self, channel=-1, param=-1, value=-1, seq_event=None):
         MidiEvent.__init__(self, self.EVENT_TYPE, seq_event)
 
-        self.channel = -1
-        self.param = -1
-        self.value = -1
+        self.channel = channel
+        self.param = param
+        self.value = value
 
-        if None != callback:
-            # add to the class member dict for callbacks
-            self.callbacks[self.__class__.__name__] = callback
-        if None != seq_event:
+        if seq_event != None:
             error_msg = ''
 
             seq_event_data = seq_event.get_data()
+            value = seq_event_data.get(self.PARAM_KEY)
+            if None != value :
+                self.param = value
+
             value = seq_event_data.get(self.CHANNEL_KEY)
             if None != value :
                 self.channel = value
             else:
                 error_msg += 'Could not find key %s. '%(self.CHANNEL_KEY)
-
-            value = seq_event_data.get(self.PARAM_KEY)
-            if None != value :
-                self.param = value
-            else:
-                error_msg += 'Could not find key %s. '%(self.PARAM_KEY)
 
             value = seq_event_data.get(self.VALUE_KEY)
             if None != value :
@@ -80,10 +67,6 @@ class CCMidiEvent(MidiEvent):
                 self.is_valid = False
             else:
                 self.is_valid = True
-        else:
-            self.channel = channel
-            self.param = param
-            self.value = value
 
 
     def fill_seq_event(self):
@@ -95,11 +78,6 @@ class CCMidiEvent(MidiEvent):
             event_data[self.VALUE_KEY] = self.value
             self.seq_event.set_data(event_data)
             self.is_valid = True
-
-    def process(self):
-        callback = self.callbacks.get(self.__class__.__name__)
-        if None != callback:
-            callback(self)
 
     def __str__(self):
         return "%s. channel: %d, param: %d, value: %d"%(self.__class__.__name__,

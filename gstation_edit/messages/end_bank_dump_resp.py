@@ -17,10 +17,12 @@
 # You should have received a copy of the GNU General Public License along
 # with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from .jstation_sysex_resp import *
+from .jstation_sysex_event import *
 
-class EndBankDumpResponse(JStationSysExResponse):
+class EndBankDumpResponse(JStationSysExEvent):
     PROCEDURE_ID = 0x26
 
-    def __init__(self, callback=None, seq_event=None):
-        JStationSysExResponse.__init__(self, callback=callback, seq_event=seq_event)
+    def __init__(self, channel=-1, seq_event=None):
+        JStationSysExEvent.__init__(self, channel, seq_event)
+
+    # Build to send defined in JStationSysExEvent

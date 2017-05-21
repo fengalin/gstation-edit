@@ -17,44 +17,41 @@
 # You should have received a copy of the GNU General Public License along
 # with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from .jstation_sysex_resp import *
+from .jstation_sysex_event import *
 
-class WhoAmIResponse(JStationSysExResponse):
+class WhoAmIResponse(JStationSysExEvent):
     PROCEDURE_ID = 0x41
-    EXPECTED_DATA_LEN = 3
-    RECEIVE_CHANNEL_POS = 12
-    RECEIVE_CHANNEL_POS_END = 14
-    TRANSMIT_CHANNEL_POS = 14
-    TRANSMIT_CHANNEL_POS_END = 16
-    SYSEX_CHANNEL_POS = 16
-    SYSEX_CHANNEL_POS_END = 18
+    VERSION = 1
 
-    def __init__(self, callback=None, seq_event=None):
-        JStationSysExResponse.__init__(self, callback, seq_event=seq_event)
-        self.receive_channel = -1
-        self.transmit_channel = -1
-        self.sysex_channel = -1
+    def __init__(self, channel=-1, seq_event=None,
+                 receive_channel=-1, transmit_channel=-1, sysex_channel=-1):
+        JStationSysExEvent.__init__(self, channel, seq_event)
+        self.receive_channel = receive_channel
+        self.transmit_channel = transmit_channel
+        self.sysex_channel = sysex_channel
 
         if self.is_valid:
-            data_length = self.get_count()
-            if self.EXPECTED_DATA_LEN == data_length:
-                self.receive_channel = self.get_value_from_split_bytes(
-                    self.data_buffer[self.RECEIVE_CHANNEL_POS : self.RECEIVE_CHANNEL_POS_END]
-                )
-                self.transmit_channel = self.get_value_from_split_bytes(
-                   self.data_buffer[self.TRANSMIT_CHANNEL_POS : self.TRANSMIT_CHANNEL_POS_END]
-                )
-                self.sysex_channel = self.get_value_from_split_bytes(
-                    self.data_buffer[ self.SYSEX_CHANNEL_POS : self.SYSEX_CHANNEL_POS_END]
-                )
+            data_length = self.read_next_bytes(4)
+            if len(self.data_buffer)-4 >= data_length:
+                self.receive_channel = self.read_next_bytes(2)
+                self.transmit_channel = self.read_next_bytes(2)
+                self.sysex_channel = self.read_next_bytes(2)
                 self.is_valid = True
             else:
-                print('Incorrect data length %d within WhoAmIResponse'%(data_length))
-                self.is_valid = False
+                print('Incorrect data buffer with len %d. Expecting %d'\
+                      %(len(self.data_buffer)-4, data_length))
+                self.m_is_valid = False
 
+
+    # Build to send
+    def build_data_buffer(self):
+        print('Not implemented yet')
+
+
+    # Common
     def __str__(self):
         return "%s, receive ch: %d, transmit ch: %d, "\
-                "sysex ch: %d"%(JStationSysExResponse.__str__(self),
+                "sysex ch: %d"%(JStationSysExEvent.__str__(self),
                                 self.receive_channel, self.transmit_channel,
                                 self.sysex_channel)
 

@@ -1,5 +1,5 @@
 """
- gstation-edit MidiEventResponseFactory definition
+ gstation-edit MidiEventFactory definition
 """
 # this file is part of gstation-edit
 # Copyright (C) F LAIGNEL 2009-2017 <fengalin@free.fr>
@@ -17,9 +17,7 @@
 # You should have received a copy of the GNU General Public License along
 # with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from .event import *
-
-class MidiEventResponseFactory:
+class MidiEventFactory:
     event_classes = list()
 
     def __init__(self):
@@ -35,8 +33,8 @@ class MidiEventResponseFactory:
         if None != seq_event:
 #            print('Received event with type %d'%(seq_event.type))
             for event_class in self.event_classes:
-                    if event_class.is_event(seq_event):
-#                        print('Event recognized as: %s'%(l_event_class.__name__))
-                        result = event_class(seq_event=seq_event)
-                        break
+                if event_class.is_event(seq_event):
+#                    print('Event recognized as: %s'%(l_event_class.__name__))
+                    result = event_class(seq_event=seq_event)
+                    break
         return result

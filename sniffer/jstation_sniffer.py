@@ -23,6 +23,8 @@ from pyalsa import alsaseq
 
 from gstation_edit.jstation_interface import *
 
+from gstation_edit.messages.jstation_sysex_event import *
+
 class JStationSniffer(JStationInterface):
     def __init__(self, app_name):
         JStationInterface.__init__(self, app_name, None)
@@ -51,7 +53,6 @@ class JStationSniffer(JStationInterface):
 
 
     def sniff_events(self):
-        factory = MidiEventResponseFactory()
         jstation_cid = self.js_port_out.client
         jstation_in_port = self.js_port_in.port
         event_list = list()
@@ -61,18 +62,24 @@ class JStationSniffer(JStationInterface):
                 for seq_event in event_list:
                     if None != seq_event:
                         forward_event = False
+                        origin = 'J-Station'
                         source_cid, source_port = seq_event.source
-                        if source_cid == jstation_cid:
-                            print('** J-Station: %s'%(seq_event))
-                        else:
-                            print('** J-Edit: %s'%(seq_event))
+                        if source_cid != jstation_cid:
+                            origin = 'J-Edit'
                             forward_event = True
 
-                        event = factory.get_event_from_seq_event(seq_event)
+                        event = self.factory.get_event_from_seq_event(seq_event)
                         if None != event:
-                            print('Event recognized as: %s'%(event))
+                            print('\n** %s => %s'%(origin, event))
                         else:
-                            print('could not build event from response')
+                            print('\n** Could not build event from %s'\
+                                  %(seq_event))
+                            if seq_event.type == alsaseq.SEQ_EVENT_SYSEX:
+                                event = JStationSysExEvent(seq_event=seq_event)
+                                print('\tproduct: %d/%d, channel:%d, '\
+                                      'procedure: x%02x'\
+                                      %(event.manufacturer_id, event.product_id,
+                                        event.channel, event.procedure_id))
 
                         if forward_event:
                             seq_event.dest = (jstation_cid, jstation_in_port)

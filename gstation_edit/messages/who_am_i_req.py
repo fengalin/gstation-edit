@@ -17,30 +17,44 @@
 # You should have received a copy of the GNU General Public License along
 # with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from .jstation_sysex_req import *
+from .jstation_sysex_event import *
 
-class WhoAmIRequest(JStationSysExRequest):
+class WhoAmIRequest(JStationSysExEvent):
+    PROCEDURE_ID = 0x40
+    VERSION = 1
+
     RESP_ON_CHANNEL = 0
     RESP_ON_7f = 1
 
-    def __init__(self, channel_id=JStationSysExRequest.ALL_CHANNELS):
-        JStationSysExRequest.__init__(self, channel_id=channel_id,
-                                      procedure_id=0x40, version=1)
+    def __init__(self, channel=JStationSysExEvent.ALL_CHANNELS, seq_event=None):
+        JStationSysExEvent.__init__(self, channel, seq_event)
         self.response_on = self.RESP_ON_7f
 
+        if self.is_valid:
+            if len(self.data_buffer) >= 2:
+                self.response_on = self.read_next_bytes(2)
+                self.is_valid = True
+            else:
+                print('Data buffer is too short to get response_on_7f')
+                self.is_valid = False
+
+
+    # Build to send
     def build_data_buffer(self):
-        JStationSysExRequest.build_data_buffer(self)
+        JStationSysExEvent.build_data_buffer(self)
         if self.is_valid:
             if 0 < len(self.data_buffer):
                 if self.RESP_ON_CHANNEL == self.response_on or \
                         self.RESP_ON_7f == self.response_on:
-                    self.data_buffer += self.get_split_bytes_from_value(self.response_on)
+                    self.data_buffer += \
+                        self.helper.get_split_bytes_from_value(self.response_on)
                     self.is_valid = True
                 else:
                     self.data_buffer = list()
                     self.is_valid = False
                     print('Response on not defined for ReqWhoAmI SysEx')
 
+    # Common
     def __str__(self):
-        return "%s, response on %d"%(self.JStationSysExRequest.__str__(self),
+        return "%s, response on: %d"%(JStationSysExEvent.__str__(self),
                                      self.response_on)

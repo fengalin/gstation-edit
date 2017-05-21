@@ -18,8 +18,26 @@
 # with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from pyalsa import alsaseq
+from .event_resp_factory import *
 
 class MidiEvent(object):
+    class __metaclass__(type):
+        def __init__(class_, name, bases, dict):
+            MidiEventFactory.register_midi_event(class_, bases)
+
+    # class memeber
+    callbacks = dict()
+
+    @classmethod
+    def register_callback(class_, callback):
+        MidiEvent.callbacks[class_.__name__] = callback
+
+    @classmethod
+    def is_event(class_, seq_event):
+        # implement in heirs
+        return False
+
+
     def __init__(self, event_type=-1, seq_event=None):
         self.is_valid = False
         self.seq_event = seq_event
@@ -40,4 +58,11 @@ class MidiEvent(object):
             print('event is not valid (did you call fill_seq_event ?)')
             # TODO: raise something ?
             return dict()
+
+    def process(self):
+        callback = MidiEvent.callbacks.get(self.__class__.__name__)
+        if None != callback:
+            callback(self)
+        else:
+            print('Couldn''t find callback for %s'%(self.__class__.__name__))
 

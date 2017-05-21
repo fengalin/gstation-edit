@@ -21,7 +21,7 @@ from gstation_edit.jstation_interface import *
 
 def test():
     print('\n==== JStationInterface test')
-    jstation_interface = JStationInterface(None)
+    jstation_interface = JStationInterface('JStationInterface test', None)
     jstation_interface.get_clients()
     for midi_port in jstation_interface.midi_in_ports:
         print(midi_port)

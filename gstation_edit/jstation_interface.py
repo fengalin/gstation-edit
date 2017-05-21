@@ -26,20 +26,30 @@ from .midi.event_resp_factory import *
 from .midi.cc_event import *
 from .midi.prg_change_event import *
 
-from .messages.who_am_i_req import *
-from .messages.utility_settings_req import *
-from .messages.bank_dump_req import *
-from .messages.receive_prg_update_req import *
-from .messages.request_prg_update_req import *
 
-from .messages.who_am_i_resp import *
-from .messages.utility_settings_resp import *
-from .messages.start_bank_dump_resp import *
-from .messages.prg_indices_resp import *
-from .messages.one_prg_resp import *
+from .messages.jstation_sysex_event import *
+
+from .messages.bank_dump_req import *
 from .messages.end_bank_dump_resp import *
+
+from .messages.one_prg_resp import *
+
+from .messages.prg_indices_req import *
+from .messages.prg_indices_resp import *
+
+from .messages.receive_prg_update import *
+from .messages.request_prg_update import *
+
+from .messages.start_bank_dump_resp import *
+
 from .messages.to_msg_resp import *
-from .messages.receive_prg_update_resp import *
+
+from .messages.utility_settings_req import *
+from .messages.utility_settings_resp import *
+
+from .messages.who_am_i_req import *
+from .messages.who_am_i_resp import *
+
 
 class JStationInterface:
     WAIT_SHUTDOWN_TIMEOUT = 1000 # ms - this one determines the longest period
@@ -47,18 +57,32 @@ class JStationInterface:
     RESPONSE_TIMEOUT = 2 # s
 
     def __init__(self, app_name, main_window):
-        # instanciate response events in order for them to be available to the factory
-        # and define the callback function for processing
-        CCMidiEvent(callback=self.one_parameter_cc_callback)
-        PrgChangeEvent(callback=self.program_change_callback )
-        WhoAmIResponse(callback=self.who_am_i_callback)
-        UtilitySettingsResponse(callback=self.utility_settings_callback)
-        StartBankDumpResponse(callback=self.default_event_callback)
-        PRGIndicesResponse(callback=self.program_indices_callback)
-        OneProgramResponse(callback=self.one_program_callback)
-        EndBankDumpResponse(callback=self.end_bank_dump_callback)
-        ToMessageResponse(callback=self.response_to_message_callback)
-        ReceiveProgramUpdateResponse(callback=self.program_update_response)
+        self.factory = MidiEventFactory()
+
+        CCMidiEvent.register_callback(self.one_parameter_cc_callback)
+        PrgChangeEvent.register_callback(self.program_change_callback)
+
+        BankDumpRequest.register_callback(None)
+        EndBankDumpResponse.register_callback(self.end_bank_dump_callback)
+
+        OneProgramResponse.register_callback(self.one_program_callback)
+
+        PRGIndicesRequest.register_callback(None)
+        PRGIndicesResponse.register_callback(self.program_indices_callback)
+
+        ReceiveProgramUpdate.register_callback(self.program_update_response)
+        RequestProgramUpdate.register_callback(None)
+
+        StartBankDumpResponse.register_callback(self.default_event_callback)
+
+        ToMessageResponse.register_callback(self.response_to_message_callback)
+
+        UtilitySettingsRequest.register_callback(None)
+        UtilitySettingsResponse.register_callback(self.utility_settings_callback)
+
+        WhoAmIRequest.register_callback(self.who_am_i_callback_req)
+        WhoAmIResponse.register_callback(self.who_am_i_callback)
+
 
         self.is_connected = False
         self.is_disconnecting = Event()
@@ -172,21 +196,22 @@ class JStationInterface:
 
     def req_bank_dump(self):
         if self.is_connected:
-            self.send_event(BankDumpRequest(self.sysex_channel))
+            self.send_event(BankDumpRequest(channel=self.sysex_channel))
         else:
             print('req_bank_dump canceled: not connected')
 
     def req_program_update_req(self):
-        # TODO: find out the exact meaning since the name is too close to the next one
         if self.is_connected:
-            self.send_event(RequestProgramUpdateRequest(self.sysex_channel))
+            self.send_event(RequestProgramUpdate(channel=self.sysex_channel))
         else:
             print('req_program_update_req canceled: not connected')
 
     def req_program_update(self, program):
         if self.is_connected:
             self.is_response_received_cndt.acquire()
-            self.send_event(ReceiveProgramUpdateRequest(program, self.sysex_channel))
+            self.send_event(ReceiveProgramUpdate(program=program,
+                                                 channel=self.sysex_channel)
+            )
             self.is_response_received_cndt.wait(self.RESPONSE_TIMEOUT)
             self.is_response_received_cndt.release()
         else:
@@ -196,13 +221,14 @@ class JStationInterface:
         if self.is_connected:
             # TODO: parameter is not set for PrgChangeEvent =>
             #       maybe CCMidiEvent and PrgChangeEvent classes should be swapped
-            self.send_event(PrgChangeEvent(self.receive_channel, 0, program_nb))
+            self.send_event(PrgChangeEvent(channel=self.receive_channel,
+                                           param=0,
+                                           value=program_nb))
         else:
             print('req_program_change: not connected')
 
 
     def wait_for_events(self):
-        factory = MidiEventResponseFactory()
         event_list = list()
         while not self.is_disconnecting.is_set():
             event_list = self.seq.receive_events(self.WAIT_SHUTDOWN_TIMEOUT, 1)
@@ -210,12 +236,18 @@ class JStationInterface:
                 for seq_event in event_list:
                     if None != seq_event:
 #                        print('==> Event from JStation: %s'%(seq_event))
-                        event = factory.get_event_from_seq_event(seq_event)
+                        event = self.factory.get_event_from_seq_event(seq_event)
                         if None != event:
-#                            print('Event recognized as: %s'%(event))
+#                            print('\t%s'%(event))
                             event.process()
                         else:
-                            print('could not build event from response')
+                            print('\tCould not build event')
+                            if seq_event.type == alsaseq.SEQ_EVENT_SYSEX:
+                                event = JStationSysExEvent(seq_event=seq_event)
+                                print('\tproduct: %d/%d, channel:%d, '\
+                                      'procedure: x%02x'\
+                                      %(event.manufacturer_id, event.product_id,
+                                        event.channel, event.procedure_id))
                     else:
                         print('seq event is null')
                 event_list = list()
@@ -227,6 +259,10 @@ class JStationInterface:
             pass
         else:
             print('event is invalid %s'%(event))
+
+    def who_am_i_callback_req(self, event):
+#        print('Received WhoAmIRequest: am I calling myself?')
+        pass
 
     def who_am_i_callback(self, event):
         self.default_event_callback(event)
@@ -253,7 +289,7 @@ class JStationInterface:
 
     def one_program_callback(self, event):
         self.default_event_callback(event)
-        self.main_window.receive_program_from_jstation(event.prg)
+        self.main_window.receive_program_from_jstation(event.program)
 
     def end_bank_dump_callback(self, event):
         self.default_event_callback(event)
@@ -273,7 +309,7 @@ class JStationInterface:
     def program_update_response(self, event):
         self.default_event_callback(event)
         # TODO: handle has changed also
-        self.main_window.select_program_from_its_content(event.prg)
+        self.main_window.select_program_from_its_content(event.program)
 
     def response_to_message_callback(self, event):
         self.is_response_received_cndt.acquire()

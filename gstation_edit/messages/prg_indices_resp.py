@@ -17,28 +17,37 @@
 # You should have received a copy of the GNU General Public License along
 # with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from .jstation_sysex_resp import *
+from .jstation_sysex_event import *
 
-class PRGIndicesResponse(JStationSysExResponse):
+class PRGIndicesResponse(JStationSysExEvent):
     PROCEDURE_ID = 0x14
-    PRG_INDICES_POS = 12
+    VERSION = 1
 
-    def __init__(self, callback=None, seq_event=None):
-        JStationSysExResponse.__init__(self, callback=callback, seq_event=seq_event)
+    def __init__(self, channel=-1, seq_event=None):
+        JStationSysExEvent.__init__(self, channel, seq_event)
+
         self.prg_indices = list()
         if self.is_valid:
-            data_length = self.get_count()
-            index = 0
-            while index < data_length:
-                pos = self.PRG_INDICES_POS + 2*index
-                self.prg_indices.append(self.get_value_from_split_bytes(
-                                            self.data_buffer[pos : pos+2]
-                                        )
-                )
-                index += 1
-            self.is_valid = True
+            data_length = self.read_next_bytes(4)
+
+            if len(self.data_buffer)-4 >= data_length:
+                while self.data_index < data_length:
+                    self.prg_indices.append(self.read_next_bytes(2))
+                self.is_valid = True
+            else:
+                self.is_valid = False
+                data_buffer = None
+                print('Inconsistent data len declared (%d) '\
+                      'and left for data (%d)'%(data_len,
+                                                len(self.data_buffer)-4))
+
+
+    # Build to send
+    def build_data_buffer(self):
+        print('Not implemented yet')
+
 
     def __str__(self):
-        return "%s, prg indexes: %s"%(JStationSysExResponse.__str__(self),
+        return "%s, prg indices: %s"%(JStationSysExEvent.__str__(self),
                                       str(self.prg_indices))
 

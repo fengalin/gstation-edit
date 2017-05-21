@@ -17,15 +17,47 @@
 # You should have received a copy of the GNU General Public License along
 # with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+from ..midi.split_bytes import *
+
 class Program:
-    def __init__(self, bank, number, data, name):
+    PROGRAM_BUFFER_LEN = 88
+
+    def __init__(self, bank=-1, number=-1, data=None, name="",
+                 data_buffer=None, has_changed=False):
+        self.helper = SplitBytesHelpher()
+
         self.bank = bank
         self.number = number
         self.original_data = data
-        self.data = list(data)
         self.original_name = name
-        self.name = str(name)
-        self.has_changed = False
+
+        if data_buffer != None:
+            self.original_data = list()
+            index = 0
+            while index < self.PROGRAM_BUFFER_LEN:
+                self.original_data.append(
+                    self.helper.get_value_from_split_bytes(
+                        data_buffer[index : index+2]
+                    )
+                )
+                index += 2
+
+            self.original_name = ''
+            index = self.PROGRAM_BUFFER_LEN
+            while index < len(data_buffer):
+                value = self.helper.get_value_from_split_bytes(
+                        data_buffer[index : index+2]
+                    )
+                if 0 != value:
+                    self.original_name += chr(value)
+                else:
+                    break
+                index += 2
+
+        self.data = list(self.original_data)
+        self.name = str(self.original_name)
+        self.has_changed = has_changed
+
 
     def change_parameter(self, parameter_nb, value):
         if self.data[parameter_nb] != value:

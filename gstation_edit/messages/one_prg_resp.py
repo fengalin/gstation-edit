@@ -17,34 +17,39 @@
 # You should have received a copy of the GNU General Public License along
 # with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from .prg_resp import *
+from .jstation_sysex_event import *
+from .program import *
 
-class OneProgramResponse(ProgramResponse):
+class OneProgramResponse(JStationSysExEvent):
     PROCEDURE_ID = 0x02
-    PRG_BANK_POS = 8
-    PRG_NUMBER_POS = 10
-    COUNT_POS = 12
-    PRG_DATA_POS = 16
-    PRG_DATA_LEN = 44
-    PRG_NAME_POS = 104
+    VERSION = 1
 
-    def __init__(self, callback=None, seq_event=None):
-        ProgramResponse.__init__(self, callback=callback, seq_event=seq_event)
+    def __init__(self, channel=-1, program=None, seq_event=None):
+        JStationSysExEvent.__init__(self, channel, seq_event)
+
+        self.program = program
+
         if self.is_valid:
-            if self.PRG_DATA_POS < len(self.data_buffer):
-                bank = self.get_value_from_split_bytes(
-                   self.data_buffer[self.PRG_BANK_POS : self.PRG_BANK_POS+2]
-                )
-                number = self.get_value_from_split_bytes(
-                    self.data_buffer[self.PRG_NUMBER_POS : self.PRG_NUMBER_POS+2]
-                )
+            bank = self.read_next_bytes(2)
+            number = self.read_next_bytes(2)
+            prg_data_len = self.read_next_bytes(4)
 
-                self.init_program(bank, number)
-            else:
-                print('Data buffer is too short for message OneProgramResponse')
+            prg_data = None
+            prg_data = self.data_buffer[self.data_index:]
+            if len(prg_data) < prg_data_len:
                 self.is_valid = False
+                prg_data = None
+                print('Inconsistent prg len declared (%d) '\
+                      'and available (%d)'%(prg_data_len, len(prg_data)))
+
+            self.program = Program(bank, number, data_buffer=prg_data)
+
+
+    # Build to send
+    def build_data_buffer(self):
+        print('Not implemented yet')
 
 
     def __str__(self):
-        return "%s, %s"%(ProgramResponse.__str__(self), self.prg.__str__())
+        return "%s, %s"%(JStationSysExEvent.__str__(self), self.program)
 

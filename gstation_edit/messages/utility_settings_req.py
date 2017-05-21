@@ -17,9 +17,13 @@
 # You should have received a copy of the GNU General Public License along
 # with this program.    If not, see <http://www.gnu.org/licenses/>.
 
-from .jstation_sysex_req import *
+from .jstation_sysex_event import *
 
-class UtilitySettingsRequest(JStationSysExRequest):
-    def __init__(self, channel_id=0):
-        JStationSysExRequest.__init__(self, channel_id=channel_id,
-                                      procedure_id=0x11, version=1)
+class UtilitySettingsRequest(JStationSysExEvent):
+    PROCEDURE_ID = 0x11
+    VERSION = 1
+
+    def __init__(self, channel=-1, seq_event=None):
+        JStationSysExEvent.__init__(self, channel=channel, seq_event=seq_event)
+
+    # Build to send defined in JStationSysExEvent

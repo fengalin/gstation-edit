@@ -17,33 +17,53 @@
 # You should have received a copy of the GNU General Public License along
 # with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from .jstation_sysex_resp import *
+from .jstation_sysex_event import *
 
-class ToMessageResponse(JStationSysExResponse):
+class ToMessageResponse(JStationSysExEvent):
     PROCEDURE_ID = 0x7f
-    EXPECTED_DATA_LEN = 2
-    REQ_PROCEDURE_POS = 8
-    ERROR_CODE_POS = 10
+    VERSION = 1
+
+    ERRORS = {
+         0: 'OK',
+         1: 'Error Unknown Procedure Id',
+         2: 'Invalid Procedure Version',
+         3: 'Sysx Message Checksum Error',
+         4: 'Sysx Request Wrong Size',
+         5: 'Midi Over Run Error',
+         6: 'Invalid Program Number',
+         7: 'Invalid User Program Number',
+         8: 'Invalid Bank Number',
+         9: 'Wrong Data Count',
+        10: 'Unknown Os Command',
+        11: 'Wrong Mode for Os Command'
+    }
 
     # TODO: there is no response length in this message => bypass it in base class
 
-    def __init__(self, callback=None, seq_event=None):
-        JStationSysExResponse.__init__(self, callback, seq_event=seq_event)
-        self.req_procedure = -1
-        self.error_code = -1
+    def __init__(self, channel=-1, seq_event=None,
+                 req_procedure=-1, error_code=-1):
+        JStationSysExEvent.__init__(self, channel, seq_event)
+        self.req_procedure = req_procedure
+        self.error_code = error_code
+        self.error_msg = ''
 
         if self.is_valid:
             # no length in this message
-            self.req_procedure = self.get_value_from_split_bytes(
-                self.data_buffer[self.REQ_PROCEDURE_POS : self.REQ_PROCEDURE_POS+2]
-            )
-            self.error_code = self.get_value_from_split_bytes(
-                self.data_buffer[self.ERROR_CODE_POS : self.ERROR_CODE_POS+2]
-            )
+            self.req_procedure = self.read_next_bytes(2)
+            self.error_code = self.read_next_bytes(2)
+            self.error_msg = self.ERRORS.get(self.error_code)
+            if self.error_msg == None:
+                 self.error_msg = '*Unknown code*'
             self.is_valid = True
 
+
+    # Build to send
+    def build_data_buffer(self):
+        print('Not implemented yet')
+
+
     def __str__(self):
-        return "%s, request procedure: x%02x, error code: %d"\
-                %(JStationSysExResponse.__str__(self),
-                  self.req_procedure, self.error_code)
+        return '%s, request procedure: x%02x, message: %s (%d)'\
+                %(JStationSysExEvent.__str__(self),
+                  self.req_procedure, self.error_msg, self.error_code)
 

@@ -17,29 +17,33 @@
 # You should have received a copy of the GNU General Public License along
 # with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from .jstation_sysex_resp import *
+from .jstation_sysex_event import *
 
-class StartBankDumpResponse(JStationSysExResponse):
+class StartBankDumpResponse(JStationSysExEvent):
     PROCEDURE_ID = 0x25
-    EXPECTED_DATA_LEN = 2
-    TOTAL_LEN_POS = 12
-    TOTAL_LEN_END = 16
+    VERSION = 1
 
-    def __init__(self, callback=None, seq_event=None):
-        JStationSysExResponse.__init__(self, callback=callback, seq_event=seq_event)
-        self.total_length = -1
+    def __init__(self, channel=-1, seq_event=None, total_length=-1):
+        JStationSysExEvent.__init__(self, channel, seq_event)
+        self.total_length = total_length
 
         if self.is_valid:
-            data_length = self.get_count()
-            if self.EXPECTED_DATA_LEN == data_length:
-                self.total_length = self.get_value_from_split_bytes(
-                    self.data_buffer[self.TOTAL_LEN_POS : self.TOTAL_LEN_END]
-                )
+            data_length = self.read_next_bytes(4)
+            remaining_len = len(self.data_buffer) - 4
+            if remaining_len >= data_length:
+                self.total_length = self.read_next_bytes(data_length)
                 self.is_valid = True
             else:
-                print('Incorrect data length %d within WhoAmIResponse'%(data_length))
-                self.is_valid = False
+                print('Incorrect data buffer with len %d. Expecting %d'\
+                      %(remaining_len, data_length))
+                self.m_is_valid = False
+
+
+    # Build to send
+    def build_data_buffer(self):
+        print('Not implemented yet')
+
 
     def __str__(self):
-        return "%s, total length: %d"%(JStationSysExResponse.__str__(self),
+        return "%s, total length: %d"%(JStationSysExEvent.__str__(self),
                                        self.total_length)

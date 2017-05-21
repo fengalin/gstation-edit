@@ -17,58 +17,43 @@
 # You should have received a copy of the GNU General Public License along
 # with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from .jstation_sysex_resp import *
+from .jstation_sysex_event import *
 
-class UtilitySettingsResponse(JStationSysExResponse):
+class UtilitySettingsResponse(JStationSysExEvent):
     PROCEDURE_ID = 0x12
-    EXPECTED_DATA_LEN = 6
-    STEREO_MONO_POS = 12
-    DRY_TRACK_POS = 14
-    DIGITAL_OUT_LEVEL_POS = 16
-    GLOBAL_CABINET_POS = 18
-    MIDI_MERGE_POS = 20
-    MIDI_CHANNEL_POS = 22
+    VERSION = 1
 
-    def __init__(self, callback=None, seq_event=None):
-        JStationSysExResponse.__init__(self, callback, seq_event=seq_event)
-        self.stereo_mono = -1
-        self.dry_track = -1
-        self.digital_out_level = -1
-        self.global_cabinet = -1
-        self.midi_merge = -1
-        self.midi_channel = -1
+    def __init__(self, channel=-1, seq_event=None,
+                 stereo_mono=-1, dry_track=-1, digital_out_level=-1,
+                 global_cabinet=-1, midi_merge=-1, midi_channel=-1):
+        JStationSysExEvent.__init__(self, channel, seq_event)
+        self.stereo_mono = stereo_mono
+        self.dry_track = dry_track
+        self.digital_out_level = digital_out_level
+        self.global_cabinet = global_cabinet
+        self.midi_merge = midi_merge
+        self.midi_channel = midi_channel
 
         if self.is_valid:
-            data_length = self.get_count()
-            if self.EXPECTED_DATA_LEN == data_length:
-                self.stereo_mono = self.get_value_from_split_bytes(
-                    self.data_buffer[self.STEREO_MONO_POS : self.STEREO_MONO_POS+2]
-                )
-                self.dry_track = self.get_value_from_split_bytes(
-                    self.data_buffer[self.DRY_TRACK_POS : self.DRY_TRACK_POS+2]
-                )
-                self.digital_out_level = self.get_value_from_split_bytes(
-                    self.data_buffer[self.DIGITAL_OUT_LEVEL_POS : self.DIGITAL_OUT_LEVEL_POS+2]
-                )
-                self.global_cabinet = self.get_value_from_split_bytes(
-                    self.data_buffer[self.GLOBAL_CABINET_POS : self.GLOBAL_CABINET_POS+2]
-                )
-                self.midi_merge = self.get_value_from_split_bytes(
-                    self.data_buffer[self.MIDI_MERGE_POS : self.MIDI_MERGE_POS+2]
-                )
-                self.midi_channel = self.get_value_from_split_bytes(
-                    self.data_buffer[self.MIDI_CHANNEL_POS : self.MIDI_CHANNEL_POS+2]
-                )
+            data_length = self.read_next_bytes(4)
+            if len(self.data_buffer)-4 >= data_length:
+                self.stereo_mono = self.read_next_bytes(2)
+                self.dry_track = self.read_next_bytes(2)
+                self.digital_out_level = self.read_next_bytes(2)
+                self.global_cabinet = self.read_next_bytes(2)
+                self.midi_merge = self.read_next_bytes(2)
+                self.midi_channel = self.read_next_bytes(2)
                 self.is_valid = True
             else:
-                print('Incorrect data length %d within WhoAmIResponse'%(data_length))
+                print('Incorrect data buffer with len %d. Expecting %d'\
+                      %(len(self.data_buffer)-4), data_length)
                 self.m_is_valid = False
 
     def __str__( self ):
         return "%s, stereo mono: %d, dry track: %d, "\
                 "digital out level: %d, global cabinet: %d, "\
                 "midi merge: %d, midi channel: %d"\
-                %(JStationSysExResponse.__str__(self),
+                %(JStationSysExEvent.__str__(self),
                   self.stereo_mono, self.dry_track,
                   self.digital_out_level, self.global_cabinet,
                   self.midi_merge, self.midi_channel)
