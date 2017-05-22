@@ -1,5 +1,5 @@
-from test import event_resp_factory
-event_resp_factory.test()
+from test import event_factory
+event_factory.test()
 
 from test import split_bytes
 split_bytes.test()

@@ -20,7 +20,15 @@
 from pyalsa import alsaseq
 
 from .cc_event import *
+from .event_factory import *
 
 class PrgChangeEvent(CCMidiEvent):
     EVENT_TYPE = alsaseq.SEQ_EVENT_PGMCHANGE
 
+    @classmethod
+    def register_event_type_builder(class_):
+        MidiEventFactory.register_event_type_builder(PrgChangeEvent)
+
+    @classmethod
+    def build_from_seq_event(class_, seq_event):
+        return PrgChangeEvent(seq_event=seq_event)

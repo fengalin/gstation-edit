@@ -18,23 +18,33 @@
 # with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 class MidiEventFactory:
-    event_classes = list()
+    event_type_builder_classes = dict()
 
     def __init__(self):
         pass
 
-    def register_midi_event(self_class, midi_event_class, bases):
-#        print('Registering: %s'%(midi_event_class))
-        self_class.event_classes.append(midi_event_class)
-    register_midi_event = classmethod(register_midi_event)
+    @classmethod
+    def register_event_type_builder(self_class, event_type_class):
+#        print('Registering MIDI  event type builder: %s'%(event_type_class))
+        MidiEventFactory.event_type_builder_classes[
+                event_type_class.EVENT_TYPE.real
+            ] = event_type_class
 
-    def get_event_from_seq_event(self, seq_event):
+
+    @classmethod
+    def build_from_seq_event(class_, seq_event):
         result = None
         if None != seq_event:
 #            print('Received event with type %d'%(seq_event.type))
-            for event_class in self.event_classes:
-                if event_class.is_event(seq_event):
-#                    print('Event recognized as: %s'%(l_event_class.__name__))
-                    result = event_class(seq_event=seq_event)
-                    break
+            event_type_builder = MidiEventFactory.\
+                event_type_builder_classes.get(seq_event.type.real)
+            if event_type_builder != None:
+                result = event_type_builder.build_from_seq_event(seq_event)
+                if result != None:
+#                    print('Event identified as: %s'%(result))
+                    pass
+                else:
+                    print('Couldn\'t identify event: %s'%(seq_event))
+            else:
+                print('Unknown event type for: %s'%(seq_event))
         return result

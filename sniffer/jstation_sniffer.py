@@ -40,9 +40,9 @@ class JStationSniffer(JStationInterface):
                 self.jstation_wait_for_events_thread.join()
                 self.jstation_wait_for_events_thread = None
                 self.is_disconnecting.clear()
-                print('terminated j-station connection event loop')
+                print('Terminated J-Station connection event loop')
 
-            print('\nLaunching sniffer event loop')
+            print('\nSniffing events...')
             self.jstation_wait_for_events_thread = Thread(
                 target = self.sniff_events,
                 name = 'sniff events'
@@ -68,18 +68,12 @@ class JStationSniffer(JStationInterface):
                             origin = 'J-Edit'
                             forward_event = True
 
-                        event = self.factory.get_event_from_seq_event(seq_event)
+                        event = self.factory.build_from_seq_event(seq_event)
                         if None != event:
                             print('\n** %s => %s'%(origin, event))
                         else:
-                            print('\n** Could not build event from %s'\
-                                  %(seq_event))
-                            if seq_event.type == alsaseq.SEQ_EVENT_SYSEX:
-                                event = JStationSysExEvent(seq_event=seq_event)
-                                print('\tproduct: %d/%d, channel:%d, '\
-                                      'procedure: x%02x'\
-                                      %(event.manufacturer_id, event.product_id,
-                                        event.channel, event.procedure_id))
+#                            print('\n** Could not build event')
+                            pass
 
                         if forward_event:
                             seq_event.dest = (jstation_cid, jstation_in_port)

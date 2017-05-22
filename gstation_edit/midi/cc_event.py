@@ -20,6 +20,7 @@
 from pyalsa import alsaseq
 
 from .event import *
+from .event_factory import *
 
 class CCMidiEvent(MidiEvent):
     EVENT_TYPE = alsaseq.SEQ_EVENT_CONTROLLER
@@ -28,11 +29,12 @@ class CCMidiEvent(MidiEvent):
     VALUE_KEY = 'control.value'
 
     @classmethod
-    def is_event(class_, seq_event):
-        result = False
-        if class_.EVENT_TYPE == seq_event.type:
-            result = True
-        return result
+    def register_event_type_builder(class_):
+        MidiEventFactory.register_event_type_builder(CCMidiEvent)
+
+    @classmethod
+    def build_from_seq_event(class_, seq_event):
+        return CCMidiEvent(seq_event=seq_event)
 
 
     def __init__(self, channel=-1, param=-1, value=-1, seq_event=None):
@@ -73,8 +75,9 @@ class CCMidiEvent(MidiEvent):
         MidiEvent.fill_seq_event(self)
         if 0 <= self.channel and 0 <= self.param and 0 <= self.value:
             event_data = dict()
+            if self.param != -1:
+                event_data[self.PARAM_KEY] = self.param
             event_data[self.CHANNEL_KEY] = self.channel
-            event_data[self.PARAM_KEY] = self.param
             event_data[self.VALUE_KEY] = self.value
             self.seq_event.set_data(event_data)
             self.is_valid = True

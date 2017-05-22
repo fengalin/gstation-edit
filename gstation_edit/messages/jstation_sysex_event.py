@@ -18,6 +18,7 @@
 # with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from ..midi.sysex_event import *
+from ..midi.event_factory import *
 from ..midi.split_bytes import *
 
 class JStationSysExEvent(SysExMidiEvent):
@@ -33,34 +34,44 @@ class JStationSysExEvent(SysExMidiEvent):
     VERSION = -1 # TO BE DEFINED IN HEIRS
 
 
+    event_classes = dict()
+
     @classmethod
-    def is_event(class_, seq_event):
-        result = False
-        if SysExMidiEvent.EVENT_TYPE == seq_event.type:
-            sys_ex_data = seq_event.get_data().get(SysExMidiEvent.SYSEX_DATA_KEY)
-            if None != sys_ex_data:
-                if class_.PROCEDURE_ID_POS < len(sys_ex_data):
-                    if class_.PROCEDURE_ID == \
-                            sys_ex_data[JStationSysExEvent.PROCEDURE_ID_POS]:
-                        # matching procedure id
-                        #print("%s: found matching procecdure id"%(class_))
-                        result = True
-                    else:
-                        #print("%s: procecdure id msimatch: %d / %d"\
-                        #      %(class_,
-                        #        sys_ex_data[JStationSysExEvent.PROCEDURE_ID_POS],
-                        #        class_.PROCEDURE_ID))
-                        pass
-                else:
-                    #print("%s: sysex data too short to read procecdure id"%(class_))
-                    pass
+    def register_event_type_builder(class_):
+        MidiEventFactory.register_event_type_builder(JStationSysExEvent)
+
+    @classmethod
+    def register(class_, callback=None):
+        JStationSysExEvent.event_classes[class_.PROCEDURE_ID] = class_
+        if callback != None:
+            MidiEvent.callbacks[class_.__name__] = callback
+
+    @classmethod
+    def build_from_seq_event(class_, seq_event):
+        result = None
+        # assert: seq_event.type == SysExMidiEvent.EVENT_TYPE
+        sys_ex_data = seq_event.get_data().get(SysExMidiEvent.SYSEX_DATA_KEY)
+        if None != sys_ex_data:
+            if JStationSysExEvent.PROCEDURE_ID_POS < len(sys_ex_data):
+                proc_id = sys_ex_data[JStationSysExEvent.PROCEDURE_ID_POS]
+
+                event_class = JStationSysExEvent.event_classes.get(proc_id)
+                if event_class != None:
+                    result = JStationSysExEvent.\
+                            event_classes[proc_id](seq_event=seq_event)
+
+                if result == None:
+                    event = JStationSysExEvent(seq_event=seq_event)
+                    print('\n!! Unknown sysex event received: '\
+                          'product: %d/%d, channel:%d, procedure: x%02x'\
+                          %(event.manufacturer_id, event.product_id,
+                            event.channel, event.procedure_id))
             else:
-                #print("%s: couldn't sysex data key: %d"%(class_))
-                pass
+                print('Sysex data too short to read procecdure id: %s'\
+                      %(sys_ex_data))
         else:
-            #print("%s: doesn't match event with type: %d"%(class_,
-            #                                               seq_event.type))
-            pass
+            print('Couldn\'t find sysex data key in seq event: %s'%(seq_event))
+
         return result
 
 
@@ -86,6 +97,10 @@ class JStationSysExEvent(SysExMidiEvent):
                 if 3 < len_sysex_data:
                     if self.SYSEX_DATA_START == sysex_data[0] and \
                             self.SYSEX_DATA_END == sysex_data[len_sysex_data-1]:
+                        # Note: if this first part is common to all sysex
+                        # events, it should be moved to SysExMidiEvent along
+                        # with the factory stuff above
+
                         # get the actual buffer and check sum
                         check_sum = sysex_data[len_sysex_data-2]
                         self.data_buffer = sysex_data[1: len_sysex_data-2]

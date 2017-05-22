@@ -21,16 +21,13 @@ from pyalsa import alsaseq
 from .event_resp_factory import *
 
 class MidiEvent(object):
-    class __metaclass__(type):
-        def __init__(class_, name, bases, dict):
-            MidiEventFactory.register_midi_event(class_, bases)
-
     # class memeber
     callbacks = dict()
 
     @classmethod
-    def register_callback(class_, callback):
-        MidiEvent.callbacks[class_.__name__] = callback
+    def register(class_, callback=None):
+        if callback != None:
+            MidiEvent.callbacks[class_.__name__] = callback
 
     @classmethod
     def is_event(class_, seq_event):

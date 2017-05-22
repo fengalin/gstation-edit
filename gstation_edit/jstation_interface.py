@@ -22,7 +22,7 @@ from threading import Thread, Event, Condition
 from pyalsa import alsaseq
 
 from .midi.port import *
-from .midi.event_resp_factory import *
+from .midi.event_factory import *
 from .midi.cc_event import *
 from .midi.prg_change_event import *
 
@@ -59,29 +59,34 @@ class JStationInterface:
     def __init__(self, app_name, main_window):
         self.factory = MidiEventFactory()
 
-        CCMidiEvent.register_callback(self.one_parameter_cc_callback)
-        PrgChangeEvent.register_callback(self.program_change_callback)
+        CCMidiEvent.register_event_type_builder()
+        CCMidiEvent.register(self.one_parameter_cc_callback)
 
-        BankDumpRequest.register_callback(None)
-        EndBankDumpResponse.register_callback(self.end_bank_dump_callback)
+        PrgChangeEvent.register_event_type_builder()
+        PrgChangeEvent.register(self.program_change_callback)
 
-        OneProgramResponse.register_callback(self.one_program_callback)
+        JStationSysExEvent.register_event_type_builder()
 
-        PRGIndicesRequest.register_callback(None)
-        PRGIndicesResponse.register_callback(self.program_indices_callback)
+        BankDumpRequest.register()
+        EndBankDumpResponse.register(self.end_bank_dump_callback)
 
-        ReceiveProgramUpdate.register_callback(self.program_update_response)
-        RequestProgramUpdate.register_callback(None)
+        OneProgramResponse.register(self.one_program_callback)
 
-        StartBankDumpResponse.register_callback(self.default_event_callback)
+        PRGIndicesRequest.register()
+        PRGIndicesResponse.register(self.program_indices_callback)
 
-        ToMessageResponse.register_callback(self.response_to_message_callback)
+        ReceiveProgramUpdate.register(self.program_update_response)
+        RequestProgramUpdate.register()
 
-        UtilitySettingsRequest.register_callback(None)
-        UtilitySettingsResponse.register_callback(self.utility_settings_callback)
+        StartBankDumpResponse.register(self.default_event_callback)
 
-        WhoAmIRequest.register_callback(self.who_am_i_callback_req)
-        WhoAmIResponse.register_callback(self.who_am_i_callback)
+        ToMessageResponse.register(self.response_to_message_callback)
+
+        UtilitySettingsRequest.register()
+        UtilitySettingsResponse.register(self.utility_settings_callback)
+
+        WhoAmIRequest.register(self.who_am_i_callback_req)
+        WhoAmIResponse.register(self.who_am_i_callback)
 
 
         self.is_connected = False
@@ -235,19 +240,14 @@ class JStationInterface:
             if 0 < len(event_list):
                 for seq_event in event_list:
                     if None != seq_event:
-#                        print('==> Event from JStation: %s'%(seq_event))
-                        event = self.factory.get_event_from_seq_event(seq_event)
+#                        print('==> Received event: %s'%(seq_event))
+                        event = self.factory.build_from_seq_event(seq_event)
                         if None != event:
 #                            print('\t%s'%(event))
                             event.process()
                         else:
-                            print('\tCould not build event')
-                            if seq_event.type == alsaseq.SEQ_EVENT_SYSEX:
-                                event = JStationSysExEvent(seq_event=seq_event)
-                                print('\tproduct: %d/%d, channel:%d, '\
-                                      'procedure: x%02x'\
-                                      %(event.manufacturer_id, event.product_id,
-                                        event.channel, event.procedure_id))
+#                            print('\tCould not build event')
+                            pass
                     else:
                         print('seq event is null')
                 event_list = list()
