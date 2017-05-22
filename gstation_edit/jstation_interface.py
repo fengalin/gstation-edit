@@ -177,7 +177,13 @@ class JStationInterface:
 
 
     def disconnect(self):
+        # sign off
+        for channel in range(0, 15):
+            self.send_event(CCMidiEvent(channel=channel, param=120, value=0))
+            self.send_event(CCMidiEvent(channel=channel, param=64, value=0))
+
         self.is_disconnecting.set()
+
         if None != self.jstation_wait_for_events_thread:
             # wait until waiting thread is terminated
             self.jstation_wait_for_events_thread.join()
