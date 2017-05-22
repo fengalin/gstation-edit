@@ -2450,7 +2450,6 @@
             <child>
               <object class="GtkLabel" id="midi-channel-lbl">
                 <property name="visible">True</property>
-                <property name="sensitive">False</property>
                 <property name="can_focus">False</property>
                 <property name="halign">end</property>
                 <property name="label" translatable="yes">Midi channel: </property>
@@ -2482,7 +2481,6 @@
             <child>
               <object class="GtkLabel" id="sysex-device-id-lbl">
                 <property name="visible">True</property>
-                <property name="sensitive">False</property>
                 <property name="can_focus">False</property>
                 <property name="halign">end</property>
                 <property name="label" translatable="yes">Sysex device ID: </property>
