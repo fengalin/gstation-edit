@@ -22,6 +22,8 @@ from ..midi.split_bytes import *
 class Program:
     PROGRAM_BUFFER_LEN = 88
 
+    NAME_MAX_LEN = 20 # char count
+
     def __init__(self, bank=-1, number=-1, data=None, name="",
                  data_buffer=None, has_changed=False):
         self.helper = SplitBytesHelpher()
@@ -57,6 +59,30 @@ class Program:
         self.data = list(self.original_data)
         self.name = str(self.original_name)
         self.has_changed = has_changed
+
+
+    def get_sysex_buffer(self, with_has_changed=False):
+        program_changed_flag = 0
+        if self.has_changed:
+            program_changed_flag = 1
+
+        data = list()
+        if with_has_changed:
+            data.append(program_changed_flag)
+
+        data += self.data
+
+        for index in range(0, min(len(self.name), self.NAME_MAX_LEN)):
+            data.append(ord(self.name[index]))
+        data.append(0) # 0 ending for name
+
+        sysex_buffer = list()
+        sysex_buffer += \
+            self.helper.get_split_bytes_from_value(len(data), 4)
+        for value in data:
+            sysex_buffer += self.helper.get_split_bytes_from_value(value)
+        return sysex_buffer
+
 
 
     def change_parameter(self, parameter_nb, value):
@@ -103,8 +129,9 @@ class Program:
         return result
 
     def __str__( self ):
-        return "Prg bank: %d, prg nb: %d, prg name: %s, prg data: %s"\
-                %(self.bank, self.number, self.name,
-                  ["%d: %d"%(index, self.data[index]) \
+        return 'Prg bank: %d, prg nb: %d, has_changed: %d, '\
+               'prg name: %s, prg data: %s'\
+                %(self.bank, self.number, self.has_changed, self.name,
+                  ["%02d: %02d"%(index, self.data[index]) \
                    for index in range(0, len(self.data))])
 

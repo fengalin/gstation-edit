@@ -73,9 +73,9 @@ class CCMidiEvent(MidiEvent):
 
     def fill_seq_event(self):
         MidiEvent.fill_seq_event(self)
-        if 0 <= self.channel and 0 <= self.param and 0 <= self.value:
+        if 0 <= self.channel and 0 <= self.value:
             event_data = dict()
-            if self.param != -1:
+            if self.param >= 0:
                 event_data[self.PARAM_KEY] = self.param
             event_data[self.CHANNEL_KEY] = self.channel
             event_data[self.VALUE_KEY] = self.value
@@ -83,8 +83,11 @@ class CCMidiEvent(MidiEvent):
             self.is_valid = True
 
     def __str__(self):
-        return "%s. channel: %d, param: %d, value: %d"%(self.__class__.__name__,
+        param = ''
+        if self.param >= 0:
+            param = ' param: %d,'%(self.param)
+        return "%s. channel: %d,%s value: %d"%(self.__class__.__name__,
                                                         self.channel,
-                                                        self.param,
+                                                        param,
                                                         self.value)
 

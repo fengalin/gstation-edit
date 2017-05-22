@@ -224,10 +224,7 @@ class JStationInterface:
 
     def req_program_change(self, program_nb):
         if self.is_connected:
-            # TODO: parameter is not set for PrgChangeEvent =>
-            #       maybe CCMidiEvent and PrgChangeEvent classes should be swapped
             self.send_event(PrgChangeEvent(channel=self.receive_channel,
-                                           param=0,
                                            value=program_nb))
         else:
             print('req_program_change: not connected')
@@ -249,7 +246,7 @@ class JStationInterface:
 #                            print('\tCould not build event')
                             pass
                     else:
-                        print('seq event is null')
+                        print('Seq event is null')
                 event_list = list()
             # else: no response received (timed out)
 
@@ -258,7 +255,7 @@ class JStationInterface:
 #            print('==> received %s'%(event))
             pass
         else:
-            print('event is invalid %s'%(event))
+            print('Event is invalid %s'%(event))
 
     def who_am_i_callback_req(self, event):
 #        print('Received WhoAmIRequest: am I calling myself?')
@@ -308,7 +305,7 @@ class JStationInterface:
 
     def program_update_response(self, event):
         self.default_event_callback(event)
-        # TODO: handle has changed also
+        # TODO: handle 'has changed' flag also
         self.main_window.select_program_from_its_content(event.program)
 
     def response_to_message_callback(self, event):
@@ -329,7 +326,7 @@ class JStationInterface:
 #            print('...sent')
             success = True
         else:
-            print('failed to build seq event for: %s'%(event))
+            print('Failed to build seq event for: %s'%(event))
         return success
 
     def send_command(self, command, value):

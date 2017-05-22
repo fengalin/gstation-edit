@@ -233,9 +233,9 @@ class MainWindow:
 
     def select_program_from_its_content(self, program):
         # select a program without knowing its number, but from its name and data
-        for program in self._programs.values():
-            if program.is_the_same_as(program):
-                self.select_program_from_its_number(program.number)
+        for cur_prg in self._programs.values():
+            if program.is_the_same_as(cur_prg):
+                self.select_program_from_its_number(cur_prg.number)
                 break
         if None == self._current_program:
             self.select_program_from_its_number(0)

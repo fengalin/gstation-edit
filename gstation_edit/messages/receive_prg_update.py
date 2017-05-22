@@ -31,13 +31,12 @@ class ReceiveProgramUpdate(JStationSysExEvent):
         if self.is_valid:
             prg_data_len = self.read_next_bytes(4)
 
-            prg_buffer = self.data_buffer[self.data_index:]
-            if len(prg_buffer) >= prg_data_len:
+            if len(self.data_buffer) >= 2*prg_data_len+4:
                 has_changed = False
                 if self.VERSION == 2:
-                    has_changed = self.read_next_bytes(1)
-                    prg_buffer = self.data_buffer[self.data_index:]
+                    has_changed = self.read_next_bytes(2)
 
+                prg_buffer = self.data_buffer[self.data_index:]
                 self.program = Program(data_buffer=prg_buffer,
                                        has_changed=has_changed)
                 self.is_valid = True
@@ -51,19 +50,10 @@ class ReceiveProgramUpdate(JStationSysExEvent):
     def build_data_buffer(self):
         JStationSysExEvent.build_data_buffer(self)
         if self.is_valid:
-            program_changed_flag = 0
-            if self.program.has_changed:
-                program_changed_flag = 1
-            data = list()
-            data.append(program_changed_flag)
-            data += self.program.data
-            # TODO: check name length
-            for index in range(0, len(self.program.name)):
-                data.append(ord(self.program.name[index]))
-            data.append(0) # 0 ending for name
-            self.data_buffer += self.get_sysex_buffer(data)
+            self.data_buffer += \
+                self.program.get_sysex_buffer(with_has_changed=True)
         else:
-            print('Could not build ReceiveProgramUpdateRequest')
+            print('Could not build ReceiveProgramUpdate (invalid)')
 
 
     def __str__(self):

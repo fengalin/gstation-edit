@@ -34,14 +34,7 @@ class OneProgramResponse(JStationSysExEvent):
             number = self.read_next_bytes(2)
             prg_data_len = self.read_next_bytes(4)
 
-            prg_data = None
             prg_data = self.data_buffer[self.data_index:]
-            if len(prg_data) < prg_data_len:
-                self.is_valid = False
-                prg_data = None
-                print('Inconsistent prg len declared (%d) '\
-                      'and available (%d)'%(prg_data_len, len(prg_data)))
-
             self.program = Program(bank, number, data_buffer=prg_data)
 
 
