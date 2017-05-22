@@ -25,20 +25,18 @@ class ToMessageResponse(JStationSysExEvent):
 
     ERRORS = {
          0: 'OK',
-         1: 'Error Unknown Procedure Id',
+         1: 'Unknown Procedure Id',
          2: 'Invalid Procedure Version',
-         3: 'Sysx Message Checksum Error',
-         4: 'Sysx Request Wrong Size',
-         5: 'Midi Over Run Error',
+         3: 'Sysex Message Checksum Error',
+         4: 'Sysex Request Wrong Size',
+         5: 'MIDI Overrun Error',
          6: 'Invalid Program Number',
          7: 'Invalid User Program Number',
          8: 'Invalid Bank Number',
          9: 'Wrong Data Count',
-        10: 'Unknown Os Command',
-        11: 'Wrong Mode for Os Command'
+        10: 'Unknown OS Command',
+        11: 'Wrong Mode for OS Command'
     }
-
-    # TODO: there is no response length in this message => bypass it in base class
 
     def __init__(self, channel=-1, seq_event=None,
                  req_procedure=-1, error_code=-1):
