@@ -17,9 +17,9 @@
 # You should have received a copy of the GNU General Public License along
 # with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from ..midi.sysex_event import *
-from ..midi.event_factory import *
-from ..midi.split_bytes import *
+from ..midi.sysex_event import SysExMidiEvent
+from ..midi.event_factory import MidiEventFactory
+from ..midi.split_bytes import SplitBytesHelpher
 
 class JStationSysExEvent(SysExMidiEvent):
     MANUFACTURER_ID = [0, 0, 0x10]
@@ -62,10 +62,6 @@ class JStationSysExEvent(SysExMidiEvent):
 
                 if result == None:
                     event = JStationSysExEvent(seq_event=seq_event)
-                    print('\n!! Unknown sysex event received: '\
-                          'product: %d/%d, channel:%d, procedure: x%02x'\
-                          %(event.manufacturer_id, event.product_id,
-                            event.channel, event.procedure_id))
             else:
                 print('Sysex data too short to read procecdure id: %s'\
                       %(sys_ex_data))
@@ -80,7 +76,7 @@ class JStationSysExEvent(SysExMidiEvent):
         SysExMidiEvent.__init__(self)
         self.helper = SplitBytesHelpher()
 
-        self.manufacturer_id = -1
+        self.manufacturer_id = []
         self.channel = channel
         self.product_id = -1
         self.procedure_id = -1
@@ -107,12 +103,15 @@ class JStationSysExEvent(SysExMidiEvent):
                         self.data_index = 0
 
                         if check_sum == self.get_check_sum():
-                            self.manufacturer_id = self.read_next_bytes(3)
+                            self.manufacturer_id = self.data_buffer[:3]
+                            self.data_index += 3
                             self.channel = self.read_next_bytes(1)
                             self.product_id = self.read_next_bytes(1)
                             self.procedure_id = self.read_next_bytes(1)
                             self.VERSION = self.read_next_bytes(2)
-                            self.is_valid = True
+                            if not type(self) is JStationSysExEvent:
+                                self.is_valid = True
+                            # else: couldn't instantiate a specific class
                         else:
                             print('Incorrect checksum for received sysex')
                             self.is_valid = False
@@ -168,9 +167,15 @@ class JStationSysExEvent(SysExMidiEvent):
 
     # Common
     def __str__(self):
+        product = ''
+        if self.manufacturer_id != self.MANUFACTURER_ID and \
+           self.product_id != self.PRODUCT_ID:
+            product = 'product: %s/%d '%(self.manufacturer_id, self.product_id)
+        event_type = 'Uknonw sysex'
         valid = ''
-        if not self.is_valid:
-            valid = ' - not valid'
-        return "%s (x%02x)%s. Version: %d"%(self.__class__.__name__,
-                                            self.PROCEDURE_ID, valid,
-                                            self.VERSION)
+        if not type(self) is JStationSysExEvent:
+            event_type = self.__class__.__name__
+            if not self.is_valid:
+                valid = ' - not valid'
+        return "%s%s (x%02x)%s. Version: %d"\
+                %(product, event_type, self.PROCEDURE_ID, valid, self.VERSION)

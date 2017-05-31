@@ -17,10 +17,10 @@
 # You should have received a copy of the GNU General Public License along
 # with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from ..ui_core.cbx_parameter import *
-from ..ui_core.scale_parameter import *
+from ..ui_core.cbx_parameter import CbxParameter
+from ..ui_core.scale_parameter import ScaleParameter
 
-from .rack_unit import *
+from .rack_unit import RackUnit
 
 class AmpUnit(RackUnit):
     def __init__(self, parent):
@@ -28,36 +28,36 @@ class AmpUnit(RackUnit):
 
         self._amp_modeling = CbxParameter(parent=self,
                                           name='amp-model',
+                                          cc_nb=34,
                                           parameter_nb=9,
-                                          jstation_command=34,
                                           max_value=24)
         self._cabinet = CbxParameter(parent=self,
                                      name='cabinet-type',
+                                     cc_nb=66,
                                      parameter_nb=15,
-                                     jstation_command=66,
                                      max_value=18)
         self._gain = ScaleParameter(parent=self,
                                     name='gain',
+                                    cc_nb=35,
                                     parameter_nb=10,
-                                    jstation_command=35,
                                     max_value=90)
         self._treble = ScaleParameter(parent=self,
                                       name='treble',
+                                      cc_nb=39,
                                       parameter_nb=11,
-                                      jstation_command=39,
                                       max_value=90)
         self._mid = ScaleParameter(parent=self,
                                    name='mid',
+                                   cc_nb=38,
                                    parameter_nb=12,
-                                   jstation_command=38,
                                    max_value=90)
         self._bass = ScaleParameter(parent=self,
                                     name='bass',
+                                    cc_nb=37,
                                     parameter_nb=13,
-                                    jstation_command=37,
                                     max_value=90)
         self._level = ScaleParameter(parent=self,
                                      name='level',
+                                     cc_nb=36,
                                      parameter_nb=14,
-                                     jstation_command=36,
                                      max_value=90)

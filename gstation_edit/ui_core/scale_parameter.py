@@ -21,9 +21,9 @@ from .parameter import Parameter
 
 class ScaleParameter(Parameter):
 
-    def __init__(self, parent, name, parameter_nb, jstation_command,
-                 is_sensitive=1, value=0, min_value=0, max_value=99):
-         Parameter.__init__(self, parent, name, parameter_nb, jstation_command,
+    def __init__(self, parent, name, cc_nb=-1, parameter_nb=-1, is_sensitive=1,
+                 value=0, min_value=0, max_value=99):
+         Parameter.__init__(self, parent, name, cc_nb, parameter_nb,
                             is_sensitive, value, min_value, max_value)
 
     def get_str_value(self):

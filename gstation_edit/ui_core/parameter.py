@@ -18,7 +18,7 @@
 # with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 class Parameter:
-    def __init__(self, parent, name, jstation_command, parameter_nb=-1,
+    def __init__(self, parent, name, cc_nb=-1, parameter_nb=-1,
                  is_sensitive=1, value=0, min_value=0, max_value=99,
                  auto_register=True):
         self._parent = parent
@@ -26,7 +26,7 @@ class Parameter:
         self._widget_label = None
         self.name = name
         self.parameter_nb = parameter_nb
-        self.jstation_command = jstation_command
+        self.cc_nb = cc_nb
         self.is_sensitive = is_sensitive
         self.value = value
         self.str_value = self.get_str_value()
@@ -71,10 +71,16 @@ class Parameter:
         pass
 
     def get_parameter_bindings(self):
-        return {self.parameter_nb: self}
+        result = dict()
+        if self.parameter_nb != -1:
+            result[self.parameter_nb] = self
+        return result
 
     def get_parameter_cc_bindings(self):
-        return {self.jstation_command: self}
+        result = dict()
+        if self.cc_nb != -1:
+            result[self.cc_nb] = self
+        return result
 
     def init_widget(self, gtk_builder):
         widget_label = gtk_builder.get_object(self.get_widget_label_name())
@@ -103,7 +109,7 @@ class Parameter:
             self._widget.set_value(self.value)
 
     def __str__(self):
-        return "%s: value %d, in [ %d, %d] - param %d, JStation nb %d"\
+        return "%s: value %d, in [ %d, %d] - param %d, cc nb %d"\
                 %(self.name, self.value, self.min_value, self.max_value,
-                 self.parameter_nb, self.jstation_command)
+                 self.parameter_nb, self.cc_nb)
 

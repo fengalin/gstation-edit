@@ -17,11 +17,11 @@
 # You should have received a copy of the GNU General Public License along
 # with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from ..ui_core.cbx_parameter import *
-from ..ui_core.scale_parameter import *
-from ..ui_core.btn_parameter import *
+from ..ui_core.cbx_parameter import CbxParameter
+from ..ui_core.scale_parameter import ScaleParameter
+from ..ui_core.btn_parameter import BtnParameter
 
-from .rack_unit import *
+from .rack_unit import RackUnit
 
 class DelayUnit(RackUnit):
     def __init__(self, parent):
@@ -29,31 +29,31 @@ class DelayUnit(RackUnit):
 
         self._delay_type = CbxParameter(parent=self,
                                         name='delay-type',
+                                        cc_nb=53,
                                         parameter_nb=27,
-                                        jstation_command=53,
                                         max_value=3)
         self._delay_time_course = ScaleParameter(parent=self,
                                                  name='delay-time-course',
+                                                 cc_nb=55,
                                                  parameter_nb=29,
-                                                 jstation_command=55,
                                                  max_value=30)
         self._delay_time_fine = ScaleParameter(parent=self,
                                                name='delay-time-fine',
+                                               cc_nb=56,
                                                parameter_nb=30,
-                                               jstation_command=56,
                                                max_value=99)
         self._delay_feedback = ScaleParameter(parent=self,
                                               name='delay-feedback',
+                                              cc_nb=57,
                                               parameter_nb=31,
-                                              jstation_command=57,
                                               max_value=99)
         self._delay_level = ScaleParameter(parent=self,
                                            name='delay-level',
+                                           cc_nb=54,
                                            parameter_nb=28,
-                                           jstation_command=54,
                                            max_value=99)
         self._delay_on_off_btn = BtnParameter(parent=self,
                                               name='delay',
-                                              parameter_nb=26,
-                                              jstation_command=52)
+                                              cc_nb=52,
+                                              parameter_nb=26)
 

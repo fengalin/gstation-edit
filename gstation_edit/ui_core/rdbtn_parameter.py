@@ -17,14 +17,14 @@
 # You should have received a copy of the GNU General Public License along
 # with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from .btn_parameter import *
+from .btn_parameter import BtnParameter
 
 class RdBtnParameter(BtnParameter):
-    def __init__(self, parent, name, parameter_nb, jstation_command,
+    def __init__(self, parent, name, cc_nb=-1, parameter_nb=-1,
                  is_sensitive=1, is_active=1, value=0):
         self.is_active = is_active
-        BtnParameter.__init__(self, parent, name, parameter_nb,
-                              jstation_command, is_sensitive, value)
+        BtnParameter.__init__(self, parent, name, cc_nb, parameter_nb,
+                              is_sensitive, value)
 
     def get_str_value(self):
         if 0 == self.is_active:

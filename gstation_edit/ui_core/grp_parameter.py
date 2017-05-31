@@ -17,12 +17,12 @@
 # You should have received a copy of the GNU General Public License along
 # with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from .parameter import *
+from .parameter import Parameter
 
 class GrpParameter(Parameter):
     def __init__(self, parent, name, is_active=1):
-         Parameter.__init__(self, parent, name, parameter_nb=-1,
-                            jstation_command=-1, is_sensitive=is_active)
+         Parameter.__init__(self, parent, name, cc_nb=-1, parameter_nb=-1,
+                            is_sensitive=is_active)
          self.parameters = dict()
 
     def get_widget_name(self):
@@ -61,7 +61,7 @@ class GrpParameter(Parameter):
     def add_parameter(self, parameter):
         if 0 == len(self.parameters):
             self.parameter_nb = parameter.parameter_nb
-            self.jstation_command = parameter.jstation_command
+            self.cc_nb = parameter.cc_nb
             self.value = parameter.value
         self.parameters[parameter.name] = parameter
 

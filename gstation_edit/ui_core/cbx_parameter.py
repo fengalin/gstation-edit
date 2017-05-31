@@ -17,13 +17,13 @@
 # You should have received a copy of the GNU General Public License along
 # with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from .parameter import *
+from .parameter import Parameter
 
 class CbxParameter(Parameter):
 
-    def __init__(self, parent, name, parameter_nb, jstation_command, max_value,
+    def __init__(self, parent, name, cc_nb=-1, parameter_nb=-1, max_value=-1,
                  is_sensitive=1, value=0):
-         Parameter.__init__(self, parent, name, parameter_nb, jstation_command,
+         Parameter.__init__(self, parent, name, cc_nb, parameter_nb,
                             is_sensitive, value, max_value=max_value)
 
     def get_str_value(self):

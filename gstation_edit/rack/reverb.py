@@ -17,11 +17,11 @@
 # You should have received a copy of the GNU General Public License along
 # with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from ..ui_core.cbx_parameter import *
-from ..ui_core.scale_parameter import *
-from ..ui_core.btn_parameter import *
+from ..ui_core.cbx_parameter import CbxParameter
+from ..ui_core.scale_parameter import ScaleParameter
+from ..ui_core.btn_parameter import BtnParameter
 
-from .rack_unit import *
+from .rack_unit import RackUnit
 
 class ReverbUnit(RackUnit):
     def __init__(self, parent):
@@ -29,33 +29,33 @@ class ReverbUnit(RackUnit):
 
          self._reverb_type = CbxParameter(parent=self,
                                           name='reverb-type',
+                                          cc_nb=60,
                                           parameter_nb=33,
-                                          jstation_command=60,
                                           max_value=12)
          self._reverb_diffusion = ScaleParameter(parent=self,
                                                  name='reverb-diffusion',
+                                                 cc_nb=62,
                                                  parameter_nb=35,
-                                                 jstation_command=62,
                                                  max_value=99)
          self._reverb_density = ScaleParameter(parent=self,
                                                name='reverb-density',
+                                               cc_nb=63,
                                                parameter_nb=36,
-                                               jstation_command=63,
                                                max_value=99)
          self._reverb_decay = ScaleParameter(parent=self,
                                              name='reverb-decay',
+                                             cc_nb=65,
                                              parameter_nb=37,
-                                             jstation_command=65,
                                              max_value=9)
          self._reverb_level = ScaleParameter(parent=self,
                                              name='reverb-level',
+                                             cc_nb=61,
                                              parameter_nb=34,
-                                             jstation_command=61,
                                              max_value=99)
          self._reverb_on_off_btn = BtnParameter(parent=self,
                                                 name='reverb',
-                                                parameter_nb=32,
-                                                jstation_command=59)
+                                                cc_nb=59,
+                                                parameter_nb=32)
 
 
     def update_conf_from_parameter(self, parameter):

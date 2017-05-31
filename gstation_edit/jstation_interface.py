@@ -21,34 +21,34 @@ from threading import Thread, Event, Condition
 
 from pyalsa import alsaseq
 
-from .midi.port import *
-from .midi.event_factory import *
-from .midi.cc_event import *
-from .midi.prg_change_event import *
+from .midi.port import MidiPort
+from .midi.event_factory import MidiEventFactory
+from .midi.cc_event import CCMidiEvent
+from .midi.prg_change_event import PrgChangeEvent
 
 
-from .messages.jstation_sysex_event import *
+from .messages.jstation_sysex_event import JStationSysExEvent
 
-from .messages.bank_dump_req import *
-from .messages.end_bank_dump_resp import *
+from .messages.bank_dump_req import BankDumpRequest
+from .messages.end_bank_dump_resp import EndBankDumpResponse
 
-from .messages.one_prg_resp import *
+from .messages.one_prg_resp import OneProgramResponse
 
-from .messages.prg_indices_req import *
-from .messages.prg_indices_resp import *
+from .messages.prg_indices_req import PRGIndicesRequest
+from .messages.prg_indices_resp import PRGIndicesResponse
 
-from .messages.receive_prg_update import *
-from .messages.request_prg_update import *
+from .messages.receive_prg_update import ReceiveProgramUpdate
+from .messages.request_prg_update import RequestProgramUpdate
 
-from .messages.start_bank_dump_resp import *
+from .messages.start_bank_dump_resp import StartBankDumpResponse
 
-from .messages.to_msg_resp import *
+from .messages.to_msg_resp import ToMessageResponse
 
-from .messages.utility_settings_req import *
-from .messages.utility_settings_resp import *
+from .messages.utility_settings_req import UtilitySettingsRequest
+from .messages.utility_settings_resp import UtilitySettingsResponse
 
-from .messages.who_am_i_req import *
-from .messages.who_am_i_resp import *
+from .messages.who_am_i_req import WhoAmIRequest
+from .messages.who_am_i_resp import WhoAmIResponse
 
 
 class JStationInterface:
@@ -246,11 +246,11 @@ class JStationInterface:
                     if None != seq_event:
 #                        print('==> Received event: %s'%(seq_event))
                         event = self.factory.build_from_seq_event(seq_event)
-                        if None != event:
+                        if event.is_valid:
 #                            print('\t%s'%(event))
                             event.process()
                         else:
-#                            print('\tCould not build event')
+                            print(event)
                             pass
                     else:
                         print('Seq event is null')
@@ -302,9 +302,12 @@ class JStationInterface:
 
     def one_parameter_cc_callback( self, event):
         self.default_event_callback(event)
-        self.main_window.update_parameter_from_jstation(event.param,
-                                                        event.value,
-                                                        is_cc=True)
+        if self.main_window != None:
+            self.main_window.update_parameter_from_jstation(event.param,
+                                                            event.value,
+                                                            is_cc=True)
+        else:
+            print('Skipping: %s'%(event))
 
     def program_change_callback(self, event):
         self.default_event_callback(event)

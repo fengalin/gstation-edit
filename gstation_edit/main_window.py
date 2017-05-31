@@ -192,14 +192,15 @@ class MainWindow:
                                                parameter.value)
         self.set_program_has_changed(self._current_program.has_changed)
         if self._jstation_interface.is_connected:
-            self._jstation_interface.send_command(parameter.jstation_command,
+            self._jstation_interface.send_command(parameter.cc_nb,
                                                   parameter.get_cc_value())
 
     def set_program_has_changed(self, has_changed):
-        flag = ''
-        if has_changed:
-            flag = '*'
-        self._bank_list_model.set(self._current_selected_iter, 2, flag)
+        if self._current_selected_iter != None:
+            flag = ''
+            if has_changed:
+                flag = '*'
+            self._bank_list_model.set(self._current_selected_iter, 2, flag)
 
     def set_program_count(self, program_count):
         self._program_count = program_count

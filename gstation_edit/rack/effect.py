@@ -17,13 +17,13 @@
 # You should have received a copy of the GNU General Public License along
 # with this program.    If not, see <http://www.gnu.org/licenses/>.
 
-from ..ui_core.cbx_parameter import *
-from ..ui_core.scale_parameter import *
-from ..ui_core.btn_parameter import *
-from ..ui_core.rdbtn_parameter import *
-from ..ui_core.grp_parameter import *
+from ..ui_core.cbx_parameter import CbxParameter
+from ..ui_core.scale_parameter import ScaleParameter
+from ..ui_core.btn_parameter import BtnParameter
+from ..ui_core.rdbtn_parameter import RdBtnParameter
+from ..ui_core.grp_parameter import GrpParameter
 
-from .rack_unit import *
+from .rack_unit import RackUnit
 
 class EffectUnit(RackUnit):
     def __init__(self, parent):
@@ -31,47 +31,47 @@ class EffectUnit(RackUnit):
 
         self._effect_type = CbxParameter(parent=self,
                                          name='effect-type',
+                                         cc_nb=45,
                                          parameter_nb=20,
-                                         jstation_command=45,
                                          max_value=6)
         self._speed = ScaleParameter(parent=self,
                                      name='effect-speed',
+                                     cc_nb=47,
                                      parameter_nb=22,
-                                     jstation_command=47,
                                      max_value=90)
         self._depth = ScaleParameter(parent=self,
                                      name='effect-depth',
+                                     cc_nb=48,
                                      parameter_nb=23,
-                                     jstation_command=48,
                                      max_value=90)
         self._option = ScaleParameter(parent=self,
                                       name='effect-option',
+                                      cc_nb=49, # regen
                                       parameter_nb=24,
-                                      jstation_command=49, # regen
                                       max_value=90)
         self._mix = ScaleParameter(parent=self,
                                    name='effect-mix',
+                                   cc_nb=46, # level
                                    parameter_nb=21,
-                                   jstation_command=46, # level
                                    max_value=90)
         self._on_off_btn = BtnParameter(parent=self,
                                         name='effect',
-                                        parameter_nb=19,
-                                        jstation_command=44) # On/Bypass
+                                        cc_nb=44, # On/Bypass
+                                        parameter_nb=19)
 
         self._rd_btn_grp = GrpParameter(parent=self, name='effect-rd-btn-grp')
         self._pre_rdbtn = RdBtnParameter(parent=self._rd_btn_grp,
                                          name='effect-pre',
                                          is_active=1,
                                          value=99,
-                                         parameter_nb=25,
-                                         jstation_command=50) # position
+                                         cc_nb=50, # position
+                                         parameter_nb=25)
         self._post_rdbtn = RdBtnParameter(parent=self._rd_btn_grp,
                                           name='effect-post',
                                           is_active=0,
                                           value=0,
-                                          parameter_nb=25,
-                                          jstation_command=50) # position
+                                          cc_nb=50, # position
+                                          parameter_nb=25)
 
     # TODO: set option / sensitivity for pitch/detune
 
