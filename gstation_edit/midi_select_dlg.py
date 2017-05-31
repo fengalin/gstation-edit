@@ -20,7 +20,7 @@
 from gi.repository import Gtk
 from threading import Thread
 
-from .midi.port import *
+from .midi.port import MidiPort
 
 class MidiSelectDlg:
     def __init__(self, main_window, js_interface, gtk_builder):
@@ -66,7 +66,7 @@ class MidiSelectDlg:
         widget = self.gtk_builder.get_object(widget_name)
         if None == widget:
             self.is_valid = False
-            print('Could not find widget %s'%(i_widget_name))
+            print('Could not find widget %s'%(widget_name))
         return widget
 
 
@@ -79,7 +79,7 @@ class MidiSelectDlg:
         return signal_handlers
 
 
-    def present(self):
+    def present(self, widget=None):
         self.gtk_dlg.present()
 
 

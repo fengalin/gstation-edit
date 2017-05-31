@@ -170,10 +170,11 @@ class JStationInterface:
         if not self.is_connected:
             self.disconnect()
         else:
-            self.is_response_received_cndt.acquire()
-            self.send_event(UtilitySettingsRequest(self.sysex_channel))
-            self.is_response_received_cndt.wait(self.RESPONSE_TIMEOUT)
-            self.is_response_received_cndt.release()
+            if self.main_window:
+                self.is_response_received_cndt.acquire()
+                self.send_event(UtilitySettingsRequest(self.sysex_channel))
+                self.is_response_received_cndt.wait(self.RESPONSE_TIMEOUT)
+                self.is_response_received_cndt.release()
 
 
     def disconnect(self):
@@ -282,7 +283,7 @@ class JStationInterface:
         self.default_event_callback(event)
         self.is_response_received_cndt.acquire()
         self.receive_channel = event.midi_channel
-        # TODO: feedback to the UI
+        self.main_window.receive_settings(event)
         self.is_response_received_cndt.notify()
         self.is_response_received_cndt.release()
 

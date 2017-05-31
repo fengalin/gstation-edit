@@ -266,6 +266,11 @@
     <property name="page_increment">10</property>
     <property name="page_size">10</property>
   </object>
+  <object class="GtkAdjustment" id="digital-level-adjustment">
+    <property name="upper">100</property>
+    <property name="step_increment">1</property>
+    <property name="page_increment">10</property>
+  </object>
   <object class="GtkAdjustment" id="effect-depth-adjustment">
     <property name="upper">99</property>
     <property name="step_increment">1</property>
@@ -404,6 +409,48 @@
     <property name="step_increment">1</property>
     <property name="page_increment">10</property>
     <property name="page_size">10</property>
+  </object>
+  <object class="GtkHeaderBar" id="header-bar">
+    <property name="visible">True</property>
+    <property name="can_focus">False</property>
+    <property name="title">GStation-Edit</property>
+    <property name="has_subtitle">False</property>
+    <property name="show_close_button">True</property>
+    <child>
+      <object class="GtkButton" id="midi-options-btn">
+        <property name="visible">True</property>
+        <property name="can_focus">True</property>
+        <property name="receives_default">True</property>
+        <child>
+          <object class="GtkImage">
+            <property name="visible">True</property>
+            <property name="can_focus">False</property>
+            <property name="stock">gtk-connect</property>
+          </object>
+        </child>
+      </object>
+      <packing>
+        <property name="pack_type">end</property>
+      </packing>
+    </child>
+    <child>
+      <object class="GtkButton" id="utilities-btn">
+        <property name="visible">True</property>
+        <property name="can_focus">True</property>
+        <property name="receives_default">True</property>
+        <child>
+          <object class="GtkImage">
+            <property name="visible">True</property>
+            <property name="can_focus">False</property>
+            <property name="stock">gtk-preferences</property>
+          </object>
+        </child>
+      </object>
+      <packing>
+        <property name="pack_type">end</property>
+        <property name="position">1</property>
+      </packing>
+    </child>
   </object>
   <object class="GtkAdjustment" id="level-adjustment">
     <property name="upper">90</property>
@@ -555,6 +602,216 @@
     <property name="page_increment">10</property>
     <property name="page_size">10</property>
   </object>
+  <object class="GtkWindow" id="utilities-dlg">
+    <property name="width_request">500</property>
+    <property name="can_focus">False</property>
+    <property name="title" translatable="yes">J-Station Utilities</property>
+    <property name="resizable">False</property>
+    <property name="modal">True</property>
+    <property name="window_position">mouse</property>
+    <property name="skip_taskbar_hint">True</property>
+    <property name="skip_pager_hint">True</property>
+    <property name="deletable">False</property>
+    <property name="transient_for">main-window</property>
+    <child>
+      <object class="GtkBox">
+        <property name="visible">True</property>
+        <property name="can_focus">False</property>
+        <property name="margin_left">8</property>
+        <property name="margin_right">8</property>
+        <property name="margin_top">8</property>
+        <property name="margin_bottom">8</property>
+        <property name="orientation">vertical</property>
+        <property name="spacing">10</property>
+        <child>
+          <object class="GtkGrid">
+            <property name="visible">True</property>
+            <property name="can_focus">False</property>
+            <property name="valign">center</property>
+            <property name="hexpand">True</property>
+            <property name="row_spacing">10</property>
+            <property name="column_spacing">10</property>
+            <child>
+              <object class="GtkLabel" id="stero-output-lbl">
+                <property name="visible">True</property>
+                <property name="can_focus">False</property>
+                <property name="halign">end</property>
+                <property name="label" translatable="yes">Setero output:</property>
+              </object>
+              <packing>
+                <property name="left_attach">0</property>
+                <property name="top_attach">1</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkLabel" id="dry-track-lbl">
+                <property name="visible">True</property>
+                <property name="can_focus">False</property>
+                <property name="halign">end</property>
+                <property name="label" translatable="yes">S/PDIF dry track: </property>
+              </object>
+              <packing>
+                <property name="left_attach">0</property>
+                <property name="top_attach">3</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkLabel" id="midi-channel-lbl1">
+                <property name="visible">True</property>
+                <property name="can_focus">False</property>
+                <property name="halign">end</property>
+                <property name="label" translatable="yes">Midi channel: </property>
+              </object>
+              <packing>
+                <property name="left_attach">0</property>
+                <property name="top_attach">5</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkSpinButton" id="utilities-midi-channel-spbtn">
+                <property name="visible">True</property>
+                <property name="can_focus">True</property>
+                <property name="halign">start</property>
+                <property name="max_length">2</property>
+                <property name="invisible_char">•</property>
+                <property name="text" translatable="yes">1</property>
+                <property name="xalign">1</property>
+                <property name="primary_icon_activatable">False</property>
+                <property name="secondary_icon_activatable">False</property>
+                <property name="adjustment">midi-channel-adj</property>
+                <property name="value">1</property>
+              </object>
+              <packing>
+                <property name="left_attach">1</property>
+                <property name="top_attach">5</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkSwitch" id="stereo-swtch">
+                <property name="visible">True</property>
+                <property name="can_focus">True</property>
+                <property name="halign">start</property>
+                <property name="hexpand">False</property>
+              </object>
+              <packing>
+                <property name="left_attach">1</property>
+                <property name="top_attach">1</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkSwitch" id="dry-track-swtch">
+                <property name="visible">True</property>
+                <property name="can_focus">True</property>
+                <property name="halign">start</property>
+                <property name="hexpand">False</property>
+              </object>
+              <packing>
+                <property name="left_attach">1</property>
+                <property name="top_attach">3</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkLabel" id="cabinet-emulation-lbl">
+                <property name="visible">True</property>
+                <property name="can_focus">False</property>
+                <property name="halign">end</property>
+                <property name="label" translatable="yes">Cabinet emulation:</property>
+              </object>
+              <packing>
+                <property name="left_attach">0</property>
+                <property name="top_attach">0</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkSwitch" id="cabinet-emulation-swtch">
+                <property name="visible">True</property>
+                <property name="can_focus">True</property>
+                <property name="halign">start</property>
+                <property name="hexpand">False</property>
+              </object>
+              <packing>
+                <property name="left_attach">1</property>
+                <property name="top_attach">0</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkLabel" id="digital-level-lbl">
+                <property name="visible">True</property>
+                <property name="can_focus">False</property>
+                <property name="halign">end</property>
+                <property name="label" translatable="yes">S/PDIF output level: </property>
+              </object>
+              <packing>
+                <property name="left_attach">0</property>
+                <property name="top_attach">2</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkLabel" id="midi-loopback-lbl">
+                <property name="visible">True</property>
+                <property name="can_focus">False</property>
+                <property name="halign">end</property>
+                <property name="label" translatable="yes">Midi loopback: </property>
+              </object>
+              <packing>
+                <property name="left_attach">0</property>
+                <property name="top_attach">4</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkSwitch" id="midi-loopback-swtch">
+                <property name="visible">True</property>
+                <property name="can_focus">True</property>
+                <property name="halign">start</property>
+                <property name="hexpand">False</property>
+              </object>
+              <packing>
+                <property name="left_attach">1</property>
+                <property name="top_attach">4</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkScale" id="digital-level-scale">
+                <property name="visible">True</property>
+                <property name="can_focus">True</property>
+                <property name="valign">center</property>
+                <property name="hexpand">True</property>
+                <property name="adjustment">digital-level-adjustment</property>
+                <property name="restrict_to_fill_level">False</property>
+                <property name="fill_level">99</property>
+                <property name="round_digits">0</property>
+                <property name="digits">0</property>
+                <property name="value_pos">right</property>
+              </object>
+              <packing>
+                <property name="left_attach">1</property>
+                <property name="top_attach">2</property>
+              </packing>
+            </child>
+          </object>
+          <packing>
+            <property name="expand">False</property>
+            <property name="fill">True</property>
+            <property name="position">0</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkButton" id="utilities-done-btn">
+            <property name="label" translatable="yes">Done</property>
+            <property name="visible">True</property>
+            <property name="can_focus">True</property>
+            <property name="receives_default">True</property>
+            <signal name="clicked" handler="on_utilities-done-btn_clicked" swapped="no"/>
+          </object>
+          <packing>
+            <property name="expand">False</property>
+            <property name="fill">True</property>
+            <property name="position">1</property>
+          </packing>
+        </child>
+      </object>
+    </child>
+  </object>
   <object class="GtkListStore" id="wha-expression-model">
     <columns>
       <!-- column-name gchararray -->
@@ -620,23 +877,22 @@
     <property name="page_increment">10</property>
     <property name="page_size">10</property>
   </object>
-  <object class="GtkWindow" id="jstation-edit-window">
+  <object class="GtkApplicationWindow" id="main-window">
     <property name="width_request">1600</property>
     <property name="height_request">650</property>
-    <property name="visible">True</property>
     <property name="can_focus">False</property>
-    <property name="title" translatable="yes">GStation-Edit</property>
+    <property name="border_width">5</property>
     <property name="role">main_window</property>
+    <property name="default_width">1600</property>
+    <property name="default_height">650</property>
     <property name="icon_name">multimedia-volume-control</property>
     <property name="has_resize_grip">True</property>
-    <signal name="destroy" handler="on_jstation-edit-window_destroy" swapped="no"/>
+    <property name="show_menubar">False</property>
+    <signal name="destroy" handler="on_main-window_destroy" swapped="no"/>
     <child>
       <object class="GtkPaned" id="paned1">
         <property name="visible">True</property>
         <property name="can_focus">True</property>
-        <property name="margin_left">5</property>
-        <property name="margin_right">5</property>
-        <property name="margin_bottom">5</property>
         <property name="hexpand">True</property>
         <property name="vexpand">True</property>
         <child>
@@ -669,7 +925,6 @@
           <object class="GtkGrid" id="rack">
             <property name="visible">True</property>
             <property name="can_focus">False</property>
-            <property name="margin_top">4</property>
             <property name="hexpand">True</property>
             <property name="vexpand">True</property>
             <property name="column_spacing">8</property>
@@ -749,7 +1004,7 @@
               </object>
               <packing>
                 <property name="left_attach">1</property>
-                <property name="top_attach">1</property>
+                <property name="top_attach">0</property>
               </packing>
             </child>
             <child>
@@ -836,7 +1091,7 @@
               </object>
               <packing>
                 <property name="left_attach">2</property>
-                <property name="top_attach">1</property>
+                <property name="top_attach">0</property>
               </packing>
             </child>
             <child>
@@ -950,7 +1205,7 @@
               </object>
               <packing>
                 <property name="left_attach">3</property>
-                <property name="top_attach">1</property>
+                <property name="top_attach">0</property>
                 <property name="width">4</property>
               </packing>
             </child>
@@ -958,6 +1213,7 @@
               <object class="GtkBox" id="compressor-selection">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
+                <property name="margin_bottom">5</property>
                 <property name="orientation">vertical</property>
                 <child>
                   <object class="GtkLabel" id="compressor-ratio-lbl">
@@ -1031,7 +1287,7 @@
               </object>
               <packing>
                 <property name="left_attach">1</property>
-                <property name="top_attach">3</property>
+                <property name="top_attach">2</property>
               </packing>
             </child>
             <child>
@@ -1044,7 +1300,6 @@
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
                     <property name="halign">start</property>
-                    <property name="margin_left">5</property>
                     <property name="label" translatable="yes">Compression:</property>
                     <property name="single_line_mode">True</property>
                   </object>
@@ -1087,7 +1342,7 @@
               </object>
               <packing>
                 <property name="left_attach">2</property>
-                <property name="top_attach">3</property>
+                <property name="top_attach">2</property>
               </packing>
             </child>
             <child>
@@ -1147,7 +1402,7 @@
               </object>
               <packing>
                 <property name="left_attach">3</property>
-                <property name="top_attach">3</property>
+                <property name="top_attach">2</property>
               </packing>
             </child>
             <child>
@@ -1159,14 +1414,12 @@
                 <property name="receives_default">True</property>
                 <property name="halign">center</property>
                 <property name="valign">start</property>
-                <property name="margin_left">10</property>
-                <property name="margin_right">2</property>
                 <property name="use_stock">True</property>
                 <signal name="toggled" handler="on_gate-btn_toggled" swapped="no"/>
               </object>
               <packing>
                 <property name="left_attach">4</property>
-                <property name="top_attach">3</property>
+                <property name="top_attach">2</property>
               </packing>
             </child>
             <child>
@@ -1221,7 +1474,7 @@
               </object>
               <packing>
                 <property name="left_attach">5</property>
-                <property name="top_attach">3</property>
+                <property name="top_attach">2</property>
               </packing>
             </child>
             <child>
@@ -1285,7 +1538,7 @@
               </object>
               <packing>
                 <property name="left_attach">6</property>
-                <property name="top_attach">3</property>
+                <property name="top_attach">2</property>
               </packing>
             </child>
             <child>
@@ -1330,7 +1583,7 @@
               </object>
               <packing>
                 <property name="left_attach">1</property>
-                <property name="top_attach">5</property>
+                <property name="top_attach">4</property>
               </packing>
             </child>
             <child>
@@ -1403,7 +1656,7 @@
               </object>
               <packing>
                 <property name="left_attach">2</property>
-                <property name="top_attach">5</property>
+                <property name="top_attach">4</property>
               </packing>
             </child>
             <child>
@@ -1494,7 +1747,7 @@
               </object>
               <packing>
                 <property name="left_attach">3</property>
-                <property name="top_attach">5</property>
+                <property name="top_attach">4</property>
                 <property name="width">4</property>
               </packing>
             </child>
@@ -1507,13 +1760,11 @@
                 <property name="receives_default">True</property>
                 <property name="halign">center</property>
                 <property name="valign">start</property>
-                <property name="margin_left">2</property>
-                <property name="margin_right">2</property>
                 <property name="use_stock">True</property>
               </object>
               <packing>
                 <property name="left_attach">0</property>
-                <property name="top_attach">7</property>
+                <property name="top_attach">6</property>
               </packing>
             </child>
             <child>
@@ -1558,7 +1809,7 @@
               </object>
               <packing>
                 <property name="left_attach">1</property>
-                <property name="top_attach">7</property>
+                <property name="top_attach">6</property>
               </packing>
             </child>
             <child>
@@ -1629,7 +1880,7 @@
               </object>
               <packing>
                 <property name="left_attach">2</property>
-                <property name="top_attach">7</property>
+                <property name="top_attach">6</property>
               </packing>
             </child>
             <child>
@@ -1717,7 +1968,7 @@
               </object>
               <packing>
                 <property name="left_attach">3</property>
-                <property name="top_attach">7</property>
+                <property name="top_attach">6</property>
                 <property name="width">4</property>
               </packing>
             </child>
@@ -1730,14 +1981,12 @@
                 <property name="receives_default">True</property>
                 <property name="halign">center</property>
                 <property name="valign">start</property>
-                <property name="margin_left">2</property>
-                <property name="margin_right">2</property>
                 <property name="use_stock">True</property>
                 <signal name="toggled" handler="on_reverb-btn_toggled" swapped="no"/>
               </object>
               <packing>
                 <property name="left_attach">0</property>
-                <property name="top_attach">9</property>
+                <property name="top_attach">8</property>
               </packing>
             </child>
             <child>
@@ -1782,7 +2031,7 @@
               </object>
               <packing>
                 <property name="left_attach">1</property>
-                <property name="top_attach">9</property>
+                <property name="top_attach">8</property>
               </packing>
             </child>
             <child>
@@ -1854,7 +2103,7 @@
               </object>
               <packing>
                 <property name="left_attach">2</property>
-                <property name="top_attach">9</property>
+                <property name="top_attach">8</property>
               </packing>
             </child>
             <child>
@@ -1945,7 +2194,7 @@
               </object>
               <packing>
                 <property name="left_attach">3</property>
-                <property name="top_attach">9</property>
+                <property name="top_attach">8</property>
                 <property name="width">4</property>
               </packing>
             </child>
@@ -1958,14 +2207,12 @@
                 <property name="receives_default">True</property>
                 <property name="halign">center</property>
                 <property name="valign">start</property>
-                <property name="margin_left">2</property>
-                <property name="margin_right">2</property>
                 <property name="use_stock">True</property>
                 <signal name="toggled" handler="on_wah-expression-btn_toggled" swapped="no"/>
               </object>
               <packing>
                 <property name="left_attach">0</property>
-                <property name="top_attach">11</property>
+                <property name="top_attach">10</property>
               </packing>
             </child>
             <child>
@@ -2010,7 +2257,7 @@
               </object>
               <packing>
                 <property name="left_attach">1</property>
-                <property name="top_attach">11</property>
+                <property name="top_attach">10</property>
               </packing>
             </child>
             <child>
@@ -2081,7 +2328,7 @@
               </object>
               <packing>
                 <property name="left_attach">2</property>
-                <property name="top_attach">11</property>
+                <property name="top_attach">10</property>
               </packing>
             </child>
             <child>
@@ -2174,7 +2421,7 @@
               </object>
               <packing>
                 <property name="left_attach">3</property>
-                <property name="top_attach">11</property>
+                <property name="top_attach">10</property>
                 <property name="width">4</property>
               </packing>
             </child>
@@ -2206,7 +2453,6 @@
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
                     <property name="halign">start</property>
-                    <property name="margin_left">5</property>
                     <property name="margin_top">10</property>
                     <property name="orientation">vertical</property>
                     <property name="spacing">2</property>
@@ -2252,7 +2498,7 @@
               </object>
               <packing>
                 <property name="left_attach">0</property>
-                <property name="top_attach">5</property>
+                <property name="top_attach">4</property>
               </packing>
             </child>
             <child>
@@ -2264,14 +2510,12 @@
                 <property name="receives_default">True</property>
                 <property name="halign">center</property>
                 <property name="valign">start</property>
-                <property name="margin_left">2</property>
-                <property name="margin_right">2</property>
                 <property name="use_stock">True</property>
                 <signal name="toggled" handler="on_compressor-btn_toggled" swapped="no"/>
               </object>
               <packing>
                 <property name="left_attach">0</property>
-                <property name="top_attach">3</property>
+                <property name="top_attach">2</property>
               </packing>
             </child>
             <child>
@@ -2283,7 +2527,7 @@
               </object>
               <packing>
                 <property name="left_attach">0</property>
-                <property name="top_attach">10</property>
+                <property name="top_attach">9</property>
                 <property name="width">7</property>
               </packing>
             </child>
@@ -2296,7 +2540,7 @@
               </object>
               <packing>
                 <property name="left_attach">0</property>
-                <property name="top_attach">8</property>
+                <property name="top_attach">7</property>
                 <property name="width">7</property>
               </packing>
             </child>
@@ -2309,7 +2553,7 @@
               </object>
               <packing>
                 <property name="left_attach">0</property>
-                <property name="top_attach">6</property>
+                <property name="top_attach">5</property>
                 <property name="width">7</property>
               </packing>
             </child>
@@ -2322,7 +2566,7 @@
               </object>
               <packing>
                 <property name="left_attach">0</property>
-                <property name="top_attach">4</property>
+                <property name="top_attach">3</property>
                 <property name="width">7</property>
               </packing>
             </child>
@@ -2335,30 +2579,9 @@
               </object>
               <packing>
                 <property name="left_attach">0</property>
-                <property name="top_attach">2</property>
+                <property name="top_attach">1</property>
                 <property name="width">7</property>
               </packing>
-            </child>
-            <child>
-              <placeholder/>
-            </child>
-            <child>
-              <placeholder/>
-            </child>
-            <child>
-              <placeholder/>
-            </child>
-            <child>
-              <placeholder/>
-            </child>
-            <child>
-              <placeholder/>
-            </child>
-            <child>
-              <placeholder/>
-            </child>
-            <child>
-              <placeholder/>
             </child>
             <child>
               <placeholder/>
@@ -2371,6 +2594,9 @@
         </child>
       </object>
     </child>
+    <child type="titlebar">
+      <placeholder/>
+    </child>
   </object>
   <object class="GtkWindow" id="midi-select-dlg">
     <property name="width_request">400</property>
@@ -2382,15 +2608,16 @@
     <property name="window_position">mouse</property>
     <property name="skip_taskbar_hint">True</property>
     <property name="skip_pager_hint">True</property>
-    <property name="transient_for">jstation-edit-window</property>
+    <property name="deletable">False</property>
+    <property name="transient_for">main-window</property>
     <child>
       <object class="GtkBox" id="midi-select-box">
         <property name="visible">True</property>
         <property name="can_focus">False</property>
-        <property name="margin_left">10</property>
-        <property name="margin_right">10</property>
-        <property name="margin_top">10</property>
-        <property name="margin_bottom">10</property>
+        <property name="margin_left">8</property>
+        <property name="margin_right">8</property>
+        <property name="margin_top">8</property>
+        <property name="margin_bottom">8</property>
         <property name="orientation">vertical</property>
         <property name="spacing">5</property>
         <child>
@@ -2404,7 +2631,7 @@
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
                 <property name="halign">end</property>
-                <property name="label" translatable="yes">Midi in: </property>
+                <property name="label" translatable="yes">Midi in:</property>
               </object>
               <packing>
                 <property name="left_attach">0</property>
@@ -2416,7 +2643,7 @@
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
                 <property name="halign">end</property>
-                <property name="label" translatable="yes">Midi out: </property>
+                <property name="label" translatable="yes">Midi out:</property>
               </object>
               <packing>
                 <property name="left_attach">0</property>
@@ -2452,7 +2679,7 @@
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
                 <property name="halign">end</property>
-                <property name="label" translatable="yes">Midi channel: </property>
+                <property name="label" translatable="yes">Midi channel:</property>
               </object>
               <packing>
                 <property name="left_attach">0</property>
@@ -2483,7 +2710,7 @@
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
                 <property name="halign">end</property>
-                <property name="label" translatable="yes">Sysex device ID: </property>
+                <property name="label" translatable="yes">Sysex device ID:</property>
               </object>
               <packing>
                 <property name="left_attach">0</property>
@@ -2511,7 +2738,7 @@
             </child>
           </object>
           <packing>
-            <property name="expand">False</property>
+            <property name="expand">True</property>
             <property name="fill">True</property>
             <property name="position">0</property>
           </packing>

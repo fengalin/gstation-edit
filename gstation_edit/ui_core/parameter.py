@@ -18,7 +18,7 @@
 # with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 class Parameter:
-    def __init__(self, parent, name, parameter_nb, jstation_command,
+    def __init__(self, parent, name, jstation_command, parameter_nb=-1,
                  is_sensitive=1, value=0, min_value=0, max_value=99,
                  auto_register=True):
         self._parent = parent

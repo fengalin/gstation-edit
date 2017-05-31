@@ -20,20 +20,23 @@
 
 from gi.repository import Gtk
 
-from .rack.amp import *
-from .rack.compress_gate import *
-from .rack.effect import *
-from .rack.delay import *
-from .rack.reverb import *
-from .rack.wha_expression import *
+from .rack.amp import AmpUnit
+from .rack.compress_gate import CompressorGateUnit
+from .rack.effect import EffectUnit
+from .rack.delay import DelayUnit
+from .rack.reverb import ReverbUnit
+from .rack.wha_expression import WhaExpressionUnit
 
-from .midi_select_dlg import *
-from .jstation_interface import *
+from .midi_select_dlg import MidiSelectDlg
+from .utilities_dlg import UtilitiesDlg
+from .jstation_interface import JStationInterface
 
 class MainWindow:
     def __init__(self, app_name, gtk_builder):
         self._gtk_builder = gtk_builder
-        self.gtk_window = self._gtk_builder.get_object('jstation-edit-window')
+        self.gtk_window = self._gtk_builder.get_object('main-window')
+
+        self.gtk_window.show_all()
 
         self._programs = dict()
         self._program_count = 0
@@ -42,18 +45,10 @@ class MainWindow:
 
         self._jstation_interface = JStationInterface(app_name, self)
 
-        self._units = list()
-        self._units.append(CompressorGateUnit(self))
-        self._units.append(AmpUnit(self))
-        self._units.append(EffectUnit(self))
-        self._units.append(DelayUnit(self))
-        self._units.append(ReverbUnit(self))
-        self._units.append(WhaExpressionUnit(self))
-        # TODO: add a global unit for global values
-
         self.init_widgets()
 
         self.init_parameters_dictionnaries()
+
 
     def connect(self):
         # TODO: use a property file to store the midi connection ports
@@ -68,11 +63,31 @@ class MainWindow:
 
     def init_widgets(self):
         self._signal_handlers = dict()
-        self.init_midi_select_dlg()
+
         self.init_utilities_dlg()
+        self.init_rename_dlg()
+        self.init_midi_select_dlg()
+
+        header_bar = self._gtk_builder.get_object('header-bar')
+        self.gtk_window.set_titlebar(header_bar)
+
+        midi_options_btn = self._gtk_builder.get_object('midi-options-btn')
+        midi_options_btn.connect('clicked',
+                                 self._midi_select_dlg.present)
+        utilities_btn = self._gtk_builder.get_object('utilities-btn')
+        utilities_btn.connect('clicked',
+                                  self._utilities_dlg.present)
+
+        self._units = list()
+        self._units.append(CompressorGateUnit(self))
+        self._units.append(AmpUnit(self))
+        self._units.append(EffectUnit(self))
+        self._units.append(DelayUnit(self))
+        self._units.append(ReverbUnit(self))
+        self._units.append(WhaExpressionUnit(self))
+
         self.init_bank_list_widget()
         self.init_contextual_menu_widget()
-        self.init_rename_dlg()
         for unit in self._units:
             unit.init_widgets(self._gtk_builder)
 
@@ -83,12 +98,10 @@ class MainWindow:
         self._signal_handlers.update(self._midi_select_dlg.get_signal_handlers())
 
     def init_utilities_dlg(self):
-        # TODO: move the actual code to a dedicated file
-        #self._utilities_dlg = UtilitiesDlg(self,
-        #                                   self._jstation_interface,
-        #                                   self._gtk_builder)
-        #self._signal_handlers.update(self._utilities_dlg.get_signal_handlers())
-        pass
+        self._utilities_dlg = UtilitiesDlg(self,
+                                           self._jstation_interface,
+                                           self._gtk_builder)
+        self._signal_handlers.update(self._utilities_dlg.get_signal_handlers())
 
 
     def init_bank_list_widget(self):
@@ -251,9 +264,10 @@ class MainWindow:
             parameter = self._parameter_cc_bindings.get(parameter)
             if None != parameter:
                 parameter.init_value(value=value, is_cc=True)
-                self._current_program.change_parameter(parameter.parameter_nb,
-                                                       parameter.value)
-                self.set_program_has_changed(self._current_program.has_changed)
+                if parameter.parameter_nb != -1:
+                    self._current_program.change_parameter(parameter.parameter_nb,
+                                                           parameter.value)
+                    self.set_program_has_changed(self._current_program.has_changed)
         else:
             print('Updating isolated parameters other than with CC command not implemented')
 
@@ -269,6 +283,11 @@ class MainWindow:
         self._current_selected_iter = \
                         self._bank_list_widget.get_selection().get_selected()[1]
         self._jstation_interface.req_program_change(selected_program_nb)
+
+
+    def receive_settings(self, settings):
+        self._utilities_dlg.set_utilities(settings)
+
 
     def popup_contextual_menu(self, widget, event):
         if 3 == event.button:

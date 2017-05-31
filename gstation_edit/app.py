@@ -24,7 +24,7 @@ gi.require_version('Gtk', '3.0')
 from gi.repository import Gtk
 from gi.repository import GObject
 
-from .main_window import *
+from .main_window import MainWindow
 
 try:
     from config import DATA_ROOT_DIR
@@ -37,7 +37,8 @@ class GStationEdit:
     def __init__( self ):
         GObject.threads_init()
 
-        gtk_builder_file = os.path.join(DATA_ROOT_DIR, 'gstation-edit-one-window.ui')
+        gtk_builder_file = os.path.join(DATA_ROOT_DIR,
+                                        'gstation-edit-one-window.ui')
 
         self.gtk_builder = Gtk.Builder()
         self.gtk_builder.add_from_file(gtk_builder_file)
@@ -46,7 +47,7 @@ class GStationEdit:
         self.main_window = MainWindow(sys.argv[0], self.gtk_builder)
 
         signal_handlers = dict()
-        signal_handlers['on_jstation-edit-window_destroy'] = self.quit
+        signal_handlers['on_main-window_destroy'] = self.quit
         signal_handlers.update(self.main_window.get_signal_handlers())
 
         self.gtk_builder.connect_signals(signal_handlers)
