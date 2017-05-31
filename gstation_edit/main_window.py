@@ -63,6 +63,8 @@ class MainWindow:
 
     def init_widgets(self):
         self._signal_handlers = dict()
+        self._parameter_bindings = dict()
+        self._parameter_cc_bindings = dict()
 
         self.init_utilities_dlg()
         self.init_rename_dlg()
@@ -77,6 +79,7 @@ class MainWindow:
         utilities_btn = self._gtk_builder.get_object('utilities-btn')
         utilities_btn.connect('clicked',
                                   self._utilities_dlg.present)
+
 
         self._units = list()
         self._units.append(CompressorGateUnit(self))
@@ -98,10 +101,11 @@ class MainWindow:
         self._signal_handlers.update(self._midi_select_dlg.get_signal_handlers())
 
     def init_utilities_dlg(self):
-        self._utilities_dlg = UtilitiesDlg(self,
-                                           self._jstation_interface,
-                                           self._gtk_builder)
+        self._utilities_dlg = UtilitiesDlg(self, self._gtk_builder)
         self._signal_handlers.update(self._utilities_dlg.get_signal_handlers())
+        self._parameter_cc_bindings.update(
+            self._utilities_dlg.get_parameter_cc_bindings()
+        )
 
 
     def init_bank_list_widget(self):
@@ -180,17 +184,16 @@ class MainWindow:
         self._signal_handlers['on_bank-list-trv_button_press_event'] = \
                                                     self.popup_contextual_menu
 
-        self._parameter_bindings = dict()
-        self._parameter_cc_bindings = dict()
         for unit in self._units:
             self._signal_handlers.update(unit.get_signal_handlers())
             self._parameter_bindings.update(unit.get_parameter_bindings())
             self._parameter_cc_bindings.update(unit.get_parameter_cc_bindings())
 
-    def send_parameter_value(self, parameter):
-        self._current_program.change_parameter(parameter.parameter_nb,
-                                               parameter.value)
-        self.set_program_has_changed(self._current_program.has_changed)
+    def send_parameter_value(self, parameter, program_has_changed=True):
+        if program_has_changed:
+            self._current_program.change_parameter(parameter.parameter_nb,
+                                                   parameter.value)
+            self.set_program_has_changed(self._current_program.has_changed)
         if self._jstation_interface.is_connected:
             self._jstation_interface.send_command(parameter.cc_nb,
                                                   parameter.get_cc_value())
@@ -289,6 +292,9 @@ class MainWindow:
     def receive_settings(self, settings):
         self._utilities_dlg.set_utilities(settings)
 
+    def send_settings(self, settings):
+        self._jstation_interface.send_event(settings)
+
 
     def popup_contextual_menu(self, widget, event):
         if 3 == event.button:
@@ -338,6 +344,3 @@ class MainWindow:
         # TODO: implement !
         print('Paste clicked %s'%(arg))
 
-if __name__ == '__main__':
-    main_window = MainWindow()
-    print(main_window.get_signal_handlers())

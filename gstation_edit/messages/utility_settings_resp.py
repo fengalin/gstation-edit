@@ -17,7 +17,7 @@
 # You should have received a copy of the GNU General Public License along
 # with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from .jstation_sysex_event import *
+from .jstation_sysex_event import JStationSysExEvent
 
 class UtilitySettingsResponse(JStationSysExEvent):
     PROCEDURE_ID = 0x12
@@ -48,6 +48,20 @@ class UtilitySettingsResponse(JStationSysExEvent):
                 print('Incorrect data buffer with len %d. Expecting %d'\
                       %(len(self.data_buffer)-4), data_length)
                 self.m_is_valid = False
+
+    # Build to send
+    def build_data_buffer(self):
+        JStationSysExEvent.build_data_buffer(self)
+        if self.is_valid:
+            self.data_buffer += \
+                self.helper.get_split_bytes_from_value(6, 4)
+            self.data_buffer.append(self.stereo_mono)
+            self.data_buffer.append(self.dry_track)
+            self.data_buffer.append(self.digital_out_level)
+            self.data_buffer.append(self.global_cabinet)
+            self.data_buffer.append(self.midi_merge)
+            self.data_buffer.append(self.midi_channel)
+
 
     def __str__( self ):
         return "%s, stereo mono: %d, dry track: %d, "\

@@ -17,7 +17,7 @@
 # You should have received a copy of the GNU General Public License along
 # with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from .jstation_sysex_event import *
+from .jstation_sysex_event import JStationSysExEvent
 
 class WhoAmIRequest(JStationSysExEvent):
     PROCEDURE_ID = 0x40
@@ -41,18 +41,18 @@ class WhoAmIRequest(JStationSysExEvent):
 
     # Build to send
     def build_data_buffer(self):
-        JStationSysExEvent.build_data_buffer(self)
-        if self.is_valid:
-            if 0 < len(self.data_buffer):
-                if self.RESP_ON_CHANNEL == self.response_on or \
-                        self.RESP_ON_7f == self.response_on:
-                    self.data_buffer += \
-                        self.helper.get_split_bytes_from_value(self.response_on)
-                    self.is_valid = True
-                else:
-                    self.data_buffer = list()
-                    self.is_valid = False
-                    print('Response on not defined for ReqWhoAmI SysEx')
+        if self.RESP_ON_CHANNEL == self.response_on or \
+                self.RESP_ON_7f == self.response_on:
+            JStationSysExEvent.build_data_buffer(self)
+
+            if self.is_valid:
+                self.data_buffer += \
+                    self.helper.get_split_bytes_from_value(self.response_on)
+        else:
+            self.data_buffer = list()
+            self.is_valid = False
+            print('Response on not defined for ReqWhoAmI SysEx')
+
 
     # Common
     def __str__(self):

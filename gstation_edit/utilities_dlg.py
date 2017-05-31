@@ -22,13 +22,17 @@ from .ui_core.scale_parameter import ScaleParameter
 
 from .messages.utility_settings_resp import UtilitySettingsResponse
 
+# Note: might be an heir of RackUnit because of the scale parameter
+# Or RackUnit could inherit a ParameterCollection or something similar
+# of UtilitiesDlg would inherit ParameterCollection
 class UtilitiesDlg:
-    def __init__(self, main_window, js_interface, gtk_builder):
+    def __init__(self, main_window, gtk_builder):
         self.main_window = main_window
-        self.js_interface = js_interface
         self.gtk_builder = gtk_builder
 
         self.settings = UtilitySettingsResponse()
+
+        self.prevent_propagation = False
 
         self.gtk_dlg = self.get_widget('utilities-dlg')
         self.done_btn = self.get_widget('utilities-done-btn')
@@ -42,12 +46,12 @@ class UtilitiesDlg:
         # digital level is the only utility parameter
         # to be associated to a CC parameter
         self.digital_level = self.get_widget('digital-level-scale')
-        # TODO: update max value
-        #self._gain = ScaleParameter(parent=self,
-        #                            name='digital-level',
-        #                            cc_nb=14,
-        #                            max_value=90,
-        #                            auto_register=False)
+        self.digital_level_scale = ScaleParameter(parent=self,
+                                                  name='digital-level',
+                                                  cc_nb=14,
+                                                  max_value=24,
+                                                  auto_register=False)
+        self.digital_level_scale.init_widget(self.gtk_builder)
 
 
     def get_widget(self, widget_name):
@@ -61,33 +65,65 @@ class UtilitiesDlg:
     def get_signal_handlers(self):
         signal_handlers = dict()
         signal_handlers['on_utilities-done-btn_clicked'] = self.on_done_btn_clicked
+
+        signal_handlers['on_cabinet-emulation-swtch_state_set'] = \
+                                                        self.on_utility_changed
+        signal_handlers['on_stereo-swtch_state_set'] = \
+                                                        self.on_utility_changed
+        signal_handlers['on_dry-track-swtch_state_set'] = \
+                                                        self.on_utility_changed
+        signal_handlers['on_midi-loopback-swtch_state_set'] = \
+                                                        self.on_utility_changed
+        signal_handlers['on_utilities-midi-channel-spbtn_value_changed'] = \
+                                                        self.on_utility_changed
         # TODO: connect handles for on_utility_changed
-        # TODO: link digital_level to appropriate CC event (check what J-Edit does)
+        signal_handlers.update(self.digital_level_scale.get_signal_handlers())
         return signal_handlers
 
+    def get_parameter_cc_bindings(self):
+        return self.digital_level_scale.get_parameter_cc_bindings()
 
     def present(self, widget=None):
         self.gtk_dlg.present()
 
+    def update_conf_from_parameter(self, parameter):
+        pass
+
+    def send_parameter_value(self, parameter):
+        self.main_window.send_parameter_value(parameter,
+                                              program_has_changed=False)
+
     def set_utilities(self, settings_resp):
         self.settings = settings_resp
 
-        # TODO: figure out how to present
-        # change propagation
-        # see what is done when CC events are received
-        self.stereo_switch.set_active(self.settings.stereo_mono)
-        self.dry_track_switch.set_active(self.settings.dry_track)
-        self.digital_level.set_value(self.settings.digital_out_level)
+        self.prevent_propagation = True
         self.cabinet_emul_switch.set_active(self.settings.global_cabinet)
+        self.stereo_switch.set_active(self.settings.stereo_mono)
+        self.digital_level_scale.init_value(self.settings.digital_out_level)
+        self.dry_track_switch.set_active(self.settings.dry_track)
         self.midi_loopback_switch.set_active(self.settings.midi_merge)
         self.midi_channel_spbtn.set_value(self.settings.midi_channel)
+        self.prevent_propagation = False
 
 
     def on_done_btn_clicked(self, widget):
         self.gtk_dlg.hide()
 
-    def on_utility_changed(self, widget):
-        # send update to J-Station
-        pass
+    def on_utility_changed(self, widget, value=None):
+        if not self.prevent_propagation:
+            if widget == self.cabinet_emul_switch:
+                self.settings.global_cabinet = value
+            elif widget == self.stereo_switch:
+                self.settings.stereo_mono = value
+            elif widget == self.dry_track_switch:
+                self.settings.dry_track = value
+            elif widget == self.midi_loopback_switch:
+                self.settings.midi_merge = value
+            elif widget == self.midi_channel_spbtn:
+                self.settings.midi_channel = int(
+                        self.midi_channel_spbtn.get_value()
+                    )
+
+            self.main_window.send_settings(self.settings)
 
 

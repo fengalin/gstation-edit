@@ -157,14 +157,6 @@ class JStationSysExEvent(SysExMidiEvent):
             print('procedure id and/or version not defined for JStationSysEx')
             self.is_valid = False
 
-    def get_sysex_buffer(self, data):
-        sysex_buffer = list()
-        sysex_buffer += \
-            self.helper.get_split_bytes_from_value(len(data), 4)
-        for value in data:
-            sysex_buffer += self.helper.get_split_bytes_from_value(value)
-        return sysex_buffer
-
 
     # Common
     def __str__(self):

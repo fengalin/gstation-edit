@@ -247,7 +247,7 @@ class JStationInterface:
 #                        print('==> Received event: %s'%(seq_event))
                         event = self.factory.build_from_seq_event(seq_event)
                         if event.is_valid:
-#                            print('\t%s'%(event))
+                            print('\t%s'%(event))
                             event.process()
                         else:
                             print(event)
@@ -330,10 +330,10 @@ class JStationInterface:
         success = False
         event.fill_seq_event()
         if event.is_valid:
-#            print('<== sending %s'%(event.get_seq_event()))
+            print('<== sending %s'%(event))
             self.seq.output_event(event.get_seq_event())
             self.seq.drain_output()
-#            print('...sent')
+            print('...sent')
             success = True
         else:
             print('Failed to build seq event for: %s'%(event))
