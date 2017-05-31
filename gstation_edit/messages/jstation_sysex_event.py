@@ -17,6 +17,7 @@
 # You should have received a copy of the GNU General Public License along
 # with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+from ..midi.event import MidiEvent
 from ..midi.sysex_event import SysExMidiEvent
 from ..midi.event_factory import MidiEventFactory
 from ..midi.split_bytes import SplitBytesHelpher
