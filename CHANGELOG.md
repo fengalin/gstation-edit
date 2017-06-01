@@ -1,10 +1,25 @@
 ## Change Log
 
 ### Version 0.5 (in progress)
-- Port to GTK-3 using GObject
-- Rework project structure and coding style
+#### User
+- Added a **Utility Settings** dialog
+- Added a header bar to open the Utility Settings and the MIDI Selection dialogs
+- Fixed install
 
-### Code for [previous versions hosted at sourceforge](https://sourceforge.net/projects/gstation-edit/)
+#### J-Station interface
+- Properly sign off when closing GStation-Edit
+
+#### Development
+- Built a new and much better **MIDI sniffer** which allows tracing exchanges
+between J-Edit (runing in Wine) and the J-Sstation and added it to project
+so I will not loose it again
+- Ported to **GTK-3** using GObject
+- Reworked project structure and coding style
+- Reworked **Messages** framework
+- Isolated test suites
+
+
+### [Previous versions hosted at sourceforge](https://sourceforge.net/projects/gstation-edit/)
 #### Version 0.4 - 20120115
 - Replaced home made ALSA binding with PYALSA (no longer need to generate
 anything, application can be launch directly from the source directory)
