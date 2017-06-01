@@ -51,6 +51,12 @@ class UtilitiesDlg:
                                                   max_value=24,
                                                   auto_register=False)
         self.digital_level_scale.init_widget(self.gtk_builder)
+        self.digital_level_radical = 'on_digital-level-scale'
+        self.digital_level_regular_callback = \
+            self.digital_level_scale.get_signal_handlers()[
+                self.digital_level_radical + '_change_value'
+            ]
+        self.digital_level_has_changed = False
 
 
     def get_widget(self, widget_name):
@@ -73,7 +79,11 @@ class UtilitiesDlg:
                                                         self.on_utility_changed
         signal_handlers['on_midi-loopback-swtch_state_set'] = \
                                                         self.on_utility_changed
-        signal_handlers.update(self.digital_level_scale.get_signal_handlers())
+
+        signal_handlers[self.digital_level_radical + '_change_value'] = \
+                                                  self.on_digital_level_changed
+        signal_handlers[self.digital_level_radical + '_format_value'] = \
+                                   self.digital_level_scale.handle_format_value
         return signal_handlers
 
     def get_parameter_cc_bindings(self):
@@ -102,7 +112,19 @@ class UtilitiesDlg:
 
 
     def on_done_btn_clicked(self, widget):
+        if self.digital_level_has_changed:
+            # digital out sends the value to the J-Station using CC events
+            # however, it needs to be confirmed in order to persist
+            self.main_window.send_settings(self.settings)
+            self.digital_level_has_changed = False
+
         self.gtk_dlg.hide()
+
+    def on_digital_level_changed(self, widget, step, value):
+        if not self.prevent_propagation:
+            self.digital_level_has_changed = True
+            self.settings.digital_out_level = int(value)
+        self.digital_level_regular_callback(widget, step, value)
 
     def on_utility_changed(self, widget, value=None):
         if not self.prevent_propagation:
