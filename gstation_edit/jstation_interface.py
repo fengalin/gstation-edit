@@ -32,6 +32,8 @@ from .messages.jstation_sysex_event import JStationSysExEvent
 from .messages.bank_dump_req import BankDumpRequest
 from .messages.end_bank_dump_resp import EndBankDumpResponse
 
+from .messages.notify_utility import NotifyUtility
+
 from .messages.one_prg_resp import OneProgramResponse
 
 from .messages.prg_indices_req import PRGIndicesRequest
@@ -69,6 +71,8 @@ class JStationInterface:
 
         BankDumpRequest.register()
         EndBankDumpResponse.register(self.end_bank_dump_callback)
+
+        NotifyUtility.register(self.notify_utility_callback)
 
         OneProgramResponse.register(self.one_program_callback)
 
@@ -210,13 +214,13 @@ class JStationInterface:
         if self.is_connected:
             self.send_event(BankDumpRequest(channel=self.sysex_channel))
         else:
-            print('req_bank_dump canceled: not connected')
+            print('req_bank_dump: not connected')
 
     def req_program_update_req(self):
         if self.is_connected:
             self.send_event(RequestProgramUpdate(channel=self.sysex_channel))
         else:
-            print('req_program_update_req canceled: not connected')
+            print('req_program_update_req: not connected')
 
     def req_program_update(self, program):
         if self.is_connected:
@@ -279,6 +283,11 @@ class JStationInterface:
         self.is_response_received_cndt.release()
         print('Found JStation on input %s and output %s '\
               %(str(self.js_port_in ), str( self.js_port_out)))
+
+    def notify_utility_callback(self, event):
+        self.default_event_callback(event)
+        settings_req = UtilitySettingsRequest(channel=self.sysex_channel)
+        self.send_event(settings_req)
 
     def utility_settings_callback(self, event):
         self.default_event_callback(event)
