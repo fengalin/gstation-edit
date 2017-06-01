@@ -246,12 +246,13 @@ class JStationInterface:
                     if None != seq_event:
 #                        print('==> Received event: %s'%(seq_event))
                         event = self.factory.build_from_seq_event(seq_event)
-                        if event.is_valid:
-                            print('\t%s'%(event))
+                        if event and event.is_valid:
+#                            print('\t%s'%(event))
                             event.process()
                         else:
-                            print(event)
-                            pass
+                            if event:
+                                print(event)
+                            # else: seq event is dumped in the factory
                     else:
                         print('Seq event is null')
                 event_list = list()
@@ -330,10 +331,10 @@ class JStationInterface:
         success = False
         event.fill_seq_event()
         if event.is_valid:
-            print('<== sending %s'%(event))
+#            print('<== sending %s'%(event))
             self.seq.output_event(event.get_seq_event())
             self.seq.drain_output()
-            print('...sent')
+#            print('...sent')
             success = True
         else:
             print('Failed to build seq event for: %s'%(event))

@@ -41,7 +41,6 @@ class UtilitiesDlg:
         self.stereo_switch = self.get_widget('stereo-swtch')
         self.dry_track_switch = self.get_widget('dry-track-swtch')
         self.midi_loopback_switch = self.get_widget('midi-loopback-swtch')
-        self.midi_channel_spbtn = self.get_widget('utilities-midi-channel-spbtn')
 
         # digital level is the only utility parameter
         # to be associated to a CC parameter
@@ -74,9 +73,6 @@ class UtilitiesDlg:
                                                         self.on_utility_changed
         signal_handlers['on_midi-loopback-swtch_state_set'] = \
                                                         self.on_utility_changed
-        signal_handlers['on_utilities-midi-channel-spbtn_value_changed'] = \
-                                                        self.on_utility_changed
-        # TODO: connect handles for on_utility_changed
         signal_handlers.update(self.digital_level_scale.get_signal_handlers())
         return signal_handlers
 
@@ -102,7 +98,6 @@ class UtilitiesDlg:
         self.digital_level_scale.init_value(self.settings.digital_out_level)
         self.dry_track_switch.set_active(self.settings.dry_track)
         self.midi_loopback_switch.set_active(self.settings.midi_merge)
-        self.midi_channel_spbtn.set_value(self.settings.midi_channel)
         self.prevent_propagation = False
 
 
@@ -119,10 +114,6 @@ class UtilitiesDlg:
                 self.settings.dry_track = value
             elif widget == self.midi_loopback_switch:
                 self.settings.midi_merge = value
-            elif widget == self.midi_channel_spbtn:
-                self.settings.midi_channel = int(
-                        self.midi_channel_spbtn.get_value()
-                    )
 
             self.main_window.send_settings(self.settings)
 

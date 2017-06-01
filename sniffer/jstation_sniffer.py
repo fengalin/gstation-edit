@@ -21,9 +21,8 @@ from threading import Thread, Event, Condition
 
 from pyalsa import alsaseq
 
-from gstation_edit.jstation_interface import *
+from gstation_edit.jstation_interface import JStationInterface
 
-from gstation_edit.messages.jstation_sysex_event import *
 
 class JStationSniffer(JStationInterface):
     def __init__(self, app_name):

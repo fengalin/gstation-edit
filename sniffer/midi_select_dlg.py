@@ -20,7 +20,6 @@
 from gi.repository import Gtk
 from threading import Thread
 
-from gstation_edit.midi.port import *
 
 class MidiSelectDlg:
     def __init__(self, parent, js_interface, gtk_builder):
@@ -36,7 +35,7 @@ class MidiSelectDlg:
         self.midi_channel_spbtn = self.get_widget('midi-channel-spbtn')
         self.sysex_device_id_spbtn = self.get_widget('sysex-device-id-spbtn')
 
-        self.midi_select_msg_lbl.set_text( '' )
+        self.midi_select_msg_lbl.set_text('')
 
         self.midi_port_in_list = None
         self.midi_port_out_list = None

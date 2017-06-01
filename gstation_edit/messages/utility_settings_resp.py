@@ -51,16 +51,15 @@ class UtilitySettingsResponse(JStationSysExEvent):
 
     # Build to send
     def build_data_buffer(self):
-        JStationSysExEvent.build_data_buffer(self)
-        if self.is_valid:
-            self.data_buffer += \
-                self.helper.get_split_bytes_from_value(6, 4)
-            self.data_buffer.append(self.stereo_mono)
-            self.data_buffer.append(self.dry_track)
-            self.data_buffer.append(self.digital_out_level)
-            self.data_buffer.append(self.global_cabinet)
-            self.data_buffer.append(self.midi_merge)
-            self.data_buffer.append(self.midi_channel)
+        dataset = list()
+        dataset.append(self.stereo_mono)
+        dataset.append(self.dry_track)
+        dataset.append(self.digital_out_level)
+        dataset.append(self.global_cabinet)
+        dataset.append(self.midi_merge)
+        dataset.append(self.midi_channel)
+
+        JStationSysExEvent.build_data_buffer(self, dataset)
 
 
     def __str__( self ):
