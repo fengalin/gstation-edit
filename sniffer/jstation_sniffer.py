@@ -69,7 +69,7 @@ class JStationSniffer(JStationInterface):
 
                         event = self.factory.build_from_seq_event(seq_event)
                         if None != event:
-                            print('\n** %s => %s'%(origin, event))
+                            print('\n- **%s** => %s'%(origin, event))
                         else:
 #                            print('\n** Could not build event')
                             pass
