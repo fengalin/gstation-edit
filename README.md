@@ -15,20 +15,20 @@ bass amp modeling and effect processing system.
 
 
 # Features
-- (auto-)connect to a J-Station unit.
-- Load user's bank from the J-Station.
+- Search the J-Station on the available MIDI ports.
+- Connect to the J-Station.
+- Load user's bank programs.
 - Modify parameters/program from the UI and update the J-Station.
 - Modify parameters/program from the J-Station and update the UI.
-- Update utility settings (digital output level, MIDI merge, ...).
-- Track changes with a * in the bank list. GStation-Edit clears the flag when
-initial values are restored (just like the Store button's LED on the J-Station).
+- Undo or Store changes from the UI.
+- Update utility settings (digital output level, cabinet emulation, ...).
+- Track changes with a * in the bank list with the same meaning as the LED on
+the Store button on the J-Station.
 
 
 # Not supported yet
-- Apply changes to a program when changing program from the UI. For the moment,
-just use the Store button on the J-Station.
-- The following items in the program list's contextual menu: store and reload
-a program, export and import a program, copy / paste, rename.
+- The following items in the program list's contextual menu: export and import
+a program, copy / paste, rename.
 - Scale widgets will not get to their full range.
 - Scale widgets display raw values. Actual units should be displayed instead
 (such as dB, ms, etc.)

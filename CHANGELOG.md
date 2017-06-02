@@ -3,7 +3,8 @@
 ### Version 0.5 (in progress)
 #### User
 - Added a **Utility Settings** dialog
-- Added a header bar to open the Utility Settings and the MIDI Selection dialogs
+- Added Undo and Store buttons
+- Added a button to open the MIDI Selection dialog
 - Fixed install
 
 #### J-Station interface
