@@ -77,11 +77,8 @@ class Program:
         self.has_changed = has_changed
 
 
-    def get_data_buffer(self, with_prg_id=False, with_has_changed=False):
+    def get_data_buffer(self, with_has_changed=False):
         data = list()
-        if with_prg_id:
-            data.append(self.bank)
-            data.append(self.number)
 
         program_changed_flag = 0
         if self.has_changed:
@@ -114,6 +111,11 @@ class Program:
     def restore_original(self):
         self.name = str(self.original_name)
         self.data = list(self.original_data)
+        self.has_changed = False
+
+    def apply_changes(self):
+        self.original_name = str(self.name)
+        self.original_data = list(self.data)
         self.has_changed = False
 
     def rename(self, new_name):

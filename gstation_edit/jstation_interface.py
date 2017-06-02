@@ -43,6 +43,7 @@ from .messages.prg_indices_req import PRGIndicesRequest
 from .messages.prg_indices_resp import PRGIndicesResponse
 
 from .messages.receive_prg_update import ReceiveProgramUpdate
+from .messages.reload_prg import ReloadProgram
 from .messages.request_prg_update import RequestProgramUpdate
 
 from .messages.start_bank_dump_resp import StartBankDumpResponse
@@ -85,6 +86,7 @@ class JStationInterface:
         PRGIndicesResponse.register(self.program_indices_callback)
 
         ReceiveProgramUpdate.register(self.program_update_response)
+        ReloadProgram.register()
         RequestProgramUpdate.register()
 
         StartBankDumpResponse.register(self.default_event_callback)
@@ -244,6 +246,22 @@ class JStationInterface:
                                            value=program_nb))
         else:
             print('req_program_change: not connected')
+
+    def reload_program(self):
+        if self.is_connected:
+            self.send_event(ReloadProgram(channel=self.sysex_channel))
+        else:
+            print('reload_program: not connected')
+
+
+    def store_program(self, program):
+        if self.is_connected:
+            self.send_event(ReceiveProgramUpdate(channel=self.sysex_channel,
+                                                 program=program))
+            self.send_event(OneProgramResponse(channel=self.sysex_channel,
+                                               program=program))
+        else:
+            print('store_program: not connected')
 
 
     def wait_for_events(self):

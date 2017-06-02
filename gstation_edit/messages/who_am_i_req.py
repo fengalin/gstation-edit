@@ -43,8 +43,9 @@ class WhoAmIRequest(JStationSysExEvent):
     def build_data_buffer(self):
         if self.RESP_ON_CHANNEL == self.response_on or \
                 self.RESP_ON_7f == self.response_on:
-            dataset = [self.response_on]
-            JStationSysExEvent.build_data_buffer(self, dataset, with_len=False)
+            JStationSysExEvent.build_data_buffer(
+                self, data_after_len=[self.response_on]
+            )
         else:
             self.data_buffer = list()
             self.is_valid = False

@@ -31,6 +31,7 @@ from .midi_select_dlg import MidiSelectDlg
 from .utilities_dlg import UtilitiesDlg
 from .jstation_interface import JStationInterface
 
+
 class MainWindow:
     def __init__(self, app_name, gtk_builder):
         self._gtk_builder = gtk_builder
@@ -66,20 +67,13 @@ class MainWindow:
         self._parameter_bindings = dict()
         self._parameter_cc_bindings = dict()
 
-        self.init_utilities_dlg()
-        self.init_rename_dlg()
-        self.init_midi_select_dlg()
-
         header_bar = self._gtk_builder.get_object('header-bar')
         self.gtk_window.set_titlebar(header_bar)
 
-        midi_options_btn = self._gtk_builder.get_object('midi-options-btn')
-        midi_options_btn.connect('clicked',
-                                 self._midi_select_dlg.present)
-        utilities_btn = self._gtk_builder.get_object('utilities-btn')
-        utilities_btn.connect('clicked',
-                                  self._utilities_dlg.present)
-
+        self.init_undo_store()
+        self.init_utilities_dlg()
+        self.init_rename_dlg()
+        self.init_midi_select_dlg()
 
         self._units = list()
         self._units.append(CompressorGateUnit(self))
@@ -95,18 +89,32 @@ class MainWindow:
             unit.init_widgets(self._gtk_builder)
 
     def init_midi_select_dlg(self):
+        midi_options_btn = self._gtk_builder.get_object('midi-options-btn')
         self._midi_select_dlg = MidiSelectDlg(self,
                                               self._jstation_interface,
                                               self._gtk_builder)
+        midi_options_btn.connect('clicked',
+                                 self._midi_select_dlg.present)
         self._signal_handlers.update(self._midi_select_dlg.get_signal_handlers())
 
     def init_utilities_dlg(self):
+        utilities_btn = self._gtk_builder.get_object('utilities-btn')
         self._utilities_dlg = UtilitiesDlg(self, self._gtk_builder)
+        utilities_btn.connect('clicked',
+                                  self._utilities_dlg.present)
         self._signal_handlers.update(self._utilities_dlg.get_signal_handlers())
         self._parameter_cc_bindings.update(
             self._utilities_dlg.get_parameter_cc_bindings()
         )
 
+    def init_undo_store(self):
+        self.undo_btn = self._gtk_builder.get_object('undo-btn')
+        self.undo_btn.set_sensitive(False)
+        self.undo_btn.connect('clicked', self.on_undo_clicked)
+
+        self.store_btn = self._gtk_builder.get_object('store-btn')
+        self.store_btn.set_sensitive(False)
+        self.store_btn.connect('clicked', self.on_store_clicked)
 
     def init_bank_list_widget(self):
         self._bank_list_widget = self._gtk_builder.get_object('bank-list-trv')
@@ -203,6 +211,12 @@ class MainWindow:
             flag = ''
             if has_changed:
                 flag = '*'
+                self.undo_btn.set_sensitive(True)
+                self.store_btn.set_sensitive(True)
+            else:
+                self.undo_btn.set_sensitive(False)
+                self.store_btn.set_sensitive(False)
+
             self._bank_list_model.set(self._current_selected_iter, 2, flag)
 
     def set_program_count(self, program_count):
@@ -292,12 +306,24 @@ class MainWindow:
         self._jstation_interface.req_program_change(selected_program_nb)
 
 
+    def on_undo_clicked(self, widget):
+        if self._current_program != None:
+            self._current_program.restore_original()
+            self.init_parameters()
+            self._jstation_interface.reload_program()
+
+    def on_store_clicked(self, widget):
+        if self._current_program != None:
+            self._current_program.apply_changes()
+            self._jstation_interface.store_program(self._current_program)
+            self.set_program_has_changed(False)
+
+
     def receive_settings(self, settings):
         self._utilities_dlg.set_utilities(settings)
 
     def send_settings(self, settings):
         self._jstation_interface.send_event(settings)
-
 
     def popup_contextual_menu(self, widget, event):
         if 3 == event.button:

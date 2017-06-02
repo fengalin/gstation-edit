@@ -24,7 +24,7 @@ class OneProgramResponse(JStationSysExEvent):
     PROCEDURE_ID = 0x02
     VERSION = 1
 
-    def __init__(self, channel=-1, program=None, seq_event=None):
+    def __init__(self, channel=-1, seq_event=None, program=None):
         JStationSysExEvent.__init__(self, channel, seq_event)
 
         self.program = program
@@ -41,7 +41,8 @@ class OneProgramResponse(JStationSysExEvent):
     def build_data_buffer(self):
         JStationSysExEvent.build_data_buffer(
             self,
-            self.program.get_data_buffer(with_prg_id=True)
+            data_before_len=[self.program.bank, self.program.number],
+            data_after_len=self.program.get_data_buffer()
         )
 
 

@@ -36,8 +36,10 @@ class OneProgramRequest(JStationSysExEvent):
 
     # Build to send
     def build_data_buffer(self):
-        JStationSysExEvent.build_data_buffer(self, [self.bank_nb, self.prg_nb],
-                                             with_len=False)
+        JStationSysExEvent.build_data_buffer(
+            self,
+            data_before_len=[self.bank_nb, self.prg_nb]
+        )
 
 
     def __str__( self ):

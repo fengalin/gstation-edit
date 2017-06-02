@@ -1,5 +1,5 @@
 """
- gstation-edit NotifyStore definition
+ gstation-edit ReloadProgram definition
 """
 # this file is part of gstation-edit
 # Copyright (C) F LAIGNEL 2009-2017 <fengalin@free.fr>
@@ -19,26 +19,12 @@
 
 from .jstation_sysex_event import JStationSysExEvent
 
-class NotifyStore(JStationSysExEvent):
-    PROCEDURE_ID = 0x22
+class ReloadProgram(JStationSysExEvent):
+    PROCEDURE_ID = 0x20
     VERSION = 1
 
-    def __init__(self, channel=-1, seq_event=None, prg_nb=-1):
+    def __init__(self, channel=-1, seq_event=None):
         JStationSysExEvent.__init__(self, channel, seq_event)
 
-        self.prg_nb = prg_nb
-
-        if self.is_valid:
-            self.prg_nb = self.read_next_bytes(2)
-
-    # Build to send
-    def build_data_buffer(self):
-        JStationSysExEvent.build_data_buffer(
-            self,
-            data_before_len=[self.prg_nb]
-        )
-
-
-    def __str__( self ):
-        return '%s, prg nb: %d'%(JStationSysExEvent.__str__(self), self.prg_nb)
+    # Build to send defined in JStationSysExEvent
 

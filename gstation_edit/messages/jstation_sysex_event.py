@@ -143,7 +143,7 @@ class JStationSysExEvent(SysExMidiEvent):
 
 
     # Build to send
-    def build_data_buffer(self, dataset=None, with_len=True):
+    def build_data_buffer(self, data_before_len=None, data_after_len=None):
         SysExMidiEvent.build_data_buffer(self)
         if -1 != self.PROCEDURE_ID and -1 != self.VERSION:
             self.data_buffer = list(self.MANUFACTURER_ID)
@@ -153,14 +153,20 @@ class JStationSysExEvent(SysExMidiEvent):
             self.data_buffer += \
                 self.helper.get_split_bytes_from_value(self.VERSION)
 
-            if dataset != None:
-                if with_len:
-                    self.data_buffer += \
-                        self.helper.get_split_bytes_from_value(len(dataset), 4)
-
-                for value in dataset:
+            if data_before_len != None:
+                for value in data_before_len:
                     self.data_buffer += \
                         self.helper.get_split_bytes_from_value(value)
+
+            if data_after_len != None:
+                self.data_buffer += self.helper.get_split_bytes_from_value(
+                        len(data_after_len), 4
+                    )
+
+                for value in data_after_len:
+                    self.data_buffer += \
+                        self.helper.get_split_bytes_from_value(value)
+
             self.is_valid = True
         else:
             print('procedure id and/or version not defined for JStationSysEx')

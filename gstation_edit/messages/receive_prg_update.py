@@ -18,7 +18,7 @@
 # with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from .jstation_sysex_event import JStationSysExEvent
-from .program import *
+from .program import Program
 
 class ReceiveProgramUpdate(JStationSysExEvent):
     PROCEDURE_ID = 0x61
@@ -50,7 +50,7 @@ class ReceiveProgramUpdate(JStationSysExEvent):
     def build_data_buffer(self):
         JStationSysExEvent.build_data_buffer(
             self,
-            self.program.get_data_buffer(with_has_changed=True)
+            data_after_len=self.program.get_data_buffer(with_has_changed=True)
         )
 
 
