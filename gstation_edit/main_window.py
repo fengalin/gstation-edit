@@ -210,12 +210,14 @@ class MainWindow:
         self._bank_list_model.clear()
 
     def receive_program_from_jstation(self, program):
+        local_program = self._programs.get(program.number)
+        if local_program == None:
+            loc_str = '%d.%d' %(program.number//3, program.number%3 + 1)
+            self._bank_list_model.append([program.number, loc_str, '', program.name])
         self._programs[program.number] = program
-        loc_str = '%d.%d' %(program.number//3, program.number%3 + 1)
-        self._bank_list_model.append([program.number, loc_str, '', program.name])
         if None != self._current_program:
             if self._current_program.number == program.number:
-                self.update_parameters()
+                self.init_parameters()
 
     def select_program_from_its_number(self, program_nb):
         self.set_current_program(program_nb)
@@ -251,7 +253,7 @@ class MainWindow:
     def select_program_from_its_content(self, program):
         # select a program without knowing its number, but from its name and data
         for cur_prg in self._programs.values():
-            if program.is_the_same_as(cur_prg):
+            if program.is_same_as(cur_prg):
                 self.select_program_from_its_number(cur_prg.number)
                 break
         if None == self._current_program:
@@ -262,6 +264,7 @@ class MainWindow:
             parameter = self._parameter_bindings.get(index)
             if None != parameter:
                 parameter.init_value(self._current_program.data[index])
+        self.set_program_has_changed(False)
 
     def update_parameter_from_jstation(self, parameter, value, is_cc):
         if is_cc:

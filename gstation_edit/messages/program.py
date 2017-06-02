@@ -24,6 +24,22 @@ class Program:
 
     NAME_MAX_LEN = 20 # char count
 
+    BANK_FACTORY = 0
+    BANK_USER = 1
+
+    @classmethod
+    def get_bank_name(class_, bank_nb):
+        bank_name = 'undefined'
+        if bank_nb >= 0:
+            if bank_nb == Program.BANK_USER:
+                bank_name = 'user'
+            elif bank_nb == Program.BANK_FACTORY:
+                bank_name = 'factory'
+            else:
+                bank_name = 'unknown'
+        return bank_name
+
+
     def __init__(self, bank=-1, number=-1, data=None, name="",
                  data_buffer=None, has_changed=False):
         self.helper = SplitBytesHelpher()
@@ -61,12 +77,16 @@ class Program:
         self.has_changed = has_changed
 
 
-    def get_sysex_buffer(self, with_has_changed=False):
+    def get_data_buffer(self, with_prg_id=False, with_has_changed=False):
+        data = list()
+        if with_prg_id:
+            data.append(self.bank)
+            data.append(self.number)
+
         program_changed_flag = 0
         if self.has_changed:
             program_changed_flag = 1
 
-        data = list()
         if with_has_changed:
             data.append(program_changed_flag)
 
@@ -76,13 +96,7 @@ class Program:
             data.append(ord(self.name[index]))
         data.append(0) # 0 ending for name
 
-        sysex_buffer = list()
-        sysex_buffer += \
-            self.helper.get_split_bytes_from_value(len(data), 4)
-        for value in data:
-            sysex_buffer += self.helper.get_split_bytes_from_value(value)
-        return sysex_buffer
-
+        return data
 
 
     def change_parameter(self, parameter_nb, value):
@@ -90,7 +104,7 @@ class Program:
             self.data[parameter_nb] = value
             if self.original_data[parameter_nb] == value:
                 # back to original value => check if Program is back to original state
-                self.has_changed = not self.is_the_same_name_and_data(
+                self.has_changed = not self.is_same_name_and_data(
                     self.original_name,
                     self.original_data
                 )
@@ -107,17 +121,17 @@ class Program:
             self.name = new_name
             if self.original_name == new_name:
                 # back to original name => check if Program is back to original state
-                self.has_changed = not self.is_the_same_name_and_data(
+                self.has_changed = not self.is_same_name_and_data(
                     self.original_name,
                     self.original_data
                 )
             else:
                 self.has_changed = True
 
-    def is_the_same_as(self, other_program):
-        return self.is_the_same_name_and_data(other_program.name, other_program.data)
+    def is_same_as(self, other_program):
+        return self.is_same_name_and_data(other_program.name, other_program.data)
 
-    def is_the_same_name_and_data(self, other_name, other_data):
+    def is_same_name_and_data(self, other_name, other_data):
         result = True
         if other_name == self.name:
             for index in range(0, len(self.original_data)):
@@ -128,10 +142,12 @@ class Program:
             result = False
         return result
 
-    def __str__( self ):
-        return 'Prg bank: %d, prg nb: %d, has_changed: %d, '\
-               'prg name: %s, prg data: %s'\
-                %(self.bank, self.number, self.has_changed, self.name,
+    def __str__(self):
+        return 'prg bank: %s, prg nb: %d, '\
+                'has_changed: %d, prg name: %s, '\
+                'prg data: %s'\
+                %(self.get_bank_name(self.bank), self.number,
+                  self.has_changed, self.name,
                   ["%02d: %02d"%(index, self.data[index]) \
                    for index in range(0, len(self.data))])
 

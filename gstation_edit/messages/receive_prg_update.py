@@ -46,14 +46,12 @@ class ReceiveProgramUpdate(JStationSysExEvent):
                       'and available (%d)'%(prg_data_len, len(prg_data)))
 
 
-
+    # Build to send
     def build_data_buffer(self):
-        JStationSysExEvent.build_data_buffer(self)
-        if self.is_valid:
-            self.data_buffer += \
-                self.program.get_sysex_buffer(with_has_changed=True)
-        else:
-            print('Could not build ReceiveProgramUpdate (invalid)')
+        JStationSysExEvent.build_data_buffer(
+            self,
+            self.program.get_data_buffer(with_has_changed=True)
+        )
 
 
     def __str__(self):

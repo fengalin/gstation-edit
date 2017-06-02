@@ -28,12 +28,15 @@ from .midi.prg_change_event import PrgChangeEvent
 
 
 from .messages.jstation_sysex_event import JStationSysExEvent
+from .messages.program import Program
 
 from .messages.bank_dump_req import BankDumpRequest
 from .messages.end_bank_dump_resp import EndBankDumpResponse
 
+from .messages.notify_store import NotifyStore
 from .messages.notify_utility import NotifyUtility
 
+from .messages.one_prg_req import OneProgramRequest
 from .messages.one_prg_resp import OneProgramResponse
 
 from .messages.prg_indices_req import PRGIndicesRequest
@@ -72,8 +75,10 @@ class JStationInterface:
         BankDumpRequest.register()
         EndBankDumpResponse.register(self.end_bank_dump_callback)
 
+        NotifyStore.register(self.notify_store_callback)
         NotifyUtility.register(self.notify_utility_callback)
 
+        OneProgramRequest.register()
         OneProgramResponse.register(self.one_program_callback)
 
         PRGIndicesRequest.register()
@@ -283,6 +288,13 @@ class JStationInterface:
         self.is_response_received_cndt.release()
         print('Found JStation on input %s and output %s '\
               %(str(self.js_port_in ), str( self.js_port_out)))
+
+    def notify_store_callback(self, event):
+        self.default_event_callback(event)
+        one_prg_req = OneProgramRequest(channel=self.sysex_channel,
+                                        bank_nb=Program.BANK_USER,
+                                        prg_nb=event.prg_nb)
+        self.send_event(one_prg_req)
 
     def notify_utility_callback(self, event):
         self.default_event_callback(event)

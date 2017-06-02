@@ -1,5 +1,5 @@
 """
- gstation-edit OneProgramResponse definition
+ gstation-edit OneProgramRequest definition
 """
 # this file is part of gstation-edit
 # Copyright (C) F LAIGNEL 2009-2017 <fengalin@free.fr>
@@ -20,31 +20,28 @@
 from .jstation_sysex_event import JStationSysExEvent
 from .program import Program
 
-class OneProgramResponse(JStationSysExEvent):
-    PROCEDURE_ID = 0x02
+class OneProgramRequest(JStationSysExEvent):
+    PROCEDURE_ID = 0x01
     VERSION = 1
 
-    def __init__(self, channel=-1, program=None, seq_event=None):
+    def __init__(self, channel=-1, seq_event=None, bank_nb=-1, prg_nb=-1):
         JStationSysExEvent.__init__(self, channel, seq_event)
 
-        self.program = program
+        self.bank_nb = bank_nb
+        self.prg_nb = prg_nb
 
         if self.is_valid:
-            bank_nb = self.read_next_bytes(2)
-            prg_nb = self.read_next_bytes(2)
-            prg_data_len = self.read_next_bytes(4)
-
-            prg_data = self.data_buffer[self.data_index:]
-            self.program = Program(bank_nb, prg_nb, data_buffer=prg_data)
+            self.bank_nb = self.read_next_bytes(2)
+            self.prg_nb = self.read_next_bytes(2)
 
     # Build to send
     def build_data_buffer(self):
-        JStationSysExEvent.build_data_buffer(
-            self,
-            self.program.get_data_buffer(with_prg_id=True)
-        )
+        JStationSysExEvent.build_data_buffer(self, [self.bank_nb, self.prg_nb],
+                                             with_len=False)
 
 
-    def __str__(self):
-        return "%s, %s"%(JStationSysExEvent.__str__(self), self.program)
+    def __str__( self ):
+        return '%s, %s bank, prg nb: %d'\
+                %(JStationSysExEvent.__str__(self),
+                  Program.get_bank_name(self.bank_nb), self.prg_nb)
 

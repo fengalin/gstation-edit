@@ -23,8 +23,20 @@ class NotifyStore(JStationSysExEvent):
     PROCEDURE_ID = 0x22
     VERSION = 1
 
-    def __init__(self, channel=-1, seq_event=None):
+    def __init__(self, channel=-1, seq_event=None, prg_nb=-1):
         JStationSysExEvent.__init__(self, channel, seq_event)
 
-    # Build to send defined in JStationSysExEvent
+        self.prg_nb = prg_nb
+
+        if self.is_valid:
+            self.prg_nb = self.read_next_bytes(2)
+
+    # Build to send
+    def build_data_buffer(self):
+        JStationSysExEvent.build_data_buffer(self, [self.prg_nb],
+                                             with_len=False)
+
+
+    def __str__( self ):
+        return '%s, prg nb: %d'%(JStationSysExEvent.__str__(self), self.prg_nb)
 
