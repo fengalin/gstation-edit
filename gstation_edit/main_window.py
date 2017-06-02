@@ -84,7 +84,7 @@ class MainWindow:
         self._units.append(WhaExpressionUnit(self))
 
         self.init_bank_list_widget()
-        self.init_contextual_menu_widget()
+        self.init_context_menu_widget()
         for unit in self._units:
             unit.init_widgets(self._gtk_builder)
 
@@ -142,42 +142,49 @@ class MainWindow:
             self._bank_list_model = None
             print('Could not find widget for bank list')
 
-    def init_contextual_menu_widget(self):
-        self._contextual_menu_widget = \
-                                 self._gtk_builder.get_object('contextual-menu')
-        if None != self._contextual_menu_widget:
+    def init_context_menu_widget(self):
+        self._context_menu_widget = \
+                                 self._gtk_builder.get_object('context-menu')
+        self._context_menu_widget.attach_to_widget(self._bank_list_widget)
+
+        if None != self._context_menu_widget:
+            self.menu_item_store = Gtk.MenuItem('Store changes')
+            self.menu_item_store.connect('activate', self.context_menu_store)
+            self._context_menu_widget.insert(self.menu_item_store, 1)
+            self.menu_item_store.set_sensitive(False)
+
+            self.menu_item_undo = Gtk.MenuItem('Undo changes')
+            self.menu_item_undo.connect('activate', self.context_menu_undo)
+            self._context_menu_widget.insert(self.menu_item_undo, 2)
+            self.menu_item_undo.set_sensitive(False)
+
             menu_item_rename = Gtk.MenuItem('Rename...')
-            menu_item_rename.connect( 'activate', self.contextual_menu_rename)
-            self._contextual_menu_widget.insert(menu_item_rename, 0)
+            menu_item_rename.connect( 'activate', self.context_menu_rename)
+            self._context_menu_widget.insert(menu_item_rename, 0)
+            menu_item_rename.set_sensitive(False)
 
-            menu_item_store = Gtk.MenuItem('Store to J-Station')
-            menu_item_store.connect('activate', self.contextual_menu_store)
-            self._contextual_menu_widget.insert(menu_item_store, 1)
+            menu_item_export = Gtk.MenuItem('Export...')
+            menu_item_export.connect('activate', self.context_menu_export)
+            self._context_menu_widget.insert(menu_item_export, 3)
+            menu_item_export.set_sensitive(False)
 
-            menu_item_reload = Gtk.MenuItem('Reload from J-Station')
-            menu_item_reload.connect('activate', self.contextual_menu_reload)
-            self._contextual_menu_widget.insert(menu_item_reload, 2)
-
-            menu_item_export = Gtk.MenuItem('Export to file...')
-            menu_item_export.connect('activate', self.contextual_menu_export)
-            self._contextual_menu_widget.insert(menu_item_export, 3)
-
-            menu_item_import = Gtk.MenuItem('Import from file...')
-            menu_item_import.connect('activate', self.contextual_menu_import)
-            self._contextual_menu_widget.insert(menu_item_import, 4)
+            menu_item_import = Gtk.MenuItem('Import...')
+            menu_item_import.connect('activate', self.context_menu_import)
+            self._context_menu_widget.insert(menu_item_import, 4)
+            menu_item_import.set_sensitive(False)
 
             menu_item_copy = Gtk.MenuItem('Copy')
-            menu_item_copy.connect('activate', self.contextual_menu_copy)
-            self._contextual_menu_widget.insert(menu_item_copy, 5)
+            menu_item_copy.connect('activate', self.context_menu_copy)
+            self._context_menu_widget.insert(menu_item_copy, 5)
+            menu_item_copy.set_sensitive(False)
 
             menu_item_paste = Gtk.MenuItem('Paste')
             menu_item_paste.set_sensitive(False)
-            menu_item_paste.connect('activate', self.contextual_menu_paste)
-            self._contextual_menu_widget.insert(menu_item_paste, 6)
-            # TODO: Paste should be visible in Rack because the sensitivity will be toggled
-            # TODO: in JEdit it is possible to edit comments for banks (don't know where it's stored)
+            menu_item_paste.connect('activate', self.context_menu_paste)
+            self._context_menu_widget.insert(menu_item_paste, 6)
+            menu_item_paste.set_sensitive(False)
         else:
-            print('Could not find widget for contextual menu')
+            print('Could not find widget for context menu')
 
     def init_rename_dlg(self):
         self._rename_dlg = self._gtk_builder.get_object('rename-dlg')
@@ -190,7 +197,7 @@ class MainWindow:
         self._signal_handlers['on_bank-list-trv_cursor_changed'] = \
                                                     self.select_program_from_ui
         self._signal_handlers['on_bank-list-trv_button_press_event'] = \
-                                                    self.popup_contextual_menu
+                                                    self.popup_context_menu
 
         for unit in self._units:
             self._signal_handlers.update(unit.get_signal_handlers())
@@ -212,10 +219,14 @@ class MainWindow:
             if has_changed:
                 flag = '*'
                 self.undo_btn.set_sensitive(True)
+                self.menu_item_undo.set_sensitive(True)
                 self.store_btn.set_sensitive(True)
+                self.menu_item_store.set_sensitive(True)
             else:
                 self.undo_btn.set_sensitive(False)
+                self.menu_item_undo.set_sensitive(False)
                 self.store_btn.set_sensitive(False)
+                self.menu_item_store.set_sensitive(False)
 
             self._bank_list_model.set(self._current_selected_iter, 2, flag)
 
@@ -325,17 +336,18 @@ class MainWindow:
     def send_settings(self, settings):
         self._jstation_interface.send_event(settings)
 
-    def popup_contextual_menu(self, widget, event):
-        if 3 == event.button:
+    def popup_context_menu(self, widget, event):
+        if event.button == 3:
             # right click
-            self._contextual_menu_widget.popup(None, None, None,
-                                               event.button, event.time )
-            self._contextual_menu_widget.show_all()
+            self._context_menu_widget.popup(None, None, None, None,
+                                            event.button, event.time)
+            self._context_menu_widget.show_all()
+            return True
 
     def set_current_name(self, name):
         self._bank_list_model.set(self._current_selected_iter, 3, name)
 
-    def contextual_menu_rename(self, widget, *arg):
+    def context_menu_rename(self, widget, *arg):
         if None != self._current_program:
             original_name = self._current_program.name
             self._rename_entry.set_text(original_name)
@@ -349,27 +361,25 @@ class MainWindow:
                     self.set_current_name(new_name)
             self.rename_dlg.hide()
 
-    def contextual_menu_store(self, widget, *arg):
-        # TODO: implement !
-        print('Store clicked %s'%(arg))
+    def context_menu_store(self, widget, *arg):
+        self.on_store_clicked(widget)
 
-    def contextual_menu_reload( self, i_widget, *arg ):
-        # TODO: implement !
-        print('Reload clicked %s'%(arg))
+    def context_menu_undo(self, widget, *arg):
+        self.on_undo_clicked(widget)
 
-    def contextual_menu_import( self, i_widget, *arg ):
+    def context_menu_import(self, widget, *arg):
         # TODO: implement !
         print('Import clicked %s'%(arg))
 
-    def contextual_menu_export( self, i_widget, *arg ):
+    def context_menu_export(self, widget, *arg):
         # TODO: implement !
         print('Export clicked %s'%(arg))
 
-    def contextual_menu_copy( self, i_widget, *arg ):
+    def context_menu_copy(self, widget, *arg):
         # TODO: implement !
         print('Copy clicked %s'%(arg))
 
-    def contextual_menu_paste( self, i_widget, *arg ):
+    def context_menu_paste(self, widget, *arg):
         # TODO: implement !
         print('Paste clicked %s'%(arg))
 

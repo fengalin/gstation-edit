@@ -218,7 +218,7 @@
     <property name="page_increment">10</property>
     <property name="page_size">10</property>
   </object>
-  <object class="GtkMenu" id="contextual-menu">
+  <object class="GtkMenu" id="context-menu">
     <property name="visible">True</property>
     <property name="can_focus">False</property>
   </object>
