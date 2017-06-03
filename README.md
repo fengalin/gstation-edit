@@ -16,7 +16,6 @@ bass amp modeling and effect processing system.
 
 # Features
 - Search the J-Station on the available MIDI ports.
-- Connect to the J-Station.
 - Load user's bank programs.
 - Modify parameters/program from the UI and update the J-Station.
 - Modify parameters/program from the J-Station and update the UI.
@@ -27,15 +26,15 @@ the Store button on the J-Station.
 
 
 # Not supported yet
-- The following items in the program list's contextual menu: export and import
+- The following items in the program list's context menu: export and import
 a program, copy / paste, rename.
-- Scale widgets will not get to their full range.
 - Scale widgets display raw values. Actual units should be displayed instead
 (such as dB, ms, etc.)
+- Scale widgets will not get to their full range.
 - Factory banks are selectable from the J-Station, but will not be reflected
 in the UI.
 - Only firmware 2.0 is supported. If someone uses firmware 1.0, please contact
-me and we could have GStation-Edit compatible with both firmware.
+me and we could have GStation-Edit compatible with both firmwares.
 
 
 # How to run GStation-Edit
@@ -66,7 +65,7 @@ $ ./setup.py install --user
 ### System wide install
 From the dowload root directory:
 ``` bash
-# sudo ./setup.py install
+\# sudo ./setup.py install
 ```
 
 
