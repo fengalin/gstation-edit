@@ -17,7 +17,7 @@
 # You should have received a copy of the GNU General Public License along
 # with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from ..ui_core.parameter import Parameter
+from gstation_edit.ui_core.parameter import Parameter
 
 class RackUnit:
     def __init__(self, parent, name):

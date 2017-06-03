@@ -21,40 +21,40 @@ from threading import Thread, Event, Condition
 
 from pyalsa import alsaseq
 
-from .midi.port import MidiPort
-from .midi.event_factory import MidiEventFactory
-from .midi.cc_event import CCMidiEvent
-from .midi.prg_change_event import PrgChangeEvent
+from gstation_edit.midi.port import MidiPort
+from gstation_edit.midi.event_factory import MidiEventFactory
+from gstation_edit.midi.cc_event import CCMidiEvent
+from gstation_edit.midi.prg_change_event import PrgChangeEvent
 
 
-from .messages.jstation_sysex_event import JStationSysExEvent
-from .messages.program import Program
+from gstation_edit.messages.jstation_sysex_event import JStationSysExEvent
+from gstation_edit.messages.program import Program
 
-from .messages.bank_dump_req import BankDumpRequest
-from .messages.end_bank_dump_resp import EndBankDumpResponse
+from gstation_edit.messages.bank_dump_req import BankDumpRequest
+from gstation_edit.messages.end_bank_dump_resp import EndBankDumpResponse
 
-from .messages.notify_store import NotifyStore
-from .messages.notify_utility import NotifyUtility
+from gstation_edit.messages.notify_store import NotifyStore
+from gstation_edit.messages.notify_utility import NotifyUtility
 
-from .messages.one_prg_req import OneProgramRequest
-from .messages.one_prg_resp import OneProgramResponse
+from gstation_edit.messages.one_prg_req import OneProgramRequest
+from gstation_edit.messages.one_prg_resp import OneProgramResponse
 
-from .messages.prg_indices_req import PRGIndicesRequest
-from .messages.prg_indices_resp import PRGIndicesResponse
+from gstation_edit.messages.prg_indices_req import PRGIndicesRequest
+from gstation_edit.messages.prg_indices_resp import PRGIndicesResponse
 
-from .messages.receive_prg_update import ReceiveProgramUpdate
-from .messages.reload_prg import ReloadProgram
-from .messages.request_prg_update import RequestProgramUpdate
+from gstation_edit.messages.receive_prg_update import ReceiveProgramUpdate
+from gstation_edit.messages.reload_prg import ReloadProgram
+from gstation_edit.messages.request_prg_update import RequestProgramUpdate
 
-from .messages.start_bank_dump_resp import StartBankDumpResponse
+from gstation_edit.messages.start_bank_dump_resp import StartBankDumpResponse
 
-from .messages.to_msg_resp import ToMessageResponse
+from gstation_edit.messages.to_msg_resp import ToMessageResponse
 
-from .messages.utility_settings_req import UtilitySettingsRequest
-from .messages.utility_settings_resp import UtilitySettingsResponse
+from gstation_edit.messages.utility_settings_req import UtilitySettingsRequest
+from gstation_edit.messages.utility_settings_resp import UtilitySettingsResponse
 
-from .messages.who_am_i_req import WhoAmIRequest
-from .messages.who_am_i_resp import WhoAmIResponse
+from gstation_edit.messages.who_am_i_req import WhoAmIRequest
+from gstation_edit.messages.who_am_i_resp import WhoAmIResponse
 
 
 class JStationInterface:

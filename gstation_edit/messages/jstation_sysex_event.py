@@ -17,10 +17,10 @@
 # You should have received a copy of the GNU General Public License along
 # with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from ..midi.event import MidiEvent
-from ..midi.sysex_event import SysExMidiEvent
-from ..midi.event_factory import MidiEventFactory
-from ..midi.split_bytes import SplitBytesHelpher
+from gstation_edit.midi.event import MidiEvent
+from gstation_edit.midi.sysex_event import SysExMidiEvent
+from gstation_edit.midi.event_factory import MidiEventFactory
+from gstation_edit.midi.split_bytes import SplitBytesHelpher
 
 class JStationSysExEvent(SysExMidiEvent):
     MANUFACTURER_ID = [0, 0, 0x10]

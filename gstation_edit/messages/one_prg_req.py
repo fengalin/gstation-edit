@@ -17,8 +17,8 @@
 # You should have received a copy of the GNU General Public License along
 # with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from .jstation_sysex_event import JStationSysExEvent
-from .program import Program
+from gstation_edit.messages.jstation_sysex_event import JStationSysExEvent
+from gstation_edit.messages.program import Program
 
 class OneProgramRequest(JStationSysExEvent):
     PROCEDURE_ID = 0x01

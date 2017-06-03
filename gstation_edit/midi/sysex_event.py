@@ -19,7 +19,7 @@
 
 from pyalsa import alsaseq
 
-from .event import *
+from gstation_edit.midi.event import MidiEvent
 
 class SysExMidiEvent(MidiEvent):
     EVENT_TYPE = alsaseq.SEQ_EVENT_SYSEX

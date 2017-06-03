@@ -24,7 +24,7 @@ gi.require_version('Gtk', '3.0')
 from gi.repository import Gtk
 from gi.repository import GObject
 
-from .main_window import MainWindow
+from gstation_edit.main_window import MainWindow
 
 try:
     from config import DATA_ROOT_DIR

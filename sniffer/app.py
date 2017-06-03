@@ -24,8 +24,8 @@ gi.require_version('Gtk', '3.0')
 from gi.repository import Gtk
 from gi.repository import GObject
 
-from .jstation_sniffer import JStationSniffer
-from .midi_select_dlg import MidiSelectDlg
+from sniffer.jstation_sniffer import JStationSniffer
+from sniffer.midi_select_dlg import MidiSelectDlg
 
 sys.argv[0] = 'jstation-sniffer'
 

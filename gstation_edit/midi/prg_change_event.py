@@ -19,8 +19,8 @@
 
 from pyalsa import alsaseq
 
-from .cc_event import *
-from .event_factory import *
+from gstation_edit.midi.cc_event import CCMidiEvent
+from gstation_edit.midi.event_factory import MidiEventFactory
 
 class PrgChangeEvent(CCMidiEvent):
     EVENT_TYPE = alsaseq.SEQ_EVENT_PGMCHANGE

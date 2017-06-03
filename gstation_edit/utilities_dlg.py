@@ -18,9 +18,9 @@
 # with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
-from .ui_core.scale_parameter import ScaleParameter
+from gstation_edit.ui_core.scale_parameter import ScaleParameter
 
-from .messages.utility_settings_resp import UtilitySettingsResponse
+from gstation_edit.messages.utility_settings_resp import UtilitySettingsResponse
 
 # Note: might be an heir of RackUnit because of the scale parameter
 # Or RackUnit could inherit a ParameterCollection or something similar

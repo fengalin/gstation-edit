@@ -19,8 +19,8 @@
 
 from pyalsa import alsaseq
 
-from .event import *
-from .event_factory import *
+from gstation_edit.midi.event import MidiEvent
+from gstation_edit.midi.event_factory import MidiEventFactory
 
 class CCMidiEvent(MidiEvent):
     EVENT_TYPE = alsaseq.SEQ_EVENT_CONTROLLER

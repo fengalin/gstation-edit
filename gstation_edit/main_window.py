@@ -20,16 +20,16 @@
 
 from gi.repository import Gtk
 
-from .rack.amp import AmpUnit
-from .rack.compress_gate import CompressorGateUnit
-from .rack.effect import EffectUnit
-from .rack.delay import DelayUnit
-from .rack.reverb import ReverbUnit
-from .rack.wha_expression import WhaExpressionUnit
+from gstation_edit.rack.amp import AmpUnit
+from gstation_edit.rack.compress_gate import CompressorGateUnit
+from gstation_edit.rack.effect import EffectUnit
+from gstation_edit.rack.delay import DelayUnit
+from gstation_edit.rack.reverb import ReverbUnit
+from gstation_edit.rack.wha_expression import WhaExpressionUnit
 
-from .midi_select_dlg import MidiSelectDlg
-from .utilities_dlg import UtilitiesDlg
-from .jstation_interface import JStationInterface
+from gstation_edit.midi_select_dlg import MidiSelectDlg
+from gstation_edit.utilities_dlg import UtilitiesDlg
+from gstation_edit.jstation_interface import JStationInterface
 
 
 class MainWindow:
