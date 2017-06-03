@@ -50,7 +50,7 @@ is stucked to Python 2)
 ## Runing from source
 You can launch GStation-Edit from the download root directory:
 ``` bash
-$ ./gstation-edit
+ $ ./gstation-edit
 ```
 
 ## Install
@@ -60,12 +60,12 @@ the Audio and Video menu.
 ### User install
 From the dowload root directory:
 ``` bash
-$ ./setup.py install --user
+ $ ./setup.py install --user
 ```
 ### System wide install
 From the dowload root directory:
 ``` bash
-`# sudo ./setup.py install
+ # sudo ./setup.py install
 ```
 
 
