@@ -1,6 +1,6 @@
 ## Change Log
 
-### Version 0.5 (in progress)
+### Version 0.5.0
 #### User
 - Added a **Utility Settings** dialog
 - Added Undo and Store buttons
@@ -11,8 +11,8 @@
 - Properly sign off when closing GStation-Edit
 
 #### Development
-- Built a new and much better **MIDI sniffer** which allows tracing exchanges
-between J-Edit (runing in Wine) and the J-Sstation and added it to project
+- Built a new and better **MIDI sniffer** which allows tracing exchanges
+between J-Edit (runing in Wine) and the J-Sstation and added it to the project
 so I will not loose it again
 - Ported to **GTK-3** using GObject
 - Reworked project structure and coding style
