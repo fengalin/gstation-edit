@@ -18,7 +18,6 @@
 # with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from pyalsa import alsaseq
-from .event_resp_factory import *
 
 class MidiEvent(object):
     # class memeber
