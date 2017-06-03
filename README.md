@@ -65,7 +65,7 @@ $ ./setup.py install --user
 ### System wide install
 From the dowload root directory:
 ``` bash
-\# sudo ./setup.py install
+`# sudo ./setup.py install
 ```
 
 
