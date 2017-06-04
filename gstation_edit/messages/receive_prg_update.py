@@ -33,7 +33,7 @@ class ReceiveProgramUpdate(JStationSysExEvent):
 
             if len(self.data_buffer) >= 2*prg_data_len+4:
                 has_changed = False
-                if self.VERSION == 2:
+                if self.version == 2:
                     has_changed = self.read_next_bytes(2)
 
                 prg_buffer = self.data_buffer[self.data_index:]
