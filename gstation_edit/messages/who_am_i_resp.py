@@ -30,7 +30,7 @@ class WhoAmIResponse(JStationSysExEvent):
         self.transmit_channel = transmit_channel
         self.sysex_channel = sysex_channel
 
-        if self.is_valid:
+        if seq_event and self.is_valid:
             data_length = self.read_next_bytes(4)
             if len(self.data_buffer) >= 2*data_length+4:
                 self.receive_channel = self.read_next_bytes(2)

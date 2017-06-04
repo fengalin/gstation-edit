@@ -28,7 +28,7 @@ class ReceiveProgramUpdate(JStationSysExEvent):
         JStationSysExEvent.__init__(self, channel, seq_event)
         self.program = program
 
-        if self.is_valid:
+        if seq_event and self.is_valid:
             prg_data_len = self.read_next_bytes(4)
 
             if len(self.data_buffer) >= 2*prg_data_len+4:

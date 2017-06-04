@@ -45,7 +45,7 @@ class ToMessageResponse(JStationSysExEvent):
         self.error_code = error_code
         self.error_msg = ''
 
-        if self.is_valid:
+        if seq_event and self.is_valid:
             # no length in this message
             self.req_procedure = self.read_next_bytes(2)
             self.error_code = self.read_next_bytes(2)

@@ -30,7 +30,7 @@ class WhoAmIRequest(JStationSysExEvent):
         JStationSysExEvent.__init__(self, channel, seq_event)
         self.response_on = self.RESP_ON_7f
 
-        if self.is_valid:
+        if seq_event and self.is_valid:
             if len(self.data_buffer) >= 2:
                 self.response_on = self.read_next_bytes(2)
                 self.is_valid = True

@@ -27,7 +27,7 @@ class PRGIndicesResponse(JStationSysExEvent):
         JStationSysExEvent.__init__(self, channel, seq_event)
 
         self.prg_indices = list()
-        if self.is_valid:
+        if seq_event and self.is_valid:
             data_length = self.read_next_bytes(4)
 
             if len(self.data_buffer) >= 2*data_length+4:

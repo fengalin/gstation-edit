@@ -27,7 +27,7 @@ class StartBankDumpResponse(JStationSysExEvent):
         JStationSysExEvent.__init__(self, channel, seq_event)
         self.total_length = total_length
 
-        if self.is_valid:
+        if seq_event and self.is_valid:
             data_length = self.read_next_bytes(4)
             if len(self.data_buffer) >= 2*data_length+4:
                 self.total_length = self.read_next_bytes(data_length)

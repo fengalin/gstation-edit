@@ -29,7 +29,7 @@ class OneProgramResponse(JStationSysExEvent):
 
         self.program = program
 
-        if self.is_valid:
+        if seq_event and self.is_valid:
             bank_nb = self.read_next_bytes(2)
             prg_nb = self.read_next_bytes(2)
             prg_data_len = self.read_next_bytes(4)

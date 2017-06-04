@@ -30,7 +30,7 @@ class OneProgramRequest(JStationSysExEvent):
         self.bank_nb = bank_nb
         self.prg_nb = prg_nb
 
-        if self.is_valid:
+        if seq_event and self.is_valid:
             self.bank_nb = self.read_next_bytes(2)
             self.prg_nb = self.read_next_bytes(2)
 
