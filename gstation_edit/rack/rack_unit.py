@@ -56,8 +56,8 @@ class RackUnit:
     def send_parameter_value(self, parameter):
         self.parent.send_parameter_value(parameter)
 
-    def __str__( self ):
+    def __str__(self):
         parameters_str = ''
         for parameter in self._parameters.values():
             parameters_str += parameter
-        return "Rack unit: %s%s"%(self.name, parameters_str)
+        return 'Rack unit: %s%s'%(self.name, parameters_str)

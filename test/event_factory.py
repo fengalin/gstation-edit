@@ -47,7 +47,7 @@ def test():
 
     factory = MidiEventFactory()
     sysex_event = factory.build_from_seq_event(sysex_seq_event)
-    if None != sysex_event:
+    if sysex_event:
         print(sysex_event.is_valid)
         print(str(sysex_event))
     else:
@@ -61,7 +61,7 @@ def test():
     cc_seq_event.set_data(cc_data);
 
     cc_event = factory.build_from_seq_event(cc_seq_event)
-    if None != cc_event:
+    if cc_event:
         print(cc_event.is_valid)
         print(str(cc_event))
     else:

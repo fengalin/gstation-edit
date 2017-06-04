@@ -59,7 +59,7 @@ class GrpParameter(Parameter):
                 parameter.set_active(False)
 
     def add_parameter(self, parameter):
-        if 0 == len(self.parameters):
+        if len(self.parameters) == 0:
             self.parameter_nb = parameter.parameter_nb
             self.cc_nb = parameter.cc_nb
             self.value = parameter.value

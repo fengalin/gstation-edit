@@ -55,5 +55,5 @@ class ReceiveProgramUpdate(JStationSysExEvent):
 
 
     def __str__(self):
-        return "%s, %s"%(JStationSysExEvent.__str__(self),
+        return '%s, %s'%(JStationSysExEvent.__str__(self),
                          self.program.__str__())

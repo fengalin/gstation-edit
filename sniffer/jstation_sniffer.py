@@ -34,7 +34,7 @@ class JStationSniffer(JStationInterface):
         # using connect()
         if self.is_connected:
             self.is_disconnecting.set()
-            if None != self.jstation_wait_for_events_thread:
+            if self.jstation_wait_for_events_thread:
                 # wait until waiting thread is terminated
                 self.jstation_wait_for_events_thread.join()
                 self.jstation_wait_for_events_thread = None
@@ -57,9 +57,9 @@ class JStationSniffer(JStationInterface):
         event_list = list()
         while not self.is_disconnecting.is_set():
             event_list = self.seq.receive_events(self.WAIT_SHUTDOWN_TIMEOUT, 1)
-            if 0 < len(event_list):
+            if len(event_list) > 0:
                 for seq_event in event_list:
-                    if None != seq_event:
+                    if seq_event:
                         forward_event = False
                         origin = 'J-Station'
                         source_cid, source_port = seq_event.source
@@ -68,7 +68,7 @@ class JStationSniffer(JStationInterface):
                             forward_event = True
 
                         event = self.factory.build_from_seq_event(seq_event)
-                        if None != event:
+                        if event:
                             print('\n- **%s** => %s'%(origin, event))
                         else:
 #                            print('\n** Could not build event')
@@ -82,4 +82,3 @@ class JStationSniffer(JStationInterface):
                         print('seq event is null')
                 event_list = list()
             # else: no response received (timed out)
-

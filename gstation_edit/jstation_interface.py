@@ -59,7 +59,7 @@ from gstation_edit.messages.who_am_i_resp import WhoAmIResponse
 
 class JStationInterface:
     WAIT_SHUTDOWN_TIMEOUT = 1000 # ms - this one determines the longest period
-                                 #            before a shudown request can be detected
+                                 #      before a shudown request can be detected
     RESPONSE_TIMEOUT = 2 # s
 
     def __init__(self, app_name, main_window):
@@ -191,22 +191,22 @@ class JStationInterface:
     def disconnect(self):
         # sign off
         for channel in range(0, 15):
-            self.send_event(CCMidiEvent(channel=channel, param=120, value=0))
-            self.send_event(CCMidiEvent(channel=channel, param=64, value=0))
+            self.send_event(CCMidiEvent(channel=channel, param=120))
+            self.send_event(CCMidiEvent(channel=channel, param=64))
 
         self.is_disconnecting.set()
 
-        if None != self.jstation_wait_for_events_thread:
+        if self.jstation_wait_for_events_thread:
             # wait until waiting thread is terminated
             self.jstation_wait_for_events_thread.join()
             self.jstation_wait_for_events_thread = None
 
-        if None != self.js_port_in:
+        if self.js_port_in:
             self.seq.disconnect_ports(
                 (self.seq.client_id, self.port_out),
                 (self.js_port_in.client, self.js_port_in.port)
             )
-        if None != self.js_port_out:
+        if self.js_port_out:
             self.seq.disconnect_ports(
                 (self.js_port_out.client, self.js_port_out.port),
                 (self.seq.client_id, self.port_in)
@@ -268,9 +268,9 @@ class JStationInterface:
         event_list = list()
         while not self.is_disconnecting.is_set():
             event_list = self.seq.receive_events(self.WAIT_SHUTDOWN_TIMEOUT, 1)
-            if 0 < len(event_list):
+            if len(event_list) > 0:
                 for seq_event in event_list:
-                    if None != seq_event:
+                    if seq_event:
 #                        print('==> Received event: %s'%(seq_event))
                         event = self.factory.build_from_seq_event(seq_event)
                         if event and event.is_valid:
@@ -342,7 +342,7 @@ class JStationInterface:
 
     def one_parameter_cc_callback( self, event):
         self.default_event_callback(event)
-        if self.main_window != None:
+        if self.main_window:
             self.main_window.update_parameter_from_jstation(event.param,
                                                             event.value,
                                                             is_cc=True)
@@ -363,7 +363,7 @@ class JStationInterface:
         self.default_event_callback(event)
         self.is_response_received_cndt.notify()
         self.is_response_received_cndt.release()
-        if 0 != event.error_code:
+        if event.error_code != 0:
             print('Received error: %s'%(event))
 
     def send_event(self, event):

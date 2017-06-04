@@ -27,7 +27,7 @@ class SplitBytesHelpher:
         split_bytes_range = len(split_bytes) / 2
         for index in range(0, split_bytes_range):
             byte_ = split_bytes[2*index + 1]
-            if 0 != split_bytes[2*index]:
+            if split_bytes[2*index] != 0:
                 byte_ += 0x80
             value = value + (byte_ << (8*index))
         return value
@@ -44,7 +44,7 @@ class SplitBytesHelpher:
                 split_bytes.append(0)
             split_bytes.append(current_byte & 0x7f)
             remainder = remainder >> 8
-            if 0 == remainder:
+            if remainder == 0:
                 value_left_to_read = False
 
         return split_bytes

@@ -1,7 +1,7 @@
 #!/usr/bin/python2
 #
 # this file is part of gstation-edit
-# Copyright (C) F LAIGNEL 2009 <fengalin@free.fr>
+# Copyright (C) F LAIGNEL 2009-2017 <fengalin@free.fr>
 #
 # gstation-edit is free software: you can redistribute it and/or modify it
 # under the terms of the GNU General Public License as published by the
@@ -25,9 +25,9 @@ from gi.repository import Gtk
 try:
     from gstation_edit.app import GStationEdit
 except Exception as exc:
-    print("==> Failed to start GStation-Edit. Did you install py_alsa?")
+    print('==> Failed to start GStation-Edit. Did you install py_alsa?')
     print(traceback.format_exc())
 
-if __name__ == "__main__":
+if __name__ == '__main__':
   gstation_edit = GStationEdit()
   Gtk.main()

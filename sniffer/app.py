@@ -1,5 +1,3 @@
-#!/usr/bin/python
-#
 # this file is part of gstation-edit
 # Copyright (C) F LAIGNEL 2009-2017 <fengalin@free.fr>
 #

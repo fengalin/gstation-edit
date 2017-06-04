@@ -44,27 +44,23 @@ class CCMidiEvent(MidiEvent):
         self.param = param
         self.value = value
 
-        if seq_event != None:
+        if seq_event:
             error_msg = ''
 
             seq_event_data = seq_event.get_data()
             value = seq_event_data.get(self.PARAM_KEY)
-            if None != value :
+            if value:
                 self.param = value
 
             value = seq_event_data.get(self.CHANNEL_KEY)
-            if None != value :
+            if value:
                 self.channel = value
-            else:
-                error_msg += 'Could not find key %s. '%(self.CHANNEL_KEY)
 
             value = seq_event_data.get(self.VALUE_KEY)
-            if None != value :
+            if value:
                 self.value= value
-            else:
-                error_msg += 'Could not find key %s. '%(self.VALUE_KEY)
 
-            if 0 < len(error_msg):
+            if len(error_msg) > 0:
                 print(error_msg)
                 self.is_valid = False
             else:
@@ -73,21 +69,23 @@ class CCMidiEvent(MidiEvent):
 
     def fill_seq_event(self):
         MidiEvent.fill_seq_event(self)
-        if 0 <= self.channel and 0 <= self.value:
+        if self.channel >= 0:
             event_data = dict()
             if self.param >= 0:
                 event_data[self.PARAM_KEY] = self.param
             event_data[self.CHANNEL_KEY] = self.channel
-            event_data[self.VALUE_KEY] = self.value
+            if self.value >= 0:
+                event_data[self.VALUE_KEY] = self.value
             self.seq_event.set_data(event_data)
             self.is_valid = True
 
     def __str__(self):
         param = ''
         if self.param >= 0:
-            param = ' param: %d,'%(self.param)
-        return "%s. channel: %d,%s value: %d"%(self.__class__.__name__,
-                                                        self.channel,
-                                                        param,
-                                                        self.value)
+            param = ', param: %d'%(self.param)
+        value = ''
+        if self.value >= 0:
+            value = ', value: %d'%(self.value)
+        return '%s. channel: %d%s%s'%(self.__class__.__name__,
+                                      self.channel, param, value)
 

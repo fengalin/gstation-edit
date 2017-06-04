@@ -32,14 +32,14 @@ class WhoAmIResponse(JStationSysExEvent):
 
         if self.is_valid:
             data_length = self.read_next_bytes(4)
-            if len(self.data_buffer)-4 >= data_length:
+            if len(self.data_buffer) >= 2*data_length+4:
                 self.receive_channel = self.read_next_bytes(2)
                 self.transmit_channel = self.read_next_bytes(2)
                 self.sysex_channel = self.read_next_bytes(2)
                 self.is_valid = True
             else:
                 print('Incorrect data buffer with len %d. Expecting %d'\
-                      %(len(self.data_buffer)-4, data_length))
+                      %(len(self.data_buffer), 2*data_length+4))
                 self.m_is_valid = False
 
 
@@ -50,8 +50,8 @@ class WhoAmIResponse(JStationSysExEvent):
 
     # Common
     def __str__(self):
-        return "%s, receive ch: %d, transmit ch: %d, "\
-                "sysex ch: %d"%(JStationSysExEvent.__str__(self),
-                                self.receive_channel, self.transmit_channel,
-                                self.sysex_channel)
+        return '%s, receive ch: %d, transmit ch: %d, '\
+               'sysex ch: %d'%(JStationSysExEvent.__str__(self),
+                               self.receive_channel, self.transmit_channel,
+                               self.sysex_channel)
 

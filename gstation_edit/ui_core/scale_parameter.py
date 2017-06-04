@@ -35,7 +35,7 @@ class ScaleParameter(Parameter):
 
     def init_widget(self, gtk_builder):
         Parameter.init_widget(self, gtk_builder)
-        if self._widget != None:
+        if self._widget:
             self._widget.set_range(self.min_value, self.max_value)
 
     def get_signal_handlers(self):
@@ -47,9 +47,8 @@ class ScaleParameter(Parameter):
 
     def handle_change_value(self, widget, scroll_jump, value):
         int_value = int(value)
-        if self.min_value<=int_value and self.max_value>=int_value:
+        if self.min_value<=int_value and int_value<=self.max_value:
             self.set_value(int_value)
 
     def handle_format_value(self, widget, value):
         return self.str_value
-

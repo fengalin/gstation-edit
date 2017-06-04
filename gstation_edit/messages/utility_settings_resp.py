@@ -36,7 +36,7 @@ class UtilitySettingsResponse(JStationSysExEvent):
 
         if self.is_valid:
             data_length = self.read_next_bytes(4)
-            if len(self.data_buffer)-4 >= data_length:
+            if len(self.data_buffer) >= 2*data_length+4:
                 self.stereo_mono = self.read_next_bytes(2)
                 self.dry_track = self.read_next_bytes(2)
                 self.digital_out_level = self.read_next_bytes(2)
@@ -46,7 +46,7 @@ class UtilitySettingsResponse(JStationSysExEvent):
                 self.is_valid = True
             else:
                 print('Incorrect data buffer with len %d. Expecting %d'\
-                      %(len(self.data_buffer)-4), data_length)
+                      %(len(self.data_buffer), 2*data_length+4))
                 self.m_is_valid = False
 
     # Build to send
@@ -63,11 +63,11 @@ class UtilitySettingsResponse(JStationSysExEvent):
 
 
     def __str__( self ):
-        return "%s, stereo mono: %d, dry track: %d, "\
-                "digital out level: %d, global cabinet: %d, "\
-                "midi merge: %d, midi channel: %d"\
-                %(JStationSysExEvent.__str__(self),
-                  self.stereo_mono, self.dry_track,
-                  self.digital_out_level, self.global_cabinet,
-                  self.midi_merge, self.midi_channel)
+        return '%s, stereo mono: %d, dry track: %d, '\
+               'digital out level: %d, global cabinet: %d, '\
+               'midi merge: %d, midi channel: %d'\
+               %(JStationSysExEvent.__str__(self),
+                 self.stereo_mono, self.dry_track,
+                 self.digital_out_level, self.global_cabinet,
+                 self.midi_merge, self.midi_channel)
 

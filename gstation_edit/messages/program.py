@@ -40,7 +40,7 @@ class Program:
         return bank_name
 
 
-    def __init__(self, bank=-1, number=-1, data=None, name="",
+    def __init__(self, bank=-1, number=-1, data=None, name='',
                  data_buffer=None, has_changed=False):
         self.helper = SplitBytesHelpher()
 
@@ -49,7 +49,7 @@ class Program:
         self.original_data = data
         self.original_name = name
 
-        if data_buffer != None:
+        if data_buffer:
             self.original_data = list()
             index = 0
             while index < self.PROGRAM_BUFFER_LEN:
@@ -66,7 +66,7 @@ class Program:
                 value = self.helper.get_value_from_split_bytes(
                         data_buffer[index : index+2]
                     )
-                if 0 != value:
+                if value != 0:
                     self.original_name += chr(value)
                 else:
                     break

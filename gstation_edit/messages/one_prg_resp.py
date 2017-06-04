@@ -47,5 +47,5 @@ class OneProgramResponse(JStationSysExEvent):
 
 
     def __str__(self):
-        return "%s, %s"%(JStationSysExEvent.__str__(self), self.program)
+        return '%s, %s'%(JStationSysExEvent.__str__(self), self.program)
 

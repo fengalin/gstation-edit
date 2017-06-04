@@ -1,5 +1,3 @@
-#!/usr/bin/python
-#
 # this file is part of gstation-edit
 # Copyright (C) F LAIGNEL 2009-2017 <fengalin@free.fr>
 #
@@ -59,6 +57,6 @@ class GStationEdit:
         self.main_window.quit()
         Gtk.main_quit(window)
 
-if __name__ == "__main__":
-    gstation_edit = GStationEdit()
+def run():
+    gstation_edit_app = GStationEdit()
     Gtk.main()

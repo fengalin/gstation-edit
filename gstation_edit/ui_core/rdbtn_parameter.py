@@ -27,7 +27,7 @@ class RdBtnParameter(BtnParameter):
                               is_sensitive, value)
 
     def get_str_value(self):
-        if 0 == self.is_active:
+        if self.is_active == 0:
             return ''
         else:
             return str(self.value)
@@ -37,10 +37,10 @@ class RdBtnParameter(BtnParameter):
 
     def handle_toggled(self, widget):
         self.is_active = widget.get_active()
-        if 0 != self.is_active:
+        if self.is_active != 0:
             self._parent.send_parameter_value(self)
 
     def set_active(self, is_active):
-        if None != self._widget:
+        if self._widget:
             self._widget.set_active(is_active)
 

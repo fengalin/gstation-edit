@@ -29,13 +29,12 @@ class StartBankDumpResponse(JStationSysExEvent):
 
         if self.is_valid:
             data_length = self.read_next_bytes(4)
-            remaining_len = len(self.data_buffer) - 4
-            if remaining_len >= data_length:
+            if len(self.data_buffer) >= 2*data_length+4:
                 self.total_length = self.read_next_bytes(data_length)
                 self.is_valid = True
             else:
                 print('Incorrect data buffer with len %d. Expecting %d'\
-                      %(remaining_len, data_length))
+                      %(len(self.data_buffer), 2*data_length+4))
                 self.m_is_valid = False
 
 
@@ -45,5 +44,5 @@ class StartBankDumpResponse(JStationSysExEvent):
 
 
     def __str__(self):
-        return "%s, total length: %d"%(JStationSysExEvent.__str__(self),
+        return '%s, total length: %d'%(JStationSysExEvent.__str__(self),
                                        self.total_length)

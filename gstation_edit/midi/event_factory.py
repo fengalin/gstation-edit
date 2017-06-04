@@ -34,13 +34,13 @@ class MidiEventFactory:
     @classmethod
     def build_from_seq_event(class_, seq_event):
         result = None
-        if None != seq_event:
+        if seq_event:
 #            print('Received event with type %d'%(seq_event.type))
             event_type_builder = MidiEventFactory.\
                 event_type_builder_classes.get(seq_event.type.real)
-            if event_type_builder != None:
+            if event_type_builder:
                 result = event_type_builder.build_from_seq_event(seq_event)
-                if result != None:
+                if result:
 #                    print('Event identified as: %s'%(result))
                     pass
                 else:

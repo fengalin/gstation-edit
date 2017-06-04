@@ -27,9 +27,9 @@ class CbxParameter(Parameter):
                             is_sensitive, value, max_value=max_value)
 
     def get_str_value(self):
-        if None != self._widget:
+        if self._widget:
             tree_iter = self._widget.get_active_iter()
-            if tree_iter != None:
+            if tree_iter:
                 model = self._widget.get_model()
                 return model[tree_iter][:1][0]
             else:
@@ -39,7 +39,7 @@ class CbxParameter(Parameter):
 
     def init_widget(self, gtk_builder):
         Parameter.init_widget( self, gtk_builder)
-        if self._widget != None:
+        if self._widget:
             self._widget.set_active(self.value)
 
     def get_widget_name(self):
@@ -52,12 +52,12 @@ class CbxParameter(Parameter):
 
     def handle_changed(self, widget):
         active_item = widget.get_active()
-        if -1 != active_item:
+        if active_item != -1:
             self.set_value(active_item)
         # else no active item
 
     def update_widget(self):
-        if self._widget != None:
+        if self._widget:
             self._widget.set_active(self.value)
 
 

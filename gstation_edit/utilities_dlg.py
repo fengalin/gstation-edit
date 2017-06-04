@@ -61,7 +61,7 @@ class UtilitiesDlg:
 
     def get_widget(self, widget_name):
         widget = self.gtk_builder.get_object(widget_name)
-        if None == widget:
+        if widget == None:
             self.is_valid = False
             print('Could not find widget %s'%(widget_name))
         return widget

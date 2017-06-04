@@ -40,15 +40,12 @@ class MidiSelectDlg:
         self.midi_port_in_list = None
         self.midi_port_out_list = None
 
-        # TODO: update validity
+        self.midi_port_in_list = self.js_interface.midi_in_ports
+        self.midi_port_out_list = self.js_interface.midi_out_ports
+        self.populate_combo_box(self.midi_in_cbx, self.midi_port_in_list)
+        self.populate_combo_box(self.midi_out_cbx, self.midi_port_out_list)
+
         self.is_valid = True
-
-        if self.is_valid:
-            self.midi_port_in_list = self.js_interface.midi_in_ports
-            self.midi_port_out_list = self.js_interface.midi_out_ports
-            self.populate_combo_box(self.midi_in_cbx, self.midi_port_in_list)
-            self.populate_combo_box(self.midi_out_cbx, self.midi_port_out_list)
-
 
     def populate_combo_box(self, combo_box, midi_ports):
             midi_cbx_model = combo_box.get_model()
@@ -57,13 +54,13 @@ class MidiSelectDlg:
             cell = Gtk.CellRendererText()
             combo_box.pack_start(cell, True)
             combo_box.add_attribute(cell, 'text', 0)
-            if 0 < midi_ports:
+            if midi_ports > 0:
                 combo_box.set_active(0)
 
 
     def get_widget(self, widget_name):
         widget = self.gtk_builder.get_object(widget_name)
-        if None == widget:
+        if widget == None:
             self.is_valid = False
             print('Could not find widget %s'%(widget_name))
         return widget

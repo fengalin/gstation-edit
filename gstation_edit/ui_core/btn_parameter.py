@@ -27,20 +27,20 @@ class BtnParameter(Parameter):
                             is_sensitive, value)
 
     def get_str_value(self):
-        if 0 == self.value:
+        if self.value == 0:
             return 'off'
         else:
             return 'on'
 
     def get_cc_value(self):
-        if 0 == self.value:
+        if self.value == 0:
             value = 0
         else:
             value = 127
         return value
 
     def get_value_from_cc(self, cc_value):
-        if 64 > cc_value:
+        if cc_value < 64:
             value = 0
         else:
             value = 1
@@ -51,7 +51,7 @@ class BtnParameter(Parameter):
 
     def init_widget(self, gtk_builder):
         Parameter.init_widget(self, gtk_builder)
-        if self._widget != None:
+        if self._widget:
             self._widget.set_active(self.value)
 
     def get_signal_handlers(self):
@@ -60,12 +60,12 @@ class BtnParameter(Parameter):
         return signal_handlers
 
     def handle_toggled(self, widget):
-        if 0 == widget.get_active():
+        if widget.get_active() == 0:
             self.set_value(0)
         else:
             self.set_value(1)
 
     def update_widget(self):
-        if self._widget != None:
+        if self._widget:
             self._widget.set_active(self.value)
 

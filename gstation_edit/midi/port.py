@@ -24,5 +24,5 @@ class MidiPort:
         self.port_name = port_name
 
     def __str__(self):
-        return "%s %d:%d"%(self.port_name,
+        return '%s %d:%d'%(self.port_name,
                            self.client, self.port)

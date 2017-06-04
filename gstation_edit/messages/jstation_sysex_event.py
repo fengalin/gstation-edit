@@ -44,7 +44,7 @@ class JStationSysExEvent(SysExMidiEvent):
     @classmethod
     def register(class_, callback=None):
         JStationSysExEvent.event_classes[class_.PROCEDURE_ID] = class_
-        if callback != None:
+        if callback:
             MidiEvent.callbacks[class_.__name__] = callback
 
     @classmethod
@@ -52,17 +52,15 @@ class JStationSysExEvent(SysExMidiEvent):
         result = None
         # assert: seq_event.type == SysExMidiEvent.EVENT_TYPE
         sys_ex_data = seq_event.get_data().get(SysExMidiEvent.SYSEX_DATA_KEY)
-        if None != sys_ex_data:
+        if sys_ex_data:
             if JStationSysExEvent.PROCEDURE_ID_POS < len(sys_ex_data):
                 proc_id = sys_ex_data[JStationSysExEvent.PROCEDURE_ID_POS]
 
                 event_class = JStationSysExEvent.event_classes.get(proc_id)
-                if event_class != None:
-                    result = JStationSysExEvent.\
-                            event_classes[proc_id](seq_event=seq_event)
-
+                if event_class:
+                    result = event_class(seq_event=seq_event)
                 if result == None:
-                    event = JStationSysExEvent(seq_event=seq_event)
+                    result = JStationSysExEvent(seq_event=seq_event)
             else:
                 print('Sysex data too short to read procecdure id: %s'\
                       %(sys_ex_data))
@@ -80,18 +78,19 @@ class JStationSysExEvent(SysExMidiEvent):
         self.manufacturer_id = []
         self.channel = channel
         self.product_id = -1
-        self.procedure_id = -1
+        self.procedure_id = self.PROCEDURE_ID
+        self.version = self.VERSION
 
         self.data_buffer = list()
         self.data_index = -1
         self.is_valid = False
 
-        if seq_event != None:
+        if seq_event:
             sysex_data = seq_event.get_data().get(SysExMidiEvent.SYSEX_DATA_KEY)
-            if None != sysex_data:
+            if sysex_data:
                 # SysEx data expected structure: 0xf0 ... data ... checksum 0xf7
                 len_sysex_data = len(sysex_data)
-                if 3 < len_sysex_data:
+                if len_sysex_data > 3:
                     if self.SYSEX_DATA_START == sysex_data[0] and \
                             self.SYSEX_DATA_END == sysex_data[len_sysex_data-1]:
                         # Note: if this first part is common to all sysex
@@ -109,7 +108,7 @@ class JStationSysExEvent(SysExMidiEvent):
                             self.channel = self.read_next_bytes(1)
                             self.product_id = self.read_next_bytes(1)
                             self.procedure_id = self.read_next_bytes(1)
-                            self.VERSION = self.read_next_bytes(2)
+                            self.version = self.read_next_bytes(2)
                             if not type(self) is JStationSysExEvent:
                                 self.is_valid = True
                             # else: couldn't instantiate a specific class
@@ -145,20 +144,20 @@ class JStationSysExEvent(SysExMidiEvent):
     # Build to send
     def build_data_buffer(self, data_before_len=None, data_after_len=None):
         SysExMidiEvent.build_data_buffer(self)
-        if -1 != self.PROCEDURE_ID and -1 != self.VERSION:
+        if self.procedure_id != -1 and self.version != -1:
             self.data_buffer = list(self.MANUFACTURER_ID)
             self.data_buffer.append(self.channel)
             self.data_buffer.append(self.PRODUCT_ID)
-            self.data_buffer.append(self.PROCEDURE_ID)
+            self.data_buffer.append(self.procedure_id)
             self.data_buffer += \
-                self.helper.get_split_bytes_from_value(self.VERSION)
+                self.helper.get_split_bytes_from_value(self.version)
 
-            if data_before_len != None:
+            if data_before_len:
                 for value in data_before_len:
                     self.data_buffer += \
                         self.helper.get_split_bytes_from_value(value)
 
-            if data_after_len != None:
+            if data_after_len:
                 self.data_buffer += self.helper.get_split_bytes_from_value(
                         len(data_after_len), 4
                     )
@@ -185,5 +184,5 @@ class JStationSysExEvent(SysExMidiEvent):
             event_type = self.__class__.__name__
             if not self.is_valid:
                 valid = ' - not valid'
-        return "%s%s (x%02x)%s. Version: %d"\
-                %(product, event_type, self.PROCEDURE_ID, valid, self.VERSION)
+        return '%s%s (x%02x)%s. Version: %d'\
+                %(product, event_type, self.procedure_id, valid, self.version)

@@ -54,5 +54,5 @@ class WhoAmIRequest(JStationSysExEvent):
 
     # Common
     def __str__(self):
-        return "%s, response on: %d"%(JStationSysExEvent.__str__(self),
-                                     self.response_on)
+        return '%s, response on: %d'%(JStationSysExEvent.__str__(self),
+                                      self.response_on)

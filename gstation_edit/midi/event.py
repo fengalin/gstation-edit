@@ -25,7 +25,7 @@ class MidiEvent(object):
 
     @classmethod
     def register(class_, callback=None):
-        if callback != None:
+        if callback:
             MidiEvent.callbacks[class_.__name__] = callback
 
     @classmethod
@@ -37,7 +37,7 @@ class MidiEvent(object):
     def __init__(self, event_type=-1, seq_event=None):
         self.is_valid = False
         self.seq_event = seq_event
-        if -1 == event_type:
+        if event_type == -1:
             self.event_type = seq_event.type
         else:
             self.event_type = event_type
@@ -57,8 +57,8 @@ class MidiEvent(object):
 
     def process(self):
         callback = MidiEvent.callbacks.get(self.__class__.__name__)
-        if None != callback:
+        if callback:
             callback(self)
         else:
-            print('Couldn''t find callback for %s'%(self.__class__.__name__))
+            print('Couldn\'t find callback for %s'%(self.__class__.__name__))
 

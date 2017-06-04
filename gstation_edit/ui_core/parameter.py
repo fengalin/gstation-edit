@@ -84,32 +84,32 @@ class Parameter:
 
     def init_widget(self, gtk_builder):
         widget_label = gtk_builder.get_object(self.get_widget_label_name())
-        if widget_label != None:
+        if widget_label:
             self._widget_label = widget_label
 
         widget = gtk_builder.get_object(self.get_widget_name())
-        if widget != None:
+        if widget:
             self._widget = widget
         else:
             print('widget not found: %s'%(self.get_widget_name()))
 
 
     def set_widget_label(self, widget_name):
-        if self._widget_label != None:
+        if self._widget_label:
             self._widget_label.set_text(widget_name)
 
     def set_sensitive(self, is_sensitive):
         self.is_sensitive = is_sensitive
         self._widget.set_sensitive(is_sensitive)
-        if self._widget_label != None:
+        if self._widget_label:
             self._widget_label.set_sensitive(is_sensitive)
 
     def update_widget(self):
-        if self._widget != None:
+        if self._widget:
             self._widget.set_value(self.value)
 
     def __str__(self):
-        return "%s: value %d, in [ %d, %d] - param %d, cc nb %d"\
-                %(self.name, self.value, self.min_value, self.max_value,
+        return '%s: value %d, in [ %d, %d] - param %d, cc nb %d'\
+               %(self.name, self.value, self.min_value, self.max_value,
                  self.parameter_nb, self.cc_nb)
 

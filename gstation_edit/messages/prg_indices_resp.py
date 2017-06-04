@@ -30,7 +30,7 @@ class PRGIndicesResponse(JStationSysExEvent):
         if self.is_valid:
             data_length = self.read_next_bytes(4)
 
-            if len(self.data_buffer)-4 >= data_length:
+            if len(self.data_buffer) >= 2*data_length+4:
                 while self.data_index < data_length:
                     self.prg_indices.append(self.read_next_bytes(2))
                 self.is_valid = True

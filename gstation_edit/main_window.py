@@ -101,7 +101,7 @@ class MainWindow:
         utilities_btn = self._gtk_builder.get_object('utilities-btn')
         self._utilities_dlg = UtilitiesDlg(self, self._gtk_builder)
         utilities_btn.connect('clicked',
-                                  self._utilities_dlg.present)
+                              self._utilities_dlg.present)
         self._signal_handlers.update(self._utilities_dlg.get_signal_handlers())
         self._parameter_cc_bindings.update(
             self._utilities_dlg.get_parameter_cc_bindings()
@@ -118,7 +118,7 @@ class MainWindow:
 
     def init_bank_list_widget(self):
         self._bank_list_widget = self._gtk_builder.get_object('bank-list-trv')
-        if None != self._bank_list_widget:
+        if self._bank_list_widget:
             self._bank_list_model = self._bank_list_widget.get_model()
 
             column_loc = Gtk.TreeViewColumn('Loc.')
@@ -147,7 +147,7 @@ class MainWindow:
                                  self._gtk_builder.get_object('context-menu')
         self._context_menu_widget.attach_to_widget(self._bank_list_widget)
 
-        if None != self._context_menu_widget:
+        if self._context_menu_widget:
             self.menu_item_store = Gtk.MenuItem('Store changes')
             self.menu_item_store.connect('activate', self.context_menu_store)
             self._context_menu_widget.insert(self.menu_item_store, 1)
@@ -214,7 +214,7 @@ class MainWindow:
                                                   parameter.get_cc_value())
 
     def set_program_has_changed(self, has_changed):
-        if self._current_selected_iter != None:
+        if self._current_selected_iter:
             flag = ''
             if has_changed:
                 flag = '*'
@@ -240,7 +240,7 @@ class MainWindow:
             loc_str = '%d.%d' %(program.number//3, program.number%3 + 1)
             self._bank_list_model.append([program.number, loc_str, '', program.name])
         self._programs[program.number] = program
-        if None != self._current_program:
+        if self._current_program:
             if self._current_program.number == program.number:
                 self.init_parameters()
 
@@ -250,8 +250,8 @@ class MainWindow:
 
     def set_current_program(self, program_nb):
         program = self._programs.get(program_nb)
-        if None != program:
-            if None != self._current_program:
+        if program:
+            if self._current_program:
                 if self._current_program.has_changed:
                     self._current_program.restore_original()
                     self.set_current_name(self._current_program.name)
@@ -268,7 +268,7 @@ class MainWindow:
             tree_iter = self._bank_list_model.get_iter_from_string(str(program_nb))
         except ValueError:
             can_be_selected = False
-        if None != tree_iter:
+        if tree_iter:
             tree_selection = self._bank_list_widget.get_selection()
             tree_selection.select_iter(tree_iter)
             self._current_selected_iter = tree_iter
@@ -281,20 +281,20 @@ class MainWindow:
             if program.is_same_as(cur_prg):
                 self.select_program_from_its_number(cur_prg.number)
                 break
-        if None == self._current_program:
+        if self._current_program == None:
             self.select_program_from_its_number(0)
 
     def init_parameters(self):
         for index in range(0, len(self._current_program.data)):
             parameter = self._parameter_bindings.get(index)
-            if None != parameter:
+            if parameter:
                 parameter.init_value(self._current_program.data[index])
         self.set_program_has_changed(False)
 
     def update_parameter_from_jstation(self, parameter, value, is_cc):
         if is_cc:
             parameter = self._parameter_cc_bindings.get(parameter)
-            if None != parameter:
+            if parameter:
                 parameter.init_value(value=value, is_cc=True)
                 if parameter.parameter_nb != -1:
                     self._current_program.change_parameter(parameter.parameter_nb,
@@ -318,13 +318,13 @@ class MainWindow:
 
 
     def on_undo_clicked(self, widget):
-        if self._current_program != None:
+        if self._current_program:
             self._current_program.restore_original()
             self.init_parameters()
             self._jstation_interface.reload_program()
 
     def on_store_clicked(self, widget):
-        if self._current_program != None:
+        if self._current_program:
             self._current_program.apply_changes()
             self._jstation_interface.store_program(self._current_program)
             self.set_program_has_changed(False)
@@ -348,7 +348,7 @@ class MainWindow:
         self._bank_list_model.set(self._current_selected_iter, 3, name)
 
     def context_menu_rename(self, widget, *arg):
-        if None != self._current_program:
+        if self._current_program:
             original_name = self._current_program.name
             self._rename_entry.set_text(original_name)
             result = self._rename_dlg.run()
