@@ -72,7 +72,6 @@ class MainWindow:
 
         self.init_undo_store()
         self.init_utilities_dlg()
-        self.init_rename_dlg()
         self.init_midi_select_dlg()
 
         self._units = list()
@@ -85,6 +84,7 @@ class MainWindow:
 
         self.init_bank_list_widget()
         self.init_context_menu_widget()
+
         for unit in self._units:
             unit.init_widgets(self._gtk_builder)
 
@@ -119,25 +119,31 @@ class MainWindow:
     def init_bank_list_widget(self):
         self._bank_list_widget = self._gtk_builder.get_object('bank-list-trv')
         if self._bank_list_widget:
-            self._bank_list_model = self._bank_list_widget.get_model()
+            self._bank_list_model = Gtk.ListStore(int, str, str, str)
+            self._bank_list_widget.set_model(self._bank_list_model)
 
-            column_loc = Gtk.TreeViewColumn('Loc.')
+            # Note: column 0 contains program number but is not rendered
+
+            column_loc = Gtk.TreeViewColumn('Loc.',
+                                            Gtk.CellRendererText(),
+                                            text=1)
             self._bank_list_widget.append_column(column_loc)
-            cell_loc = Gtk.CellRendererText()
-            column_loc.pack_start(cell_loc, True)
-            column_loc.add_attribute(cell_loc, 'text', 1)
 
-            column_name = Gtk.TreeViewColumn('*')
-            self._bank_list_widget.append_column(column_name)
-            cell_name = Gtk.CellRendererText()
-            column_name.pack_start(cell_name, True)
-            column_name.add_attribute(cell_name, 'text', 2)
+            column_changed = Gtk.TreeViewColumn('*',
+                                                Gtk.CellRendererText(),
+                                                text=2)
+            self._bank_list_widget.append_column(column_changed)
 
-            column_name = Gtk.TreeViewColumn('Bank Name')
-            self._bank_list_widget.append_column(column_name)
             cell_name = Gtk.CellRendererText()
-            column_name.pack_start(cell_name, True)
-            column_name.add_attribute(cell_name, 'text', 3)
+            cell_name.set_property('editable', True)
+            column_name = Gtk.TreeViewColumn('Bank Name', cell_name, text=3)
+            self._bank_list_widget.append_column(column_name)
+            cell_name.connect('edited', self.on_prog_name_edited)
+
+            self._signal_handlers['on_bank-list-trv_cursor_changed'] = \
+                                                    self.select_program_from_ui
+            self._signal_handlers['on_bank-list-trv_button_press_event'] = \
+                                                    self.popup_context_menu
         else:
             self._bank_list_model = None
             print('Could not find widget for bank list')
@@ -150,55 +156,41 @@ class MainWindow:
         if self._context_menu_widget:
             self.menu_item_store = Gtk.MenuItem('Store changes')
             self.menu_item_store.connect('activate', self.context_menu_store)
-            self._context_menu_widget.insert(self.menu_item_store, 1)
+            self._context_menu_widget.insert(self.menu_item_store, 0)
             self.menu_item_store.set_sensitive(False)
 
             self.menu_item_undo = Gtk.MenuItem('Undo changes')
             self.menu_item_undo.connect('activate', self.context_menu_undo)
-            self._context_menu_widget.insert(self.menu_item_undo, 2)
+            self._context_menu_widget.insert(self.menu_item_undo, 1)
             self.menu_item_undo.set_sensitive(False)
-
-            menu_item_rename = Gtk.MenuItem('Rename...')
-            menu_item_rename.connect( 'activate', self.context_menu_rename)
-            self._context_menu_widget.insert(menu_item_rename, 0)
-            menu_item_rename.set_sensitive(False)
 
             menu_item_export = Gtk.MenuItem('Export...')
             menu_item_export.connect('activate', self.context_menu_export)
-            self._context_menu_widget.insert(menu_item_export, 3)
+            self._context_menu_widget.insert(menu_item_export, 2)
             menu_item_export.set_sensitive(False)
 
             menu_item_import = Gtk.MenuItem('Import...')
             menu_item_import.connect('activate', self.context_menu_import)
-            self._context_menu_widget.insert(menu_item_import, 4)
+            self._context_menu_widget.insert(menu_item_import, 3)
             menu_item_import.set_sensitive(False)
 
             menu_item_copy = Gtk.MenuItem('Copy')
             menu_item_copy.connect('activate', self.context_menu_copy)
-            self._context_menu_widget.insert(menu_item_copy, 5)
+            self._context_menu_widget.insert(menu_item_copy, 4)
             menu_item_copy.set_sensitive(False)
 
             menu_item_paste = Gtk.MenuItem('Paste')
             menu_item_paste.set_sensitive(False)
             menu_item_paste.connect('activate', self.context_menu_paste)
-            self._context_menu_widget.insert(menu_item_paste, 6)
+            self._context_menu_widget.insert(menu_item_paste, 5)
             menu_item_paste.set_sensitive(False)
         else:
             print('Could not find widget for context menu')
-
-    def init_rename_dlg(self):
-        self._rename_dlg = self._gtk_builder.get_object('rename-dlg')
-        self._rename_entry = self._gtk_builder.get_object('rename-entry')
 
     def get_signal_handlers(self):
         return self._signal_handlers
 
     def init_parameters_dictionnaries(self):
-        self._signal_handlers['on_bank-list-trv_cursor_changed'] = \
-                                                    self.select_program_from_ui
-        self._signal_handlers['on_bank-list-trv_button_press_event'] = \
-                                                    self.popup_context_menu
-
         for unit in self._units:
             self._signal_handlers.update(unit.get_signal_handlers())
             self._parameter_bindings.update(unit.get_parameter_bindings())
@@ -304,24 +296,31 @@ class MainWindow:
             print('Updating isolated parameters other than with CC command not implemented')
 
     def select_program_from_ui(self, widget):
-        # TODO: find out what this is supposed to do since J-Station does not store update
-        if self._current_program.has_changed:
-            self._jstation_interface.req_program_update(self._current_program)
-            # TODO: something else should be done here (update ui, ??)
-
         tree_iter = self._bank_list_widget.get_selection().get_selected()[1]
         selected_program_nb = int(self._bank_list_model.get_value(tree_iter, 0))
-        self.set_current_program(selected_program_nb)
-        self._current_selected_iter = \
-                        self._bank_list_widget.get_selection().get_selected()[1]
-        self._jstation_interface.req_program_change(selected_program_nb)
+        cur_program_nb = int(self._bank_list_model.get_value(
+                self._current_selected_iter, 0)
+            )
+        if selected_program_nb != cur_program_nb:
+            if self._current_program.has_changed:
+                self.undo_changes()
 
+            self.set_current_program(selected_program_nb)
+            self._current_selected_iter = \
+                            self._bank_list_widget.get_selection().get_selected()[1]
+            self._jstation_interface.req_program_change(selected_program_nb)
+        # else: program hasn't changed
+
+
+    def undo_changes(self):
+        self._current_program.restore_original()
+        self.init_parameters()
+        self.set_current_name(self._current_program.name)
+        self._jstation_interface.reload_program()
 
     def on_undo_clicked(self, widget):
         if self._current_program:
-            self._current_program.restore_original()
-            self.init_parameters()
-            self._jstation_interface.reload_program()
+            self.undo_changes()
 
     def on_store_clicked(self, widget):
         if self._current_program:
@@ -347,39 +346,34 @@ class MainWindow:
     def set_current_name(self, name):
         self._bank_list_model.set(self._current_selected_iter, 3, name)
 
-    def context_menu_rename(self, widget, *arg):
+    def on_prog_name_edited(self, widget, path, new_name):
+        print('on_prog_name_edited')
         if self._current_program:
             original_name = self._current_program.name
-            self._rename_entry.set_text(original_name)
-            result = self._rename_dlg.run()
-            if Gtk.RESPONSE_APPLY == result:
-                new_name = self._rename_entry.get_text()
-                if original_name != new_name:
-                    # TODO: should check names max length
-                    self._current_program.rename(new_name)
-                    self.set_program_has_changed(self._current_program.has_changed)
-                    self.set_current_name(new_name)
-            self.rename_dlg.hide()
+            if original_name != new_name:
+                self._current_program.rename(new_name)
+                self.set_program_has_changed(self._current_program.has_changed)
+                self.set_current_name(new_name)
+        print('done on_prog_name_edited')
 
-    def context_menu_store(self, widget, *arg):
+    def context_menu_store(self, widget, *args):
         self.on_store_clicked(widget)
 
-    def context_menu_undo(self, widget, *arg):
+    def context_menu_undo(self, widget, *args):
         self.on_undo_clicked(widget)
 
-    def context_menu_import(self, widget, *arg):
+    def context_menu_import(self, widget, *args):
         # TODO: implement !
-        print('Import clicked %s'%(arg))
+        print('Import clicked %s'%(args))
 
-    def context_menu_export(self, widget, *arg):
+    def context_menu_export(self, widget, *args):
         # TODO: implement !
-        print('Export clicked %s'%(arg))
+        print('Export clicked %s'%(args))
 
-    def context_menu_copy(self, widget, *arg):
+    def context_menu_copy(self, widget, *args):
         # TODO: implement !
-        print('Copy clicked %s'%(arg))
+        print('Copy clicked %s'%(args))
 
-    def context_menu_paste(self, widget, *arg):
+    def context_menu_paste(self, widget, *args):
         # TODO: implement !
-        print('Paste clicked %s'%(arg))
-
+        print('Paste clicked %s'%(args))
