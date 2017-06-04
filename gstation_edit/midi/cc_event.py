@@ -45,8 +45,6 @@ class CCMidiEvent(MidiEvent):
         self.value = value
 
         if seq_event:
-            error_msg = ''
-
             seq_event_data = seq_event.get_data()
             value = seq_event_data.get(self.PARAM_KEY)
             if value:
@@ -58,10 +56,9 @@ class CCMidiEvent(MidiEvent):
 
             value = seq_event_data.get(self.VALUE_KEY)
             if value:
-                self.value= value
+                self.value = value
 
-            if len(error_msg) > 0:
-                print(error_msg)
+            if self.param == -1 and self.channel == -1 and self.value == -1:
                 self.is_valid = False
             else:
                 self.is_valid = True
