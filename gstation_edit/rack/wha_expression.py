@@ -35,11 +35,15 @@ class WhaExpressionUnit(RackUnit):
          self.wha_heel = ScaleParameter(parent=self,
                                         name='wha-heel',
                                         cc_nb=10,
-                                        parameter_nb=7)
+                                        parameter_nb=7,
+                                        max_value=127,
+                                        display_percent=True)
          self.wha_toe = ScaleParameter(parent=self,
                                        name='wha-toe',
                                        cc_nb=11,
-                                       parameter_nb=8)
+                                       parameter_nb=8,
+                                       max_value=127,
+                                       display_percent=True)
          self.pedal_forward = ScaleParameter(parent=self,
                                              name='pedal-forward',
                                              cc_nb=71,
@@ -52,4 +56,3 @@ class WhaExpressionUnit(RackUnit):
                                                        name='wah-expression',
                                                        cc_nb=8,
                                                        parameter_nb=5)
-

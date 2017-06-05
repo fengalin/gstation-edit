@@ -29,9 +29,9 @@ class Parameter:
         self.cc_nb = cc_nb
         self.is_sensitive = is_sensitive
         self.value = value
-        self.str_value = self.get_str_value()
         self.min_value = min_value
         self.max_value = max_value
+        self.str_value = self.get_str_value()
         if auto_register:
             parent.add_parameter(self)
 

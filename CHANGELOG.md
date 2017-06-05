@@ -3,6 +3,8 @@
 ### Version 0.6.0 (in progress)
 #### User
 - Make program names editable in bank list
+- Scales can now be set to their max value
+- Effect scales adapt their range depending on the selected effect
 
 #### Development
 - Simplify UI signals connection

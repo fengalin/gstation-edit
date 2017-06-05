@@ -17,18 +17,25 @@
 # You should have received a copy of the GNU General Public License along
 # with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+from gi.repository import Gtk
+
 from gstation_edit.ui_core.parameter import Parameter
 
 class ScaleParameter(Parameter):
 
     def __init__(self, parent, name, cc_nb=-1, parameter_nb=-1, is_sensitive=1,
-                 value=0, min_value=0, max_value=99, auto_register=True):
+                 value=0, min_value=0, max_value=99, display_percent=False,
+                 auto_register=True):
+         self.display_percent = display_percent
          Parameter.__init__(self, parent, name, cc_nb, parameter_nb,
                             is_sensitive, value, min_value, max_value,
                             auto_register)
 
     def get_str_value(self):
-        return ('0' + str(self.value))[-2:]
+        value = self.value
+        if self.display_percent:
+            value = 100 * value / self.max_value
+        return '%02d'%(value)
 
     def get_widget_name(self):
         return self.name + '-scale'
@@ -42,8 +49,17 @@ class ScaleParameter(Parameter):
 
     def handle_change_value(self, widget, scroll_jump, value):
         int_value = int(value)
-        if self.min_value<=int_value and int_value<=self.max_value:
-            self.set_value(int_value)
+        if int_value <= self.min_value:
+            int_value = self.min_value
+        if int_value >= self.max_value:
+            int_value = self.max_value
+        self.set_value(int_value)
+        return False
 
     def handle_format_value(self, widget, value):
         return self.str_value
+
+    def set_max(self, max_value):
+        self.max_value = max_value
+        self.widget.set_range(self.min_value, self.max_value)
+

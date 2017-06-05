@@ -27,33 +27,33 @@ class DelayUnit(RackUnit):
     def __init__(self, parent):
         RackUnit.__init__(self, parent, 'delay-unit')
 
-        self._delay_type = CbxParameter(parent=self,
-                                        name='delay-type',
-                                        cc_nb=53,
-                                        parameter_nb=27,
-                                        max_value=3)
-        self._delay_time_course = ScaleParameter(parent=self,
-                                                 name='delay-time-course',
-                                                 cc_nb=55,
-                                                 parameter_nb=29,
-                                                 max_value=30)
-        self._delay_time_fine = ScaleParameter(parent=self,
-                                               name='delay-time-fine',
-                                               cc_nb=56,
-                                               parameter_nb=30,
-                                               max_value=99)
-        self._delay_feedback = ScaleParameter(parent=self,
-                                              name='delay-feedback',
-                                              cc_nb=57,
-                                              parameter_nb=31,
+        self.delay_type = CbxParameter(parent=self,
+                                       name='delay-type',
+                                       cc_nb=53,
+                                       parameter_nb=27,
+                                       max_value=3)
+        self.delay_time_course = ScaleParameter(parent=self,
+                                                name='delay-time-course',
+                                                cc_nb=55,
+                                                parameter_nb=29,
+                                                max_value=30)
+        self.delay_time_fine = ScaleParameter(parent=self,
+                                              name='delay-time-fine',
+                                              cc_nb=56,
+                                              parameter_nb=30,
                                               max_value=99)
-        self._delay_level = ScaleParameter(parent=self,
-                                           name='delay-level',
-                                           cc_nb=54,
-                                           parameter_nb=28,
-                                           max_value=99)
-        self._delay_on_off_btn = BtnParameter(parent=self,
-                                              name='delay',
-                                              cc_nb=52,
-                                              parameter_nb=26)
-
+        self.delay_feedback = ScaleParameter(parent=self,
+                                             name='delay-feedback',
+                                             cc_nb=57,
+                                             parameter_nb=31,
+                                             max_value=99)
+        self.delay_level = ScaleParameter(parent=self,
+                                          name='delay-level',
+                                          cc_nb=54,
+                                          parameter_nb=28,
+                                          max_value=99,
+                                          display_percent=True)
+        self.delay_on_off_btn = BtnParameter(parent=self,
+                                             name='delay',
+                                             cc_nb=52,
+                                             parameter_nb=26)

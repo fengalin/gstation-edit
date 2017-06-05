@@ -26,38 +26,43 @@ class AmpUnit(RackUnit):
     def __init__(self, parent):
         RackUnit.__init__(self, parent, 'amp-unit')
 
-        self._amp_modeling = CbxParameter(parent=self,
-                                          name='amp-model',
-                                          cc_nb=34,
-                                          parameter_nb=9,
-                                          max_value=24)
-        self._cabinet = CbxParameter(parent=self,
-                                     name='cabinet-type',
-                                     cc_nb=66,
-                                     parameter_nb=15,
-                                     max_value=18)
-        self._gain = ScaleParameter(parent=self,
-                                    name='gain',
-                                    cc_nb=35,
-                                    parameter_nb=10,
-                                    max_value=90)
-        self._treble = ScaleParameter(parent=self,
-                                      name='treble',
-                                      cc_nb=39,
-                                      parameter_nb=11,
-                                      max_value=90)
-        self._mid = ScaleParameter(parent=self,
-                                   name='mid',
-                                   cc_nb=38,
-                                   parameter_nb=12,
-                                   max_value=90)
-        self._bass = ScaleParameter(parent=self,
-                                    name='bass',
-                                    cc_nb=37,
-                                    parameter_nb=13,
-                                    max_value=90)
-        self._level = ScaleParameter(parent=self,
-                                     name='level',
-                                     cc_nb=36,
-                                     parameter_nb=14,
-                                     max_value=90)
+        self.amp_modeling = CbxParameter(parent=self,
+                                         name='amp-model',
+                                         cc_nb=34,
+                                         parameter_nb=9,
+                                         max_value=24)
+        self.cabinet = CbxParameter(parent=self,
+                                    name='cabinet-type',
+                                    cc_nb=66,
+                                    parameter_nb=15,
+                                    max_value=18)
+        self.gain = ScaleParameter(parent=self,
+                                   name='gain',
+                                   cc_nb=35,
+                                   parameter_nb=10,
+                                   max_value=90,
+                                   display_percent=True)
+        self.treble = ScaleParameter(parent=self,
+                                     name='treble',
+                                     cc_nb=39,
+                                     parameter_nb=11,
+                                     max_value=90,
+                                     display_percent=True)
+        self.mid = ScaleParameter(parent=self,
+                                  name='mid',
+                                  cc_nb=38,
+                                  parameter_nb=12,
+                                  max_value=90,
+                                  display_percent=True)
+        self.bass = ScaleParameter(parent=self,
+                                   name='bass',
+                                   cc_nb=37,
+                                   parameter_nb=13,
+                                   max_value=90,
+                                   display_percent=True)
+        self.level = ScaleParameter(parent=self,
+                                    name='level',
+                                    cc_nb=36,
+                                    parameter_nb=14,
+                                    max_value=90,
+                                    display_percent=True)

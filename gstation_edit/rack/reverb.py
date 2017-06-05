@@ -27,39 +27,42 @@ class ReverbUnit(RackUnit):
     def __init__(self, parent):
          RackUnit.__init__(self, parent, 'reverb-unit')
 
-         self._reverb_type = CbxParameter(parent=self,
-                                          name='reverb-type',
-                                          cc_nb=60,
-                                          parameter_nb=33,
-                                          max_value=12)
-         self._reverb_diffusion = ScaleParameter(parent=self,
-                                                 name='reverb-diffusion',
-                                                 cc_nb=62,
-                                                 parameter_nb=35,
-                                                 max_value=99)
-         self._reverb_density = ScaleParameter(parent=self,
-                                               name='reverb-density',
-                                               cc_nb=63,
-                                               parameter_nb=36,
-                                               max_value=99)
-         self._reverb_decay = ScaleParameter(parent=self,
-                                             name='reverb-decay',
-                                             cc_nb=65,
-                                             parameter_nb=37,
-                                             max_value=9)
-         self._reverb_level = ScaleParameter(parent=self,
-                                             name='reverb-level',
-                                             cc_nb=61,
-                                             parameter_nb=34,
-                                             max_value=99)
-         self._reverb_on_off_btn = BtnParameter(parent=self,
-                                                name='reverb',
-                                                cc_nb=59,
-                                                parameter_nb=32)
+         self.reverb_type = CbxParameter(parent=self,
+                                         name='reverb-type',
+                                         cc_nb=60,
+                                         parameter_nb=33,
+                                         max_value=12)
+         self.reverb_diffusion = ScaleParameter(parent=self,
+                                                name='reverb-diffusion',
+                                                cc_nb=62,
+                                                parameter_nb=35,
+                                                max_value=99,
+                                                display_percent=True)
+         self.reverb_density = ScaleParameter(parent=self,
+                                              name='reverb-density',
+                                              cc_nb=63,
+                                              parameter_nb=36,
+                                              max_value=99,
+                                              display_percent=True)
+         self.reverb_decay = ScaleParameter(parent=self,
+                                            name='reverb-decay',
+                                            cc_nb=65,
+                                            parameter_nb=37,
+                                            max_value=9)
+         self.reverb_level = ScaleParameter(parent=self,
+                                            name='reverb-level',
+                                            cc_nb=61,
+                                            parameter_nb=34,
+                                            max_value=99,
+                                            display_percent=True)
+         self.reverb_on_off_btn = BtnParameter(parent=self,
+                                               name='reverb',
+                                               cc_nb=59,
+                                               parameter_nb=32)
 
 
     def update_conf_from_parameter(self, parameter):
-        if parameter == self._reverb_type:
+        if parameter == self.reverb_type:
             str_value = parameter.str_value
             sensitivity = True
             if str_value == '2-Spring 7\"' or \
@@ -68,7 +71,6 @@ class ReverbUnit(RackUnit):
                     str_value == 'Rattle \'n\' Boing':
                 sensitivity = False
 
-            self._reverb_diffusion.set_sensitive(sensitivity)
-            self._reverb_density.set_sensitive(sensitivity)
-            self._reverb_decay.set_sensitive(sensitivity)
-
+            self.reverb_diffusion.set_sensitive(sensitivity)
+            self.reverb_density.set_sensitive(sensitivity)
+            self.reverb_decay.set_sensitive(sensitivity)

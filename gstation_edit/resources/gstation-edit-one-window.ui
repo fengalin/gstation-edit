@@ -97,12 +97,6 @@
       <column type="gchararray"/>
     </columns>
   </object>
-  <object class="GtkAdjustment" id="bass-adjustment">
-    <property name="upper">90</property>
-    <property name="step_increment">1</property>
-    <property name="page_increment">10</property>
-    <property name="page_size">10</property>
-  </object>
   <object class="GtkListStore" id="cabinet-type-model">
     <columns>
       <!-- column-name gchararray -->
@@ -168,12 +162,6 @@
       </row>
     </data>
   </object>
-  <object class="GtkAdjustment" id="compressor-gain-adjustment">
-    <property name="upper">99</property>
-    <property name="step_increment">1</property>
-    <property name="page_increment">10</property>
-    <property name="page_size">10</property>
-  </object>
   <object class="GtkListStore" id="compressor-ratio-model">
     <columns>
       <!-- column-name gchararray -->
@@ -212,27 +200,9 @@
       </row>
     </data>
   </object>
-  <object class="GtkAdjustment" id="compressor-threshold-adjustment">
-    <property name="upper">99</property>
-    <property name="step_increment">1</property>
-    <property name="page_increment">10</property>
-    <property name="page_size">10</property>
-  </object>
   <object class="GtkMenu" id="context-menu">
     <property name="visible">True</property>
     <property name="can_focus">False</property>
-  </object>
-  <object class="GtkAdjustment" id="delay-feedback-adjustment">
-    <property name="upper">99</property>
-    <property name="step_increment">1</property>
-    <property name="page_increment">10</property>
-    <property name="page_size">10</property>
-  </object>
-  <object class="GtkAdjustment" id="delay-level-adjustment">
-    <property name="upper">99</property>
-    <property name="step_increment">1</property>
-    <property name="page_increment">10</property>
-    <property name="page_size">10</property>
   </object>
   <object class="GtkListStore" id="delay-model">
     <columns>
@@ -253,35 +223,6 @@
         <col id="0" translatable="yes">Analog Pong</col>
       </row>
     </data>
-  </object>
-  <object class="GtkAdjustment" id="delay-time-course-adjustment">
-    <property name="upper">30</property>
-    <property name="step_increment">1</property>
-    <property name="page_increment">10</property>
-    <property name="page_size">10</property>
-  </object>
-  <object class="GtkAdjustment" id="delay-time-fine-adjustment">
-    <property name="upper">99</property>
-    <property name="step_increment">1</property>
-    <property name="page_increment">10</property>
-    <property name="page_size">10</property>
-  </object>
-  <object class="GtkAdjustment" id="digital-level-adjustment">
-    <property name="upper">100</property>
-    <property name="step_increment">1</property>
-    <property name="page_increment">10</property>
-  </object>
-  <object class="GtkAdjustment" id="effect-depth-adjustment">
-    <property name="upper">99</property>
-    <property name="step_increment">1</property>
-    <property name="page_increment">10</property>
-    <property name="page_size">10</property>
-  </object>
-  <object class="GtkAdjustment" id="effect-mix-adjustment">
-    <property name="upper">99</property>
-    <property name="step_increment">1</property>
-    <property name="page_increment">10</property>
-    <property name="page_size">10</property>
   </object>
   <object class="GtkListStore" id="effect-model">
     <columns>
@@ -305,24 +246,12 @@
         <col id="0" translatable="yes">Rotary Speaker</col>
       </row>
       <row>
-        <col id="0" translatable="yes">Envelope Filter</col>
+        <col id="0" translatable="yes">Audo Wah</col>
       </row>
       <row>
         <col id="0" translatable="yes">Pitch / Detune</col>
       </row>
     </data>
-  </object>
-  <object class="GtkAdjustment" id="effect-option-adjustment">
-    <property name="upper">99</property>
-    <property name="step_increment">1</property>
-    <property name="page_increment">10</property>
-    <property name="page_size">10</property>
-  </object>
-  <object class="GtkAdjustment" id="effect-speed-adjustment">
-    <property name="upper">99</property>
-    <property name="step_increment">1</property>
-    <property name="page_increment">10</property>
-    <property name="page_size">10</property>
   </object>
   <object class="GtkListStore" id="frequency-model">
     <columns>
@@ -391,24 +320,6 @@
         <col id="0" translatable="yes">Full Range</col>
       </row>
     </data>
-  </object>
-  <object class="GtkAdjustment" id="gain-adjustment">
-    <property name="upper">90</property>
-    <property name="step_increment">1</property>
-    <property name="page_increment">10</property>
-    <property name="page_size">10</property>
-  </object>
-  <object class="GtkAdjustment" id="gate-attack-adjustment">
-    <property name="upper">99</property>
-    <property name="step_increment">1</property>
-    <property name="page_increment">10</property>
-    <property name="page_size">10</property>
-  </object>
-  <object class="GtkAdjustment" id="gate-threshold-adjustment">
-    <property name="upper">99</property>
-    <property name="step_increment">1</property>
-    <property name="page_increment">10</property>
-    <property name="page_size">10</property>
   </object>
   <object class="GtkHeaderBar" id="header-bar">
     <property name="visible">True</property>
@@ -488,18 +399,6 @@
       </packing>
     </child>
   </object>
-  <object class="GtkAdjustment" id="level-adjustment">
-    <property name="upper">90</property>
-    <property name="step_increment">1</property>
-    <property name="page_increment">10</property>
-    <property name="page_size">10</property>
-  </object>
-  <object class="GtkAdjustment" id="mid-adjustment">
-    <property name="upper">90</property>
-    <property name="step_increment">1</property>
-    <property name="page_increment">10</property>
-    <property name="page_size">10</property>
-  </object>
   <object class="GtkAdjustment" id="midi-channel-adj">
     <property name="lower">1</property>
     <property name="upper">16</property>
@@ -518,42 +417,6 @@
       <!-- column-name midi -->
       <column type="gchararray"/>
     </columns>
-  </object>
-  <object class="GtkAdjustment" id="pedal-back-adjustment">
-    <property name="upper">99</property>
-    <property name="step_increment">1</property>
-    <property name="page_increment">10</property>
-    <property name="page_size">10</property>
-  </object>
-  <object class="GtkAdjustment" id="pedal-forward-adjustment">
-    <property name="upper">99</property>
-    <property name="step_increment">1</property>
-    <property name="page_increment">10</property>
-    <property name="page_size">10</property>
-  </object>
-  <object class="GtkAdjustment" id="reverb-decay-adjustment">
-    <property name="upper">90</property>
-    <property name="step_increment">1</property>
-    <property name="page_increment">10</property>
-    <property name="page_size">10</property>
-  </object>
-  <object class="GtkAdjustment" id="reverb-density-adjustment">
-    <property name="upper">99</property>
-    <property name="step_increment">1</property>
-    <property name="page_increment">10</property>
-    <property name="page_size">10</property>
-  </object>
-  <object class="GtkAdjustment" id="reverb-diffusion-adjustment">
-    <property name="upper">99</property>
-    <property name="step_increment">1</property>
-    <property name="page_increment">10</property>
-    <property name="page_size">10</property>
-  </object>
-  <object class="GtkAdjustment" id="reverb-level-adjustment">
-    <property name="upper">99</property>
-    <property name="step_increment">1</property>
-    <property name="page_increment">10</property>
-    <property name="page_size">10</property>
   </object>
   <object class="GtkListStore" id="reverb-model">
     <columns>
@@ -609,12 +472,6 @@
     <property name="step_increment">1</property>
     <property name="page_increment">10</property>
   </object>
-  <object class="GtkAdjustment" id="treble-adjustment">
-    <property name="upper">90</property>
-    <property name="step_increment">1</property>
-    <property name="page_increment">10</property>
-    <property name="page_size">10</property>
-  </object>
   <object class="GtkListStore" id="wha-expression-model">
     <columns>
       <!-- column-name gchararray -->
@@ -667,18 +524,6 @@
         <col id="0" translatable="yes">Reverb Level</col>
       </row>
     </data>
-  </object>
-  <object class="GtkAdjustment" id="wha-heel-adjustment">
-    <property name="upper">99</property>
-    <property name="step_increment">1</property>
-    <property name="page_increment">10</property>
-    <property name="page_size">10</property>
-  </object>
-  <object class="GtkAdjustment" id="wha-toe-adjustment">
-    <property name="upper">99</property>
-    <property name="step_increment">1</property>
-    <property name="page_increment">10</property>
-    <property name="page_size">10</property>
   </object>
   <object class="GtkApplicationWindow" id="main-window">
     <property name="width_request">1600</property>
@@ -904,10 +749,7 @@
                     <property name="can_focus">True</property>
                     <property name="hexpand">True</property>
                     <property name="vexpand">True</property>
-                    <property name="adjustment">gain-adjustment</property>
-                    <property name="fill_level">99</property>
                     <property name="round_digits">0</property>
-                    <property name="digits">0</property>
                     <property name="value_pos">right</property>
                   </object>
                   <packing>
@@ -922,10 +764,6 @@
                     <property name="can_focus">True</property>
                     <property name="hexpand">True</property>
                     <property name="vexpand">True</property>
-                    <property name="adjustment">treble-adjustment</property>
-                    <property name="fill_level">99</property>
-                    <property name="round_digits">0</property>
-                    <property name="digits">0</property>
                     <property name="value_pos">right</property>
                   </object>
                   <packing>
@@ -940,10 +778,7 @@
                     <property name="can_focus">True</property>
                     <property name="hexpand">True</property>
                     <property name="vexpand">True</property>
-                    <property name="adjustment">mid-adjustment</property>
-                    <property name="fill_level">99</property>
                     <property name="round_digits">0</property>
-                    <property name="digits">0</property>
                     <property name="value_pos">right</property>
                   </object>
                   <packing>
@@ -958,10 +793,7 @@
                     <property name="can_focus">True</property>
                     <property name="hexpand">True</property>
                     <property name="vexpand">True</property>
-                    <property name="adjustment">bass-adjustment</property>
-                    <property name="fill_level">99</property>
                     <property name="round_digits">0</property>
-                    <property name="digits">0</property>
                     <property name="value_pos">right</property>
                   </object>
                   <packing>
@@ -976,10 +808,7 @@
                     <property name="can_focus">True</property>
                     <property name="hexpand">True</property>
                     <property name="vexpand">True</property>
-                    <property name="adjustment">level-adjustment</property>
-                    <property name="fill_level">99</property>
                     <property name="round_digits">0</property>
-                    <property name="digits">0</property>
                     <property name="value_pos">right</property>
                   </object>
                   <packing>
@@ -1153,8 +982,6 @@
                     <property name="can_focus">True</property>
                     <property name="hexpand">True</property>
                     <property name="vexpand">True</property>
-                    <property name="adjustment">compressor-gain-adjustment</property>
-                    <property name="fill_level">99</property>
                     <property name="value_pos">right</property>
                   </object>
                   <packing>
@@ -1169,8 +996,6 @@
                     <property name="can_focus">True</property>
                     <property name="hexpand">True</property>
                     <property name="vexpand">True</property>
-                    <property name="adjustment">compressor-threshold-adjustment</property>
-                    <property name="fill_level">99</property>
                     <property name="value_pos">right</property>
                   </object>
                   <packing>
@@ -1280,10 +1105,7 @@
                     <property name="can_focus">True</property>
                     <property name="hexpand">True</property>
                     <property name="vexpand">True</property>
-                    <property name="adjustment">gate-attack-adjustment</property>
-                    <property name="fill_level">99</property>
                     <property name="round_digits">0</property>
-                    <property name="digits">0</property>
                     <property name="value_pos">right</property>
                   </object>
                   <packing>
@@ -1298,10 +1120,7 @@
                     <property name="can_focus">True</property>
                     <property name="hexpand">True</property>
                     <property name="vexpand">True</property>
-                    <property name="adjustment">gate-threshold-adjustment</property>
-                    <property name="fill_level">99</property>
                     <property name="round_digits">0</property>
-                    <property name="digits">0</property>
                     <property name="value_pos">right</property>
                   </object>
                   <packing>
@@ -1444,10 +1263,7 @@
                     <property name="can_focus">True</property>
                     <property name="hexpand">True</property>
                     <property name="vexpand">True</property>
-                    <property name="adjustment">effect-mix-adjustment</property>
-                    <property name="fill_level">99</property>
                     <property name="round_digits">0</property>
-                    <property name="digits">0</property>
                     <property name="value_pos">right</property>
                   </object>
                   <packing>
@@ -1462,10 +1278,7 @@
                     <property name="can_focus">True</property>
                     <property name="hexpand">True</property>
                     <property name="vexpand">True</property>
-                    <property name="adjustment">effect-option-adjustment</property>
-                    <property name="fill_level">99</property>
                     <property name="round_digits">0</property>
-                    <property name="digits">0</property>
                     <property name="value_pos">right</property>
                   </object>
                   <packing>
@@ -1480,10 +1293,7 @@
                     <property name="can_focus">True</property>
                     <property name="hexpand">True</property>
                     <property name="vexpand">True</property>
-                    <property name="adjustment">effect-depth-adjustment</property>
-                    <property name="fill_level">99</property>
                     <property name="round_digits">0</property>
-                    <property name="digits">0</property>
                     <property name="value_pos">right</property>
                   </object>
                   <packing>
@@ -1498,10 +1308,7 @@
                     <property name="can_focus">True</property>
                     <property name="hexpand">True</property>
                     <property name="vexpand">True</property>
-                    <property name="adjustment">effect-speed-adjustment</property>
-                    <property name="fill_level">99</property>
                     <property name="round_digits">0</property>
-                    <property name="digits">0</property>
                     <property name="value_pos">right</property>
                   </object>
                   <packing>
@@ -1659,10 +1466,7 @@
                     <property name="can_focus">True</property>
                     <property name="hexpand">True</property>
                     <property name="vexpand">True</property>
-                    <property name="adjustment">delay-level-adjustment</property>
-                    <property name="fill_level">99</property>
                     <property name="round_digits">0</property>
-                    <property name="digits">0</property>
                     <property name="value_pos">right</property>
                   </object>
                   <packing>
@@ -1677,10 +1481,7 @@
                     <property name="can_focus">True</property>
                     <property name="hexpand">True</property>
                     <property name="vexpand">True</property>
-                    <property name="adjustment">delay-feedback-adjustment</property>
-                    <property name="fill_level">99</property>
                     <property name="round_digits">0</property>
-                    <property name="digits">0</property>
                     <property name="value_pos">right</property>
                   </object>
                   <packing>
@@ -1695,10 +1496,7 @@
                     <property name="can_focus">True</property>
                     <property name="hexpand">True</property>
                     <property name="vexpand">True</property>
-                    <property name="adjustment">delay-time-fine-adjustment</property>
-                    <property name="fill_level">99</property>
                     <property name="round_digits">0</property>
-                    <property name="digits">0</property>
                     <property name="value_pos">right</property>
                   </object>
                   <packing>
@@ -1713,10 +1511,7 @@
                     <property name="can_focus">True</property>
                     <property name="hexpand">True</property>
                     <property name="vexpand">True</property>
-                    <property name="adjustment">delay-time-course-adjustment</property>
-                    <property name="fill_level">99</property>
                     <property name="round_digits">0</property>
-                    <property name="digits">0</property>
                     <property name="value_pos">right</property>
                   </object>
                   <packing>
@@ -1875,10 +1670,7 @@
                     <property name="can_focus">True</property>
                     <property name="hexpand">True</property>
                     <property name="vexpand">True</property>
-                    <property name="adjustment">reverb-level-adjustment</property>
-                    <property name="fill_level">99</property>
                     <property name="round_digits">0</property>
-                    <property name="digits">0</property>
                     <property name="value_pos">right</property>
                   </object>
                   <packing>
@@ -1893,10 +1685,7 @@
                     <property name="can_focus">True</property>
                     <property name="hexpand">True</property>
                     <property name="vexpand">True</property>
-                    <property name="adjustment">reverb-decay-adjustment</property>
-                    <property name="fill_level">99</property>
                     <property name="round_digits">0</property>
-                    <property name="digits">0</property>
                     <property name="value_pos">right</property>
                   </object>
                   <packing>
@@ -1911,10 +1700,7 @@
                     <property name="can_focus">True</property>
                     <property name="hexpand">True</property>
                     <property name="vexpand">True</property>
-                    <property name="adjustment">reverb-density-adjustment</property>
-                    <property name="fill_level">99</property>
                     <property name="round_digits">0</property>
-                    <property name="digits">0</property>
                     <property name="value_pos">right</property>
                   </object>
                   <packing>
@@ -1929,10 +1715,7 @@
                     <property name="can_focus">True</property>
                     <property name="hexpand">True</property>
                     <property name="vexpand">True</property>
-                    <property name="adjustment">reverb-diffusion-adjustment</property>
-                    <property name="fill_level">99</property>
                     <property name="round_digits">0</property>
-                    <property name="digits">0</property>
                     <property name="value_pos">right</property>
                   </object>
                   <packing>
@@ -2090,10 +1873,7 @@
                     <property name="can_focus">True</property>
                     <property name="hexpand">True</property>
                     <property name="vexpand">True</property>
-                    <property name="adjustment">wha-heel-adjustment</property>
-                    <property name="fill_level">99</property>
                     <property name="round_digits">0</property>
-                    <property name="digits">0</property>
                     <property name="value_pos">right</property>
                   </object>
                   <packing>
@@ -2108,10 +1888,7 @@
                     <property name="can_focus">True</property>
                     <property name="hexpand">True</property>
                     <property name="vexpand">True</property>
-                    <property name="adjustment">wha-toe-adjustment</property>
-                    <property name="fill_level">99</property>
                     <property name="round_digits">0</property>
-                    <property name="digits">0</property>
                     <property name="value_pos">right</property>
                   </object>
                   <packing>
@@ -2126,11 +1903,8 @@
                     <property name="can_focus">True</property>
                     <property name="hexpand">True</property>
                     <property name="vexpand">True</property>
-                    <property name="adjustment">pedal-forward-adjustment</property>
                     <property name="restrict_to_fill_level">False</property>
-                    <property name="fill_level">99</property>
                     <property name="round_digits">0</property>
-                    <property name="digits">0</property>
                     <property name="value_pos">right</property>
                   </object>
                   <packing>
@@ -2145,11 +1919,8 @@
                     <property name="can_focus">True</property>
                     <property name="hexpand">True</property>
                     <property name="vexpand">True</property>
-                    <property name="adjustment">pedal-back-adjustment</property>
                     <property name="restrict_to_fill_level">False</property>
-                    <property name="fill_level">99</property>
                     <property name="round_digits">0</property>
-                    <property name="digits">0</property>
                     <property name="value_pos">right</property>
                   </object>
                   <packing>
@@ -2689,11 +2460,8 @@
                 <property name="can_focus">True</property>
                 <property name="valign">center</property>
                 <property name="hexpand">True</property>
-                <property name="adjustment">digital-level-adjustment</property>
                 <property name="restrict_to_fill_level">False</property>
-                <property name="fill_level">99</property>
                 <property name="round_digits">0</property>
-                <property name="digits">0</property>
                 <property name="value_pos">right</property>
               </object>
               <packing>
