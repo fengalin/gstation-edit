@@ -43,12 +43,7 @@ class GStationEdit:
 
         self.is_valid = False
         self.main_window = MainWindow(sys.argv[0], self.gtk_builder)
-
-        signal_handlers = dict()
-        signal_handlers['on_main-window_destroy'] = self.quit
-        signal_handlers.update(self.main_window.get_signal_handlers())
-
-        self.gtk_builder.connect_signals(signal_handlers)
+        self.main_window.gtk_window.connect('destroy', self.quit)
 
         self.main_window.connect()
 

@@ -21,9 +21,9 @@ class Parameter:
     def __init__(self, parent, name, cc_nb=-1, parameter_nb=-1,
                  is_sensitive=1, value=0, min_value=0, max_value=99,
                  auto_register=True):
-        self._parent = parent
-        self._widget = None
-        self._widget_label = None
+        self.parent = parent
+        self.widget = None
+        self.widget_label = None
         self.name = name
         self.parameter_nb = parameter_nb
         self.cc_nb = cc_nb
@@ -39,8 +39,8 @@ class Parameter:
         if self.value != value:
             self.value = value
             self.str_value = self.get_str_value()
-            self._parent.update_conf_from_parameter(self)
-            self._parent.send_parameter_value(self)
+            self.parent.update_conf_from_parameter(self)
+            self.parent.send_parameter_value(self)
 
     def init_value(self, value, is_cc=False):
         actual_value = value
@@ -50,7 +50,7 @@ class Parameter:
             self.value = actual_value
             self.update_widget()
             self.str_value = self.get_str_value()
-            self._parent.update_conf_from_parameter(self)
+            self.parent.update_conf_from_parameter(self)
 
     def get_str_value(self):
         return str(self.value)
@@ -85,28 +85,28 @@ class Parameter:
     def init_widget(self, gtk_builder):
         widget_label = gtk_builder.get_object(self.get_widget_label_name())
         if widget_label:
-            self._widget_label = widget_label
+            self.widget_label = widget_label
 
         widget = gtk_builder.get_object(self.get_widget_name())
         if widget:
-            self._widget = widget
+            self.widget = widget
         else:
             print('widget not found: %s'%(self.get_widget_name()))
 
 
     def set_widget_label(self, widget_name):
-        if self._widget_label:
-            self._widget_label.set_text(widget_name)
+        if self.widget_label:
+            self.widget_label.set_text(widget_name)
 
     def set_sensitive(self, is_sensitive):
         self.is_sensitive = is_sensitive
-        self._widget.set_sensitive(is_sensitive)
-        if self._widget_label:
-            self._widget_label.set_sensitive(is_sensitive)
+        self.widget.set_sensitive(is_sensitive)
+        if self.widget_label:
+            self.widget_label.set_sensitive(is_sensitive)
 
     def update_widget(self):
-        if self._widget:
-            self._widget.set_value(self.value)
+        if self.widget:
+            self.widget.set_value(self.value)
 
     def __str__(self):
         return '%s: value %d, in [ %d, %d] - param %d, cc nb %d'\

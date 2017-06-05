@@ -28,6 +28,12 @@ class MidiSelectDlg:
         self.gtk_builder = gtk_builder
 
         self.gtk_dlg = self.get_widget('midi-select-dlg')
+        connect_btn = self.get_widget('midi-connect-btn')
+        connect_btn.connect('clicked', self.on_btn_connect_clicked)
+        auto_connect_btn = self.get_widget('midi-auto-connect-btn')
+        auto_connect_btn.connect('clicked', self.on_auto_connect_btn_clicked)
+        cancel_btn = self.get_widget('midi-cancel-btn')
+        cancel_btn.connect('clicked', self.on_cancel_btn_clicked)
 
         self.midi_select_msg_lbl = self.get_widget('midi-select_message-lbl')
         self.midi_in_cbx = self.get_widget('midi-in-cbx')
@@ -64,15 +70,6 @@ class MidiSelectDlg:
             self.is_valid = False
             print('Could not find widget %s'%(widget_name))
         return widget
-
-
-    def get_signal_handlers(self):
-        signal_handlers = dict()
-        signal_handlers['on_midi-select-dlg_close'] = self.on_cancel_btn_clicked
-        signal_handlers['on_midi-connect-btn_clicked'] = self.on_btn_connect_clicked
-        signal_handlers['on_midi-auto-connect-btn_clicked'] = self.on_auto_connect_btn_clicked
-        signal_handlers['on_midi-cancel-btn_clicked'] = self.on_cancel_btn_clicked
-        return signal_handlers
 
 
     def present(self, widget=None):

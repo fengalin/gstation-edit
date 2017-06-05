@@ -21,32 +21,26 @@ from gstation_edit.ui_core.parameter import Parameter
 
 class RackUnit:
     def __init__(self, parent, name):
-        self._parameters = dict()
+        self.parameters = dict()
         self.parent = parent
         self.name = name
 
     def add_parameter(self, parameter):
-        self._parameters[parameter.name] = parameter
+        self.parameters[parameter.name] = parameter
 
     def init_widgets(self, gtk_builder):
-        for parameter in self._parameters.values():
+        for parameter in self.parameters.values():
             parameter.init_widget(gtk_builder)
-
-    def get_signal_handlers(self):
-        signal_handlers = dict()
-        for parameter in self._parameters.values():
-            signal_handlers.update(parameter.get_signal_handlers())
-        return signal_handlers
 
     def get_parameter_bindings(self):
         parameter_bindings = dict()
-        for parameter in self._parameters.values():
+        for parameter in self.parameters.values():
             parameter_bindings.update(parameter.get_parameter_bindings())
         return parameter_bindings
 
     def get_parameter_cc_bindings(self):
         parameter_cc_bindings = dict()
-        for parameter in self._parameters.values():
+        for parameter in self.parameters.values():
             parameter_cc_bindings.update(parameter.get_parameter_cc_bindings())
         return parameter_cc_bindings
 
@@ -58,6 +52,6 @@ class RackUnit:
 
     def __str__(self):
         parameters_str = ''
-        for parameter in self._parameters.values():
+        for parameter in self.parameters.values():
             parameters_str += parameter
         return 'Rack unit: %s%s'%(self.name, parameters_str)

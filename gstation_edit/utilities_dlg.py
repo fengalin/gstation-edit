@@ -36,11 +36,16 @@ class UtilitiesDlg:
 
         self.gtk_dlg = self.get_widget('utilities-dlg')
         self.done_btn = self.get_widget('utilities-done-btn')
+        self.done_btn.connect('clicked', self.on_done_btn_clicked)
 
         self.cabinet_emul_switch = self.get_widget('cabinet-emulation-swtch')
+        self.cabinet_emul_switch.connect('state_set', self.on_utility_changed)
         self.stereo_switch = self.get_widget('stereo-swtch')
+        self.stereo_switch.connect('state_set', self.on_utility_changed)
         self.dry_track_switch = self.get_widget('dry-track-swtch')
+        self.dry_track_switch.connect('state_set', self.on_utility_changed)
         self.midi_loopback_switch = self.get_widget('midi-loopback-swtch')
+        self.midi_loopback_switch.connect('state_set', self.on_utility_changed)
 
         # digital level is the only utility parameter
         # to be associated to a CC parameter
@@ -51,11 +56,6 @@ class UtilitiesDlg:
                                                   max_value=24,
                                                   auto_register=False)
         self.digital_level_scale.init_widget(self.gtk_builder)
-        self.digital_level_radical = 'on_digital-level-scale'
-        self.digital_level_regular_callback = \
-            self.digital_level_scale.get_signal_handlers()[
-                self.digital_level_radical + '_change_value'
-            ]
         self.digital_level_has_changed = False
 
 
@@ -66,25 +66,6 @@ class UtilitiesDlg:
             print('Could not find widget %s'%(widget_name))
         return widget
 
-
-    def get_signal_handlers(self):
-        signal_handlers = dict()
-        signal_handlers['on_utilities-done-btn_clicked'] = self.on_done_btn_clicked
-
-        signal_handlers['on_cabinet-emulation-swtch_state_set'] = \
-                                                        self.on_utility_changed
-        signal_handlers['on_stereo-swtch_state_set'] = \
-                                                        self.on_utility_changed
-        signal_handlers['on_dry-track-swtch_state_set'] = \
-                                                        self.on_utility_changed
-        signal_handlers['on_midi-loopback-swtch_state_set'] = \
-                                                        self.on_utility_changed
-
-        signal_handlers[self.digital_level_radical + '_change_value'] = \
-                                                  self.on_digital_level_changed
-        signal_handlers[self.digital_level_radical + '_format_value'] = \
-                                   self.digital_level_scale.handle_format_value
-        return signal_handlers
 
     def get_parameter_cc_bindings(self):
         return self.digital_level_scale.get_parameter_cc_bindings()
@@ -138,5 +119,3 @@ class UtilitiesDlg:
                 self.settings.midi_merge = value
 
             self.main_window.send_settings(self.settings)
-
-

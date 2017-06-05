@@ -33,12 +33,6 @@ class GrpParameter(Parameter):
         # no widget here, just a group
         pass
 
-    def get_signal_handlers(self):
-        signal_handlers = dict()
-        for parameter in self.parameters.values():
-            signal_handlers.update(parameter.get_signal_handlers())
-        return signal_handlers
-
     def init_widget(self, gtk_builder):
         for parameter in self.parameters.values():
             parameter.init_widget(gtk_builder)
@@ -64,4 +58,3 @@ class GrpParameter(Parameter):
             self.cc_nb = parameter.cc_nb
             self.value = parameter.value
         self.parameters[parameter.name] = parameter
-

@@ -40,12 +40,7 @@ class JStationSnifferApp:
                                          JStationSniffer(sys.argv[0]),
                                          self.gtk_builder)
 
-        signal_handlers = dict()
-        signal_handlers['on_jstation-sniffer-window_destroy'] = self.quit
-        signal_handlers.update(self.main_window.get_signal_handlers())
-
-        self.gtk_builder.connect_signals(signal_handlers)
-
+        self.main_window.gtk_dlg.connect('destroy', self.quit)
         self.main_window.present()
 
     def quit(self, window):

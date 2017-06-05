@@ -27,28 +27,24 @@ class CbxParameter(Parameter):
                             is_sensitive, value, max_value=max_value)
 
     def get_str_value(self):
-        if self._widget:
-            tree_iter = self._widget.get_active_iter()
+        if self.widget:
+            tree_iter = self.widget.get_active_iter()
             if tree_iter:
-                model = self._widget.get_model()
+                model = self.widget.get_model()
                 return model[tree_iter][:1][0]
             else:
                 return ''
         else:
             return ''
 
-    def init_widget(self, gtk_builder):
-        Parameter.init_widget( self, gtk_builder)
-        if self._widget:
-            self._widget.set_active(self.value)
-
     def get_widget_name(self):
         return self.name + '-cbx'
 
-    def get_signal_handlers(self):
-        signal_radical = 'on_' + self.get_widget_name()
-        signal_handlers = {signal_radical+'_changed': self.handle_changed}
-        return signal_handlers
+    def init_widget(self, gtk_builder):
+        Parameter.init_widget(self, gtk_builder)
+        if self.widget:
+            self.widget.set_active(self.value)
+            self.widget.connect('changed', self.handle_changed)
 
     def handle_changed(self, widget):
         active_item = widget.get_active()
@@ -57,7 +53,5 @@ class CbxParameter(Parameter):
         # else no active item
 
     def update_widget(self):
-        if self._widget:
-            self._widget.set_active(self.value)
-
-
+        if self.widget:
+            self.widget.set_active(self.value)

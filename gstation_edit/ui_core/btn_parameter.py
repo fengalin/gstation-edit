@@ -51,13 +51,9 @@ class BtnParameter(Parameter):
 
     def init_widget(self, gtk_builder):
         Parameter.init_widget(self, gtk_builder)
-        if self._widget:
-            self._widget.set_active(self.value)
-
-    def get_signal_handlers(self):
-        signal_radical = 'on_' + self.get_widget_name()
-        signal_handlers = {signal_radical+'_toggled': self.handle_toggled}
-        return signal_handlers
+        if self.widget:
+            self.widget.set_active(self.value)
+            self.widget.connect('toggled', self.handle_toggled)
 
     def handle_toggled(self, widget):
         if widget.get_active() == 0:
@@ -66,6 +62,6 @@ class BtnParameter(Parameter):
             self.set_value(1)
 
     def update_widget(self):
-        if self._widget:
-            self._widget.set_active(self.value)
+        if self.widget:
+            self.widget.set_active(self.value)
 

@@ -35,15 +35,10 @@ class ScaleParameter(Parameter):
 
     def init_widget(self, gtk_builder):
         Parameter.init_widget(self, gtk_builder)
-        if self._widget:
-            self._widget.set_range(self.min_value, self.max_value)
-
-    def get_signal_handlers(self):
-        signal_radical = 'on_' + self.get_widget_name()
-        signal_handlers = dict()
-        signal_handlers[signal_radical+'_change_value'] = self.handle_change_value
-        signal_handlers[signal_radical+'_format_value'] = self.handle_format_value
-        return signal_handlers
+        if self.widget:
+            self.widget.set_range(self.min_value, self.max_value)
+            self.widget.connect('change_value', self.handle_change_value)
+            self.widget.connect('format_value', self.handle_format_value)
 
     def handle_change_value(self, widget, scroll_jump, value):
         int_value = int(value)

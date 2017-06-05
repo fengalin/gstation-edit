@@ -38,9 +38,9 @@ class RdBtnParameter(BtnParameter):
     def handle_toggled(self, widget):
         self.is_active = widget.get_active()
         if self.is_active != 0:
-            self._parent.send_parameter_value(self)
+            self.parent.send_parameter_value(self)
 
     def set_active(self, is_active):
-        if self._widget:
-            self._widget.set_active(is_active)
+        if self.widget:
+            self.widget.set_active(is_active)
 

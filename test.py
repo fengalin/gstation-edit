@@ -29,7 +29,3 @@ who_am_i_req.test()
 
 from test import jstation_interface
 jstation_interface.test()
-
-from test import amp
-amp.test()
-
