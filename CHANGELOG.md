@@ -4,6 +4,9 @@
 #### User
 - Make program names editable in bank list
 
+#### Development
+- Simplify UI signals connection
+
 
 ### Version 0.5.0 (20170603)
 #### User
