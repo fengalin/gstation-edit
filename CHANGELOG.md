@@ -1,6 +1,11 @@
 ## Change Log
 
-### Version 0.5.0
+### Version 0.6.0 (in progress)
+#### User
+- Make program names editable in bank list
+
+
+### Version 0.5.0 (20170603)
 #### User
 - Added a **Utility Settings** dialog
 - Added Undo and Store buttons
