@@ -934,7 +934,7 @@
                     <property name="can_focus">False</property>
                     <property name="halign">end</property>
                     <property name="vexpand">True</property>
-                    <property name="label" translatable="yes">Gain (db):</property>
+                    <property name="label" translatable="yes">Gain (dB):</property>
                     <property name="single_line_mode">True</property>
                   </object>
                   <packing>
