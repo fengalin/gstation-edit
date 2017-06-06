@@ -25,7 +25,7 @@ from gstation_edit.rack.compress_gate import CompressorGateUnit
 from gstation_edit.rack.effect import EffectUnit
 from gstation_edit.rack.delay import DelayUnit
 from gstation_edit.rack.reverb import ReverbUnit
-from gstation_edit.rack.wha_expression import WhaExpressionUnit
+from gstation_edit.rack.wah_expression import WahExpressionUnit
 
 from gstation_edit.midi_select_dlg import MidiSelectDlg
 from gstation_edit.utilities_dlg import UtilitiesDlg
@@ -79,7 +79,7 @@ class MainWindow:
         self.units.append(EffectUnit(self))
         self.units.append(DelayUnit(self))
         self.units.append(ReverbUnit(self))
-        self.units.append(WhaExpressionUnit(self))
+        self.units.append(WahExpressionUnit(self))
 
         self.init_bank_list_widget()
         self.init_context_menu_widget()

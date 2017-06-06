@@ -23,7 +23,7 @@ from gstation_edit.ui_core.btn_parameter import BtnParameter
 
 from gstation_edit.rack.rack_unit import RackUnit
 
-class WhaExpressionUnit(RackUnit):
+class WahExpressionUnit(RackUnit):
     def __init__(self, parent):
          RackUnit.__init__(self, parent=parent, name='wah-expression-unit')
 
