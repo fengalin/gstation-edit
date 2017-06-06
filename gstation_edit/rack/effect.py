@@ -26,6 +26,15 @@ from gstation_edit.ui_core.grp_parameter import GrpParameter
 from gstation_edit.rack.rack_unit import RackUnit
 
 class EffectUnit(RackUnit):
+    class DepthDetuneParameter(ScaleParameter):
+        def __init__(self, **kwargs):
+            self.origin = 0
+            ScaleParameter.__init__(self, **kwargs)
+
+        def get_str_value(self):
+            return '%d'%(self.value - self.origin)
+
+
     def __init__(self, parent):
         RackUnit.__init__(self, parent, 'effect-unit')
 
@@ -39,7 +48,7 @@ class EffectUnit(RackUnit):
                                     cc_nb=47,
                                     parameter_nb=22,
                                     max_value=90)
-        self.depth = ScaleParameter(parent=self,
+        self.depth = EffectUnit.DepthDetuneParameter(parent=self,
                                     name='effect-depth',
                                     cc_nb=48,
                                     parameter_nb=23,
@@ -82,6 +91,7 @@ class EffectUnit(RackUnit):
             speed_max = 99
 
             depth_label = 'Depth:'
+            depth_origin = 0
             depth_max = 99
 
             option_label = 'PreDelay:'
@@ -101,6 +111,7 @@ class EffectUnit(RackUnit):
                 speed_label = 'Pitch:'
                 speed_max = 48
                 depth_label = 'Detune:'
+                depth_origin = 30
                 depth_max = 60
 
             self.speed.set_widget_label(speed_label)
@@ -108,6 +119,7 @@ class EffectUnit(RackUnit):
 
             self.depth.set_widget_label(depth_label)
             self.depth.set_max(depth_max)
+            self.depth.origin = depth_origin
 
             self.option.set_widget_label(option_label)
             self.option.set_sensitive(option_sensitivity)

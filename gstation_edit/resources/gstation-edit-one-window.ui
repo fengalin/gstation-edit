@@ -912,6 +912,7 @@
               <object class="GtkBox" id="compressor-labels">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
+                <property name="margin_left">5</property>
                 <property name="orientation">vertical</property>
                 <child>
                   <object class="GtkLabel" id="compression-lbl">
@@ -933,7 +934,7 @@
                     <property name="can_focus">False</property>
                     <property name="halign">end</property>
                     <property name="vexpand">True</property>
-                    <property name="label" translatable="yes">Gain:</property>
+                    <property name="label" translatable="yes">Gain (db):</property>
                     <property name="single_line_mode">True</property>
                   </object>
                   <packing>
@@ -948,7 +949,7 @@
                     <property name="can_focus">False</property>
                     <property name="halign">end</property>
                     <property name="vexpand">True</property>
-                    <property name="label" translatable="yes">Threshold:</property>
+                    <property name="label" translatable="yes">Threshold (dB):</property>
                     <property name="single_line_mode">True</property>
                   </object>
                   <packing>
@@ -1440,7 +1441,7 @@
                     <property name="can_focus">False</property>
                     <property name="halign">end</property>
                     <property name="vexpand">True</property>
-                    <property name="label" translatable="yes">Time fine:</property>
+                    <property name="label" translatable="yes">Time fine (0.1 s):</property>
                     <property name="single_line_mode">True</property>
                   </object>
                   <packing>
@@ -1455,7 +1456,7 @@
                     <property name="can_focus">False</property>
                     <property name="halign">end</property>
                     <property name="vexpand">True</property>
-                    <property name="label" translatable="yes">Time course:</property>
+                    <property name="label" translatable="yes">Time course (ms):</property>
                     <property name="single_line_mode">True</property>
                   </object>
                   <packing>
@@ -2213,6 +2214,7 @@
             </child>
             <child>
               <object class="GtkBox" id="compressor-values-box">
+                <property name="width_request">30</property>
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
                 <property name="orientation">vertical</property>

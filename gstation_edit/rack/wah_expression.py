@@ -47,11 +47,15 @@ class WahExpressionUnit(RackUnit):
          self.pedal_forward = ScaleParameter(parent=self,
                                              name='pedal-forward',
                                              cc_nb=71,
-                                             parameter_nb=41)
+                                             parameter_nb=41,
+                                             max_value=127,
+                                             display_percent=True)
          self.pedal_back = ScaleParameter(parent=self,
                                           name='pedal-back',
                                           cc_nb=72,
-                                          parameter_nb=42)
+                                          parameter_nb=42,
+                                          max_value=127,
+                                          display_percent=True)
          self.wah_expression_on_off_btn = BtnParameter(parent=self,
                                                        name='wah-expression',
                                                        cc_nb=8,

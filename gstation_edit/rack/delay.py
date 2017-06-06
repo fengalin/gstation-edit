@@ -41,6 +41,7 @@ class DelayUnit(RackUnit):
                                               name='delay-time-fine',
                                               cc_nb=56,
                                               parameter_nb=30,
+                                              min_value=1,
                                               max_value=99)
         self.delay_feedback = ScaleParameter(parent=self,
                                              name='delay-feedback',

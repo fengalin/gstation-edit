@@ -35,7 +35,7 @@ class ScaleParameter(Parameter):
         value = self.value
         if self.display_percent:
             value = 100 * value / self.max_value
-        return '%02d'%(value)
+        return '%d'%(value)
 
     def get_widget_name(self):
         return self.name + '-scale'
