@@ -62,7 +62,7 @@ From the dowload root directory:
 ### System wide install
 From the dowload root directory:
 
-    # sudo ./setup.py install
+    $ sudo ./setup.py install
 
 
 # Troubleshooting (WIP)
