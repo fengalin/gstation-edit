@@ -33,13 +33,13 @@ class WhaExpressionUnit(RackUnit):
                                                   parameter_nb=40,
                                                   max_value=3)
          self.wha_heel = ScaleParameter(parent=self,
-                                        name='wha-heel',
+                                        name='wah-heel',
                                         cc_nb=10,
                                         parameter_nb=7,
                                         max_value=127,
                                         display_percent=True)
          self.wha_toe = ScaleParameter(parent=self,
-                                       name='wha-toe',
+                                       name='wah-toe',
                                        cc_nb=11,
                                        parameter_nb=8,
                                        max_value=127,

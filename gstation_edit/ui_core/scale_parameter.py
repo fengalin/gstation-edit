@@ -45,7 +45,17 @@ class ScaleParameter(Parameter):
         if self.widget:
             self.widget.set_range(self.min_value, self.max_value)
             self.widget.connect('change_value', self.handle_change_value)
-            self.widget.connect('format_value', self.handle_format_value)
+
+            self.value_lbl = gtk_builder.get_object('%s-value-lbl'%self.name)
+
+    def init_value(self, value, is_cc=False):
+        Parameter.init_value(self, value, is_cc)
+        if self.value_lbl:
+            self.value_lbl.set_text(self.str_value)
+
+    def set_value(self, value):
+        Parameter.set_value(self, value)
+        self.value_lbl.set_text(self.str_value)
 
     def handle_change_value(self, widget, scroll_jump, value):
         int_value = int(value)
@@ -55,9 +65,6 @@ class ScaleParameter(Parameter):
             int_value = self.max_value
         self.set_value(int_value)
         return False
-
-    def handle_format_value(self, widget, value):
-        return self.str_value
 
     def set_max(self, max_value):
         self.max_value = max_value

@@ -750,6 +750,7 @@
                     <property name="hexpand">True</property>
                     <property name="vexpand">True</property>
                     <property name="round_digits">0</property>
+                    <property name="draw_value">False</property>
                     <property name="value_pos">right</property>
                   </object>
                   <packing>
@@ -764,6 +765,7 @@
                     <property name="can_focus">True</property>
                     <property name="hexpand">True</property>
                     <property name="vexpand">True</property>
+                    <property name="draw_value">False</property>
                     <property name="value_pos">right</property>
                   </object>
                   <packing>
@@ -779,6 +781,7 @@
                     <property name="hexpand">True</property>
                     <property name="vexpand">True</property>
                     <property name="round_digits">0</property>
+                    <property name="draw_value">False</property>
                     <property name="value_pos">right</property>
                   </object>
                   <packing>
@@ -794,6 +797,7 @@
                     <property name="hexpand">True</property>
                     <property name="vexpand">True</property>
                     <property name="round_digits">0</property>
+                    <property name="draw_value">False</property>
                     <property name="value_pos">right</property>
                   </object>
                   <packing>
@@ -809,6 +813,7 @@
                     <property name="hexpand">True</property>
                     <property name="vexpand">True</property>
                     <property name="round_digits">0</property>
+                    <property name="draw_value">False</property>
                     <property name="value_pos">right</property>
                   </object>
                   <packing>
@@ -821,14 +826,14 @@
               <packing>
                 <property name="left_attach">3</property>
                 <property name="top_attach">0</property>
-                <property name="width">4</property>
+                <property name="width">5</property>
               </packing>
             </child>
             <child>
               <object class="GtkBox" id="compressor-selection">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
-                <property name="margin_bottom">5</property>
+                <property name="margin_bottom">10</property>
                 <property name="orientation">vertical</property>
                 <child>
                   <object class="GtkLabel" id="compressor-ratio-lbl">
@@ -982,6 +987,7 @@
                     <property name="can_focus">True</property>
                     <property name="hexpand">True</property>
                     <property name="vexpand">True</property>
+                    <property name="draw_value">False</property>
                     <property name="value_pos">right</property>
                   </object>
                   <packing>
@@ -996,6 +1002,7 @@
                     <property name="can_focus">True</property>
                     <property name="hexpand">True</property>
                     <property name="vexpand">True</property>
+                    <property name="draw_value">False</property>
                     <property name="value_pos">right</property>
                   </object>
                   <packing>
@@ -1019,10 +1026,12 @@
                 <property name="receives_default">True</property>
                 <property name="halign">center</property>
                 <property name="valign">start</property>
+                <property name="margin_left">10</property>
+                <property name="margin_right">10</property>
                 <property name="use_stock">True</property>
               </object>
               <packing>
-                <property name="left_attach">4</property>
+                <property name="left_attach">5</property>
                 <property name="top_attach">2</property>
               </packing>
             </child>
@@ -1077,7 +1086,7 @@
                 </child>
               </object>
               <packing>
-                <property name="left_attach">5</property>
+                <property name="left_attach">6</property>
                 <property name="top_attach">2</property>
               </packing>
             </child>
@@ -1106,6 +1115,7 @@
                     <property name="hexpand">True</property>
                     <property name="vexpand">True</property>
                     <property name="round_digits">0</property>
+                    <property name="draw_value">False</property>
                     <property name="value_pos">right</property>
                   </object>
                   <packing>
@@ -1121,6 +1131,7 @@
                     <property name="hexpand">True</property>
                     <property name="vexpand">True</property>
                     <property name="round_digits">0</property>
+                    <property name="draw_value">False</property>
                     <property name="value_pos">right</property>
                   </object>
                   <packing>
@@ -1131,7 +1142,7 @@
                 </child>
               </object>
               <packing>
-                <property name="left_attach">6</property>
+                <property name="left_attach">7</property>
                 <property name="top_attach">2</property>
               </packing>
             </child>
@@ -1264,6 +1275,7 @@
                     <property name="hexpand">True</property>
                     <property name="vexpand">True</property>
                     <property name="round_digits">0</property>
+                    <property name="draw_value">False</property>
                     <property name="value_pos">right</property>
                   </object>
                   <packing>
@@ -1279,6 +1291,7 @@
                     <property name="hexpand">True</property>
                     <property name="vexpand">True</property>
                     <property name="round_digits">0</property>
+                    <property name="draw_value">False</property>
                     <property name="value_pos">right</property>
                   </object>
                   <packing>
@@ -1294,6 +1307,7 @@
                     <property name="hexpand">True</property>
                     <property name="vexpand">True</property>
                     <property name="round_digits">0</property>
+                    <property name="draw_value">False</property>
                     <property name="value_pos">right</property>
                   </object>
                   <packing>
@@ -1309,6 +1323,7 @@
                     <property name="hexpand">True</property>
                     <property name="vexpand">True</property>
                     <property name="round_digits">0</property>
+                    <property name="draw_value">False</property>
                     <property name="value_pos">right</property>
                   </object>
                   <packing>
@@ -1321,7 +1336,7 @@
               <packing>
                 <property name="left_attach">3</property>
                 <property name="top_attach">4</property>
-                <property name="width">4</property>
+                <property name="width">5</property>
               </packing>
             </child>
             <child>
@@ -1467,6 +1482,7 @@
                     <property name="hexpand">True</property>
                     <property name="vexpand">True</property>
                     <property name="round_digits">0</property>
+                    <property name="draw_value">False</property>
                     <property name="value_pos">right</property>
                   </object>
                   <packing>
@@ -1482,6 +1498,7 @@
                     <property name="hexpand">True</property>
                     <property name="vexpand">True</property>
                     <property name="round_digits">0</property>
+                    <property name="draw_value">False</property>
                     <property name="value_pos">right</property>
                   </object>
                   <packing>
@@ -1497,6 +1514,7 @@
                     <property name="hexpand">True</property>
                     <property name="vexpand">True</property>
                     <property name="round_digits">0</property>
+                    <property name="draw_value">False</property>
                     <property name="value_pos">right</property>
                   </object>
                   <packing>
@@ -1512,6 +1530,7 @@
                     <property name="hexpand">True</property>
                     <property name="vexpand">True</property>
                     <property name="round_digits">0</property>
+                    <property name="draw_value">False</property>
                     <property name="value_pos">right</property>
                   </object>
                   <packing>
@@ -1524,7 +1543,7 @@
               <packing>
                 <property name="left_attach">3</property>
                 <property name="top_attach">6</property>
-                <property name="width">4</property>
+                <property name="width">5</property>
               </packing>
             </child>
             <child>
@@ -1598,6 +1617,7 @@
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
                     <property name="halign">end</property>
+                    <property name="vexpand">True</property>
                     <property name="label" translatable="yes">Level:</property>
                     <property name="single_line_mode">True</property>
                   </object>
@@ -1671,6 +1691,7 @@
                     <property name="hexpand">True</property>
                     <property name="vexpand">True</property>
                     <property name="round_digits">0</property>
+                    <property name="draw_value">False</property>
                     <property name="value_pos">right</property>
                   </object>
                   <packing>
@@ -1686,6 +1707,7 @@
                     <property name="hexpand">True</property>
                     <property name="vexpand">True</property>
                     <property name="round_digits">0</property>
+                    <property name="draw_value">False</property>
                     <property name="value_pos">right</property>
                   </object>
                   <packing>
@@ -1701,6 +1723,7 @@
                     <property name="hexpand">True</property>
                     <property name="vexpand">True</property>
                     <property name="round_digits">0</property>
+                    <property name="draw_value">False</property>
                     <property name="value_pos">right</property>
                   </object>
                   <packing>
@@ -1716,6 +1739,7 @@
                     <property name="hexpand">True</property>
                     <property name="vexpand">True</property>
                     <property name="round_digits">0</property>
+                    <property name="draw_value">False</property>
                     <property name="value_pos">right</property>
                   </object>
                   <packing>
@@ -1728,7 +1752,7 @@
               <packing>
                 <property name="left_attach">3</property>
                 <property name="top_attach">8</property>
-                <property name="width">4</property>
+                <property name="width">5</property>
               </packing>
             </child>
             <child>
@@ -1757,7 +1781,7 @@
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
                     <property name="halign">start</property>
-                    <property name="label" translatable="yes">Wha / Expression:</property>
+                    <property name="label" translatable="yes">Wah / Expression:</property>
                     <property name="single_line_mode">True</property>
                   </object>
                   <packing>
@@ -1868,12 +1892,13 @@
                 <property name="can_focus">False</property>
                 <property name="orientation">vertical</property>
                 <child>
-                  <object class="GtkScale" id="wha-heel-scale">
+                  <object class="GtkScale" id="wah-heel-scale">
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
                     <property name="hexpand">True</property>
                     <property name="vexpand">True</property>
                     <property name="round_digits">0</property>
+                    <property name="draw_value">False</property>
                     <property name="value_pos">right</property>
                   </object>
                   <packing>
@@ -1883,12 +1908,13 @@
                   </packing>
                 </child>
                 <child>
-                  <object class="GtkScale" id="wha-toe-scale">
+                  <object class="GtkScale" id="wah-toe-scale">
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
                     <property name="hexpand">True</property>
                     <property name="vexpand">True</property>
                     <property name="round_digits">0</property>
+                    <property name="draw_value">False</property>
                     <property name="value_pos">right</property>
                   </object>
                   <packing>
@@ -1905,6 +1931,7 @@
                     <property name="vexpand">True</property>
                     <property name="restrict_to_fill_level">False</property>
                     <property name="round_digits">0</property>
+                    <property name="draw_value">False</property>
                     <property name="value_pos">right</property>
                   </object>
                   <packing>
@@ -1921,6 +1948,7 @@
                     <property name="vexpand">True</property>
                     <property name="restrict_to_fill_level">False</property>
                     <property name="round_digits">0</property>
+                    <property name="draw_value">False</property>
                     <property name="value_pos">right</property>
                   </object>
                   <packing>
@@ -1933,7 +1961,7 @@
               <packing>
                 <property name="left_attach">3</property>
                 <property name="top_attach">10</property>
-                <property name="width">4</property>
+                <property name="width">5</property>
               </packing>
             </child>
             <child>
@@ -2035,7 +2063,7 @@
               <packing>
                 <property name="left_attach">0</property>
                 <property name="top_attach">9</property>
-                <property name="width">7</property>
+                <property name="width">9</property>
               </packing>
             </child>
             <child>
@@ -2048,7 +2076,7 @@
               <packing>
                 <property name="left_attach">0</property>
                 <property name="top_attach">7</property>
-                <property name="width">7</property>
+                <property name="width">9</property>
               </packing>
             </child>
             <child>
@@ -2061,7 +2089,7 @@
               <packing>
                 <property name="left_attach">0</property>
                 <property name="top_attach">5</property>
-                <property name="width">7</property>
+                <property name="width">9</property>
               </packing>
             </child>
             <child>
@@ -2074,7 +2102,7 @@
               <packing>
                 <property name="left_attach">0</property>
                 <property name="top_attach">3</property>
-                <property name="width">7</property>
+                <property name="width">9</property>
               </packing>
             </child>
             <child>
@@ -2087,7 +2115,516 @@
               <packing>
                 <property name="left_attach">0</property>
                 <property name="top_attach">1</property>
-                <property name="width">7</property>
+                <property name="width">9</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkBox" id="amp-values-box">
+                <property name="width_request">30</property>
+                <property name="visible">True</property>
+                <property name="can_focus">False</property>
+                <property name="vexpand">True</property>
+                <property name="orientation">vertical</property>
+                <child>
+                  <object class="GtkLabel" id="gain-value-lbl">
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                    <property name="opacity">0.5</property>
+                    <property name="halign">end</property>
+                    <property name="vexpand">True</property>
+                    <property name="label" translatable="yes">00</property>
+                    <property name="single_line_mode">True</property>
+                  </object>
+                  <packing>
+                    <property name="expand">False</property>
+                    <property name="fill">False</property>
+                    <property name="position">0</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkLabel" id="treble-value-lbl">
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                    <property name="opacity">0.5</property>
+                    <property name="halign">end</property>
+                    <property name="vexpand">True</property>
+                    <property name="label" translatable="yes">00</property>
+                    <property name="single_line_mode">True</property>
+                  </object>
+                  <packing>
+                    <property name="expand">False</property>
+                    <property name="fill">False</property>
+                    <property name="position">1</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkLabel" id="mid-value-lbl">
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                    <property name="opacity">0.5</property>
+                    <property name="halign">end</property>
+                    <property name="vexpand">True</property>
+                    <property name="label" translatable="yes">00</property>
+                    <property name="single_line_mode">True</property>
+                  </object>
+                  <packing>
+                    <property name="expand">False</property>
+                    <property name="fill">False</property>
+                    <property name="position">2</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkLabel" id="bass-value-lbl">
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                    <property name="opacity">0.5</property>
+                    <property name="halign">end</property>
+                    <property name="vexpand">True</property>
+                    <property name="label" translatable="yes">00</property>
+                    <property name="single_line_mode">True</property>
+                  </object>
+                  <packing>
+                    <property name="expand">False</property>
+                    <property name="fill">False</property>
+                    <property name="position">3</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkLabel" id="level-value-lbl">
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                    <property name="opacity">0.5</property>
+                    <property name="halign">end</property>
+                    <property name="vexpand">True</property>
+                    <property name="label" translatable="yes">00</property>
+                    <property name="single_line_mode">True</property>
+                  </object>
+                  <packing>
+                    <property name="expand">False</property>
+                    <property name="fill">False</property>
+                    <property name="position">4</property>
+                  </packing>
+                </child>
+              </object>
+              <packing>
+                <property name="left_attach">8</property>
+                <property name="top_attach">0</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkBox" id="compressor-values-box">
+                <property name="visible">True</property>
+                <property name="can_focus">False</property>
+                <property name="orientation">vertical</property>
+                <child>
+                  <object class="GtkLabel" id="compression-filler-lbl">
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                    <property name="halign">start</property>
+                    <property name="single_line_mode">True</property>
+                  </object>
+                  <packing>
+                    <property name="expand">False</property>
+                    <property name="fill">False</property>
+                    <property name="position">0</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkLabel" id="compressor-gain-value-lbl">
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                    <property name="opacity">0.5</property>
+                    <property name="halign">end</property>
+                    <property name="vexpand">True</property>
+                    <property name="label" translatable="yes">00</property>
+                    <property name="single_line_mode">True</property>
+                  </object>
+                  <packing>
+                    <property name="expand">False</property>
+                    <property name="fill">True</property>
+                    <property name="position">1</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkLabel" id="compressor-threshold-value-lbl">
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                    <property name="opacity">0.5</property>
+                    <property name="halign">end</property>
+                    <property name="vexpand">True</property>
+                    <property name="label" translatable="yes">00</property>
+                    <property name="single_line_mode">True</property>
+                  </object>
+                  <packing>
+                    <property name="expand">False</property>
+                    <property name="fill">True</property>
+                    <property name="position">2</property>
+                  </packing>
+                </child>
+              </object>
+              <packing>
+                <property name="left_attach">4</property>
+                <property name="top_attach">2</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkBox" id="gate-values-box">
+                <property name="visible">True</property>
+                <property name="can_focus">False</property>
+                <property name="orientation">vertical</property>
+                <child>
+                  <object class="GtkLabel" id="gate-vfiller-lbl">
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                    <property name="halign">start</property>
+                    <property name="single_line_mode">True</property>
+                  </object>
+                  <packing>
+                    <property name="expand">False</property>
+                    <property name="fill">False</property>
+                    <property name="position">0</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkLabel" id="gate-attack-value-lbl">
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                    <property name="opacity">0.5</property>
+                    <property name="halign">end</property>
+                    <property name="vexpand">True</property>
+                    <property name="label" translatable="yes">00</property>
+                    <property name="single_line_mode">True</property>
+                  </object>
+                  <packing>
+                    <property name="expand">False</property>
+                    <property name="fill">True</property>
+                    <property name="position">1</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkLabel" id="gate-threshold-value-lbl">
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                    <property name="opacity">0.5</property>
+                    <property name="halign">end</property>
+                    <property name="vexpand">True</property>
+                    <property name="label" translatable="yes">00</property>
+                    <property name="single_line_mode">True</property>
+                  </object>
+                  <packing>
+                    <property name="expand">False</property>
+                    <property name="fill">True</property>
+                    <property name="position">2</property>
+                  </packing>
+                </child>
+              </object>
+              <packing>
+                <property name="left_attach">8</property>
+                <property name="top_attach">2</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkBox" id="effect-values-box">
+                <property name="visible">True</property>
+                <property name="can_focus">False</property>
+                <property name="orientation">vertical</property>
+                <child>
+                  <object class="GtkLabel" id="effect-mix-value-lbl">
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                    <property name="opacity">0.5</property>
+                    <property name="halign">end</property>
+                    <property name="vexpand">True</property>
+                    <property name="label" translatable="yes">00</property>
+                    <property name="single_line_mode">True</property>
+                  </object>
+                  <packing>
+                    <property name="expand">False</property>
+                    <property name="fill">True</property>
+                    <property name="position">0</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkLabel" id="effect-option-value-lbl">
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                    <property name="opacity">0.5</property>
+                    <property name="halign">end</property>
+                    <property name="vexpand">True</property>
+                    <property name="label" translatable="yes">00</property>
+                    <property name="single_line_mode">True</property>
+                  </object>
+                  <packing>
+                    <property name="expand">False</property>
+                    <property name="fill">True</property>
+                    <property name="position">1</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkLabel" id="effect-depth-value-lbl">
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                    <property name="opacity">0.5</property>
+                    <property name="halign">end</property>
+                    <property name="vexpand">True</property>
+                    <property name="label" translatable="yes">00</property>
+                    <property name="justify">right</property>
+                    <property name="single_line_mode">True</property>
+                  </object>
+                  <packing>
+                    <property name="expand">False</property>
+                    <property name="fill">True</property>
+                    <property name="position">2</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkLabel" id="effect-speed-value-lbl">
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                    <property name="opacity">0.5</property>
+                    <property name="halign">end</property>
+                    <property name="vexpand">True</property>
+                    <property name="label" translatable="yes">00</property>
+                    <property name="justify">right</property>
+                    <property name="single_line_mode">True</property>
+                  </object>
+                  <packing>
+                    <property name="expand">False</property>
+                    <property name="fill">True</property>
+                    <property name="position">3</property>
+                  </packing>
+                </child>
+              </object>
+              <packing>
+                <property name="left_attach">8</property>
+                <property name="top_attach">4</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkBox" id="delay-values-box">
+                <property name="visible">True</property>
+                <property name="can_focus">False</property>
+                <property name="orientation">vertical</property>
+                <child>
+                  <object class="GtkLabel" id="delay-level-value-lbl">
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                    <property name="opacity">0.5</property>
+                    <property name="halign">end</property>
+                    <property name="vexpand">True</property>
+                    <property name="label" translatable="yes">00</property>
+                    <property name="single_line_mode">True</property>
+                  </object>
+                  <packing>
+                    <property name="expand">False</property>
+                    <property name="fill">True</property>
+                    <property name="position">0</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkLabel" id="delay-feedback-value-lbl">
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                    <property name="opacity">0.5</property>
+                    <property name="halign">end</property>
+                    <property name="vexpand">True</property>
+                    <property name="label" translatable="yes">00</property>
+                    <property name="single_line_mode">True</property>
+                  </object>
+                  <packing>
+                    <property name="expand">False</property>
+                    <property name="fill">True</property>
+                    <property name="position">1</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkLabel" id="delay-time-fine-value-lbl">
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                    <property name="opacity">0.5</property>
+                    <property name="halign">end</property>
+                    <property name="vexpand">True</property>
+                    <property name="label" translatable="yes">00</property>
+                    <property name="single_line_mode">True</property>
+                  </object>
+                  <packing>
+                    <property name="expand">False</property>
+                    <property name="fill">True</property>
+                    <property name="position">2</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkLabel" id="delay-time-course-value-lbl">
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                    <property name="opacity">0.5</property>
+                    <property name="halign">end</property>
+                    <property name="vexpand">True</property>
+                    <property name="label" translatable="yes">00</property>
+                    <property name="single_line_mode">True</property>
+                  </object>
+                  <packing>
+                    <property name="expand">False</property>
+                    <property name="fill">True</property>
+                    <property name="position">3</property>
+                  </packing>
+                </child>
+              </object>
+              <packing>
+                <property name="left_attach">8</property>
+                <property name="top_attach">6</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkBox" id="reverb-values-box">
+                <property name="visible">True</property>
+                <property name="can_focus">False</property>
+                <property name="vexpand">True</property>
+                <property name="orientation">vertical</property>
+                <child>
+                  <object class="GtkLabel" id="reverb-level-value-lbl">
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                    <property name="opacity">0.5</property>
+                    <property name="halign">end</property>
+                    <property name="vexpand">True</property>
+                    <property name="label" translatable="yes">00</property>
+                    <property name="single_line_mode">True</property>
+                  </object>
+                  <packing>
+                    <property name="expand">False</property>
+                    <property name="fill">True</property>
+                    <property name="position">0</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkLabel" id="reverb-decay-value-lbl">
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                    <property name="opacity">0.5</property>
+                    <property name="halign">end</property>
+                    <property name="vexpand">True</property>
+                    <property name="label" translatable="yes">00</property>
+                    <property name="single_line_mode">True</property>
+                  </object>
+                  <packing>
+                    <property name="expand">False</property>
+                    <property name="fill">True</property>
+                    <property name="position">1</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkLabel" id="reverb-density-value-lbl">
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                    <property name="opacity">0.5</property>
+                    <property name="halign">end</property>
+                    <property name="vexpand">True</property>
+                    <property name="label" translatable="yes">00</property>
+                    <property name="single_line_mode">True</property>
+                  </object>
+                  <packing>
+                    <property name="expand">False</property>
+                    <property name="fill">True</property>
+                    <property name="position">2</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkLabel" id="reverb-diffusion-value-lbl">
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                    <property name="opacity">0.5</property>
+                    <property name="halign">end</property>
+                    <property name="vexpand">True</property>
+                    <property name="label" translatable="yes">00</property>
+                    <property name="justify">right</property>
+                    <property name="single_line_mode">True</property>
+                  </object>
+                  <packing>
+                    <property name="expand">False</property>
+                    <property name="fill">True</property>
+                    <property name="position">3</property>
+                  </packing>
+                </child>
+              </object>
+              <packing>
+                <property name="left_attach">8</property>
+                <property name="top_attach">8</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkBox" id="wah-expression-values-box">
+                <property name="visible">True</property>
+                <property name="can_focus">False</property>
+                <property name="orientation">vertical</property>
+                <child>
+                  <object class="GtkLabel" id="wah-heel-value-lbl">
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                    <property name="opacity">0.5</property>
+                    <property name="halign">end</property>
+                    <property name="vexpand">True</property>
+                    <property name="label" translatable="yes">00</property>
+                    <property name="single_line_mode">True</property>
+                  </object>
+                  <packing>
+                    <property name="expand">False</property>
+                    <property name="fill">True</property>
+                    <property name="position">0</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkLabel" id="wah-toe-value-lbl">
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                    <property name="opacity">0.5</property>
+                    <property name="halign">end</property>
+                    <property name="vexpand">True</property>
+                    <property name="label" translatable="yes">00</property>
+                    <property name="single_line_mode">True</property>
+                  </object>
+                  <packing>
+                    <property name="expand">False</property>
+                    <property name="fill">True</property>
+                    <property name="position">1</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkLabel" id="pedal-forward-value-lbl">
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                    <property name="opacity">0.5</property>
+                    <property name="halign">end</property>
+                    <property name="vexpand">True</property>
+                    <property name="label" translatable="yes">00</property>
+                    <property name="single_line_mode">True</property>
+                  </object>
+                  <packing>
+                    <property name="expand">False</property>
+                    <property name="fill">True</property>
+                    <property name="position">2</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkLabel" id="pedal-back-value-lbl">
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                    <property name="opacity">0.5</property>
+                    <property name="halign">end</property>
+                    <property name="vexpand">True</property>
+                    <property name="label" translatable="yes">00</property>
+                    <property name="single_line_mode">True</property>
+                  </object>
+                  <packing>
+                    <property name="expand">False</property>
+                    <property name="fill">True</property>
+                    <property name="position">3</property>
+                  </packing>
+                </child>
+              </object>
+              <packing>
+                <property name="left_attach">8</property>
+                <property name="top_attach">10</property>
               </packing>
             </child>
             <child>
