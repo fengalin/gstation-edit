@@ -22,15 +22,12 @@ bass amp modeling and effect processing system.
 - Rename a program.
 - Undo or Store changes from the UI.
 - Update utility settings (digital output level, cabinet emulation, ...).
-- Track changes with a * in the bank list with the same meaning as the LED on
-the Store button on the J-Station.
+- Track changes with a * in the bank list.
 
 
 # Not supported yet
-- The following items in the program list's context menu: export and import
-a program, copy / paste.
-- Scale widgets display raw values. Actual units should be displayed instead
-(such as dB, ms, etc.)
+- The following items in the program list's context menu: export and import,
+copy / paste.
 - Factory banks are selectable from the J-Station, but will not be reflected
 in the UI.
 - Only firmware 2.0 is supported. If someone uses firmware 1.0, please contact

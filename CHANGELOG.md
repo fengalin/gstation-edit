@@ -3,7 +3,9 @@
 ### Version 0.6.0 (in progress)
 #### User
 - Make program names editable in bank list
+- Scales display the human readable value instead of the raw value
 - Scales can now be set to their max value
+- Fixed incorrect ranges for some parameters
 - Effect scales adapt their range depending on the selected effect
 
 #### Development
