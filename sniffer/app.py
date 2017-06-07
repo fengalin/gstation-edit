@@ -22,8 +22,9 @@ gi.require_version('Gtk', '3.0')
 from gi.repository import Gtk
 from gi.repository import GObject
 
+from gstation_edit.midi_select_dlg import MidiSelectDlg
+
 from sniffer.jstation_sniffer import JStationSniffer
-from sniffer.midi_select_dlg import MidiSelectDlg
 
 sys.argv[0] = 'jstation-sniffer'
 
@@ -31,21 +32,29 @@ class JStationSnifferApp:
     def __init__( self ):
         GObject.threads_init()
 
-        gtk_builder_file = os.path.join('sniffer/resources', 'jstation_sniffer.ui')
+        gtk_builder_file = os.path.join('gstation_edit/resources',
+                                        'gstation-edit-one-window.ui')
 
         self.gtk_builder = Gtk.Builder()
         self.gtk_builder.add_from_file(gtk_builder_file)
 
-        self.main_window = MidiSelectDlg(self,
-                                         JStationSniffer(sys.argv[0]),
-                                         self.gtk_builder)
+        self.js_sniffer = JStationSniffer(sys.argv[0])
+        self.main_window = MidiSelectDlg(self.gtk_builder, self,
+                                         self.js_sniffer,
+                                         self.start_sniffing, self.quit)
 
         self.main_window.gtk_dlg.connect('destroy', self.quit)
+
         self.main_window.present()
 
-    def quit(self, window):
-        print('quitting jstation-sniffer')
-        Gtk.main_quit(window)
+    def start_sniffing(self, midi_port_in, midi_port_out):
+        self.js_sniffer.start_sniffer(midi_port_in, midi_port_out)
+        self.main_window.msg_lbl.set_text('Sniffing events...')
+
+    def quit(self, window=None):
+        print('Quitting jstation-sniffer')
+        self.js_sniffer.disconnect()
+        Gtk.main_quit(self.main_window)
 
 def run():
     jstation_sniffer = JStationSnifferApp()

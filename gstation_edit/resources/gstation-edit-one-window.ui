@@ -2793,6 +2793,8 @@
           <object class="GtkStack" id="midi-message-spinner-stack">
             <property name="visible">True</property>
             <property name="can_focus">False</property>
+            <property name="margin_top">5</property>
+            <property name="margin_bottom">5</property>
             <child>
               <object class="GtkLabel" id="midi-select-message-lbl">
                 <property name="visible">True</property>

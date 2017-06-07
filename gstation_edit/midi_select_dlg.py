@@ -22,8 +22,12 @@ from threading import Thread
 
 
 class MidiSelectDlg:
-    def __init__(self, main_window, js_interface, gtk_builder):
+    def __init__(self, gtk_builder, main_window, js_interface,
+                 on_connected, on_close=None):
         self.main_window = main_window
+        self.on_connected = on_connected
+        self.on_close = on_close
+
         self.js_interface = js_interface
         self.gtk_builder = gtk_builder
 
@@ -36,22 +40,23 @@ class MidiSelectDlg:
         cancel_btn.connect('clicked', self.on_cancel_btn_clicked)
 
         self.msg_spin_satck = self.get_widget('midi-message-spinner-stack')
-        self.midi_select_msg_lbl = self.get_widget('midi-select-message-lbl')
+        self.msg_lbl = self.get_widget('midi-select-message-lbl')
         self.midi_in_cbx = self.get_widget('midi-in-cbx')
         self.midi_out_cbx = self.get_widget('midi-out-cbx')
         self.midi_channel_spbtn = self.get_widget('midi-channel-spbtn')
         self.sysex_device_id_spbtn = self.get_widget('sysex-device-id-spbtn')
 
-        self.midi_select_msg_lbl.set_text('')
-
-        self.midi_port_in_list = None
-        self.midi_port_out_list = None
+        self.msg_lbl.set_text('')
 
         self.midi_port_in_list = self.js_interface.midi_in_ports
         self.midi_port_out_list = self.js_interface.midi_out_ports
         self.populate_combo_box(self.midi_in_cbx, self.midi_port_in_list)
         self.populate_combo_box(self.midi_out_cbx, self.midi_port_out_list)
 
+        self.port_in = None
+        self.port_out = None
+
+        self.is_connected = False
         self.is_valid = True
 
     def populate_combo_box(self, combo_box, midi_ports):
@@ -76,6 +81,9 @@ class MidiSelectDlg:
     def present(self, widget=None):
         self.gtk_dlg.present()
 
+    def hide(self):
+        self.gtk_dlg.hide()
+
 
     def on_btn_connect_clicked(self, widget):
         self.pre_connection_actions()
@@ -83,14 +91,10 @@ class MidiSelectDlg:
 
     def connect(self):
         port_in_cbx_index = self.midi_in_cbx.get_active()
-        port_in  = self.midi_port_in_list[port_in_cbx_index]
+        self.port_in  = self.midi_port_in_list[port_in_cbx_index]
         port_out_cbx_index = self.midi_out_cbx.get_active()
-        port_out = self.midi_port_out_list[port_out_cbx_index]
-        if self.attempt_to_connect(port_in, port_out):
-            self.gtk_dlg.hide()
-            self.main_window.request_bank_dump()
-        else:
-            self.midi_select_msg_lbl.set_text('Could not connect to J-Station')
+        self.port_out = self.midi_port_out_list[port_out_cbx_index]
+        self.attempt_to_connect(self.port_in, self.port_out)
         self.post_connection_actions()
 
     def on_auto_connect_btn_clicked(self, widget):
@@ -99,39 +103,39 @@ class MidiSelectDlg:
 
     def auto_connect(self):
         is_connected = False
-        for port_in_index in range(0 , len(self.midi_port_in_list)):
-            for port_out_index in range( 0, len(self.midi_port_out_list)):
+        for port_in_index in range(0, len(self.midi_port_in_list)):
+            for port_out_index in range(0, len(self.midi_port_out_list)):
                 self.midi_in_cbx.set_active(port_in_index)
                 self.midi_out_cbx.set_active(port_out_index)
-                port_in = self.midi_port_in_list[port_in_index]
-                port_out = self.midi_port_out_list[port_out_index]
-                if self.attempt_to_connect(port_in, port_out):
-                    is_connected = True
+                self.port_in = self.midi_port_in_list[port_in_index]
+                self.port_out = self.midi_port_out_list[port_out_index]
+                self.attempt_to_connect(self.port_in, self.port_out)
+                if self.is_connected:
                     break
-            if is_connected:
+            if self.is_connected:
                 break
-
-        if is_connected:
-            self.gtk_dlg.hide()
-            self.main_window.request_bank_dump()
-        else:
-            self.midi_select_msg_lbl.set_text('Could not connect to J-Station')
         self.post_connection_actions()
 
     def pre_connection_actions(self):
         self.msg_spin_satck.set_visible_child_name('spinner')
-        self.midi_select_msg_lbl.set_text('')
+        self.msg_lbl.set_text('')
         self.gtk_dlg.set_sensitive(False)
 
     def post_connection_actions(self):
+        if self.is_connected:
+            self.on_connected(self.port_in, self.port_out)
+        else:
+            self.msg_lbl.set_text('Could not connect to J-Station')
         self.msg_spin_satck.set_visible_child_name('message')
         self.gtk_dlg.set_sensitive(True)
 
     def on_cancel_btn_clicked(self, widget):
         self.gtk_dlg.hide()
+        if self.on_close:
+            self.on_close()
 
     def attempt_to_connect(self, port_in, port_out):
         # TODO: read sysexchannel too
-        print('Attempt to connect to %s and %s'%(port_in, port_out))
+        print('Attempting to connect to %s and %s'%(port_in, port_out))
         self.js_interface.connect(port_in, port_out, 1)
-        return self.js_interface.is_connected
+        self.is_connected = self.js_interface.is_connected

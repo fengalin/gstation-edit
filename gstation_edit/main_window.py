@@ -55,9 +55,10 @@ class MainWindow:
         # TODO: use a property file to store the midi connection ports
         self.midi_select_dlg.present()
 
-    def request_bank_dump(self):
+    def on_connected(self, midi_port_in, midi_port_out):
         if self.jstation_interface.is_connected:
             self.jstation_interface.req_bank_dump()
+        self.midi_select_dlg.hide()
 
     def quit(self):
         self.jstation_interface.disconnect()
@@ -89,11 +90,10 @@ class MainWindow:
 
     def init_midi_select_dlg(self):
         midi_options_btn = self.gtk_builder.get_object('midi-options-btn')
-        self.midi_select_dlg = MidiSelectDlg(self,
+        self.midi_select_dlg = MidiSelectDlg(self.gtk_builder, self,
                                              self.jstation_interface,
-                                             self.gtk_builder)
-        midi_options_btn.connect('clicked',
-                                 self.midi_select_dlg.present)
+                                             self.on_connected)
+        midi_options_btn.connect('clicked', self.midi_select_dlg.present)
 
     def init_utilities_dlg(self):
         utilities_btn = self.gtk_builder.get_object('utilities-btn')
