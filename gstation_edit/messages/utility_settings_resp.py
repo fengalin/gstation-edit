@@ -23,10 +23,9 @@ class UtilitySettingsResponse(JStationSysExEvent):
     PROCEDURE_ID = 0x12
     VERSION = 1
 
-    def __init__(self, channel=-1, seq_event=None,
+    def __init__(self, channel=-1, seq_event=None, sysex_buffer=None,
                  stereo_mono=-1, dry_track=-1, digital_out_level=-1,
                  global_cabinet=-1, midi_merge=-1, midi_channel=-1):
-        JStationSysExEvent.__init__(self, channel, seq_event)
         self.stereo_mono = stereo_mono
         self.dry_track = dry_track
         self.digital_out_level = digital_out_level
@@ -34,20 +33,19 @@ class UtilitySettingsResponse(JStationSysExEvent):
         self.midi_merge = midi_merge
         self.midi_channel = midi_channel
 
-        if seq_event and self.is_valid:
-            data_length = self.read_next_bytes(4)
-            if len(self.data_buffer) >= 2*data_length+4:
-                self.stereo_mono = self.read_next_bytes(2)
-                self.dry_track = self.read_next_bytes(2)
-                self.digital_out_level = self.read_next_bytes(2)
-                self.global_cabinet = self.read_next_bytes(2)
-                self.midi_merge = self.read_next_bytes(2)
-                self.midi_channel = self.read_next_bytes(2)
-                self.is_valid = True
-            else:
-                print('Incorrect data buffer with len %d. Expecting %d'\
-                      %(len(self.data_buffer), 2*data_length+4))
-                self.m_is_valid = False
+        JStationSysExEvent.__init__(self, channel, seq_event=seq_event,
+                                    sysex_buffer=sysex_buffer)
+
+    def parse_data_buffer(self):
+        JStationSysExEvent.parse_data_buffer(self, read_len=True)
+        if self.is_valid:
+            self.stereo_mono = self.read_next_bytes(2)
+            self.dry_track = self.read_next_bytes(2)
+            self.digital_out_level = self.read_next_bytes(2)
+            self.global_cabinet = self.read_next_bytes(2)
+            self.midi_merge = self.read_next_bytes(2)
+            self.midi_channel = self.read_next_bytes(2)
+
 
     # Build to send
     def build_data_buffer(self):
@@ -59,7 +57,7 @@ class UtilitySettingsResponse(JStationSysExEvent):
         data.append(self.midi_merge)
         data.append(self.midi_channel)
 
-        JStationSysExEvent.build_data_buffer(self, data_after_len=data)
+        JStationSysExEvent.build_data_buffer(self, post_len_data=data)
 
 
     def __str__( self ):

@@ -71,59 +71,61 @@ class JStationSysExEvent(SysExMidiEvent):
 
 
     # constructor
-    def __init__(self, channel=-1, seq_event=None):
-        SysExMidiEvent.__init__(self)
-        self.helper = SplitBytesHelpher()
-
+    def __init__(self, channel=-1, seq_event=None, sysex_buffer=None):
         self.manufacturer_id = []
         self.channel = channel
         self.product_id = -1
-        self.procedure_id = self.PROCEDURE_ID
-        self.version = self.VERSION
+        self.is_right_product = False
 
-        self.data_buffer = list()
-        self.data_index = -1
-        self.is_valid = False
+        self.procedure_id = -1
+        self.version = -1
 
-        if seq_event:
-            sysex_data = seq_event.get_data().get(SysExMidiEvent.SYSEX_DATA_KEY)
-            if sysex_data:
-                # SysEx data expected structure: 0xf0 ... data ... checksum 0xf7
-                len_sysex_data = len(sysex_data)
-                if len_sysex_data > 3:
-                    if self.SYSEX_DATA_START == sysex_data[0] and \
-                            self.SYSEX_DATA_END == sysex_data[len_sysex_data-1]:
-                        # Note: if this first part is common to all sysex
-                        # events, it should be moved to SysExMidiEvent along
-                        # with the factory stuff above
+        self.data_length = -1
 
-                        # get the actual buffer and check sum
-                        check_sum = sysex_data[len_sysex_data-2]
-                        self.data_buffer = sysex_data[1: len_sysex_data-2]
-                        self.data_index = 0
+        self.helper = SplitBytesHelpher()
+        SysExMidiEvent.__init__(self, seq_event=seq_event,
+                                sysex_buffer=sysex_buffer)
 
-                        if check_sum == self.get_check_sum():
-                            self.manufacturer_id = self.data_buffer[:3]
-                            self.data_index += 3
-                            self.channel = self.read_next_bytes(1)
-                            self.product_id = self.read_next_bytes(1)
-                            self.procedure_id = self.read_next_bytes(1)
-                            self.version = self.read_next_bytes(2)
-                            if not type(self) is JStationSysExEvent:
-                                self.is_valid = True
-                            # else: couldn't instantiate a specific class
-                        else:
-                            print('Incorrect checksum for received sysex')
-                            self.is_valid = False
-                            self.data_buffer = list()
-                    else:
-                        print('Incorrect first and/or last byte for SysEx data')
+
+    def parse_data_buffer(self, read_len=False):
+        if len(self.data_buffer) >= 8:
+            self.manufacturer_id = self.data_buffer[:3]
+            self.data_index += 3
+            self.channel = self.read_next_bytes(1)
+            self.product_id = self.read_next_bytes(1)
+
+            self.check_product()
+            if self.is_right_product:
+                self.procedure_id = self.read_next_bytes(1)
+                self.version = self.read_next_bytes(2)
+
+                if type(self) is JStationSysExEvent:
+                    # couldn't instantiate a specific class
+                    self.is_valid = False
                 else:
-                    print('Too short length for sysex: %s'%(len_sysex_data))
+                    self.is_valid = True
+                    if read_len:
+                        self.read_data_len()
             else:
-                print('Not a sysex event: %d'\
-                      %(seq_event.get_data().get(SysExMidiEvent.SYSEX_DATA_KEY)))
+                # not a message for us
+                self.is_valid = False
 
+        else:
+            print('Too short data buffer with len: %d'%(len(self.data_buffer)))
+            self.is_valid = False
+
+    def check_product(self):
+        self.is_right_product = True
+        if self.product_id == self.PRODUCT_ID:
+            if len(self.manufacturer_id) == len(self.MANUFACTURER_ID):
+                for index in range(0, len(self.MANUFACTURER_ID)):
+                    if self.manufacturer_id[index] != self.MANUFACTURER_ID[index]:
+                        self.is_right_product = False
+                        break
+            else:
+                self.is_right_product = False
+        else:
+            self.is_right_product = False
 
     def read_next_bytes(self, nb_bytes):
         result = None
@@ -138,51 +140,73 @@ class JStationSysExEvent(SysExMidiEvent):
             else:
                 result = self.data_buffer[self.data_index]
             self.data_index += nb_bytes
+        else:
+            print('Not enough data to read from data_buffer')
+            self.is_valid = False
         return result
+
+    def read_data_len(self):
+        self.data_length = self.read_next_bytes(4)
+        if len(self.data_buffer) < 2*self.data_length+4:
+            self.is_valid = False
+            print('Inconsistent data len. Expecting: %d. '\
+                  'Received: %d'%(2*self.data_length+4, len(self.data_buffer)))
 
 
     # Build to send
-    def build_data_buffer(self, data_before_len=None, data_after_len=None):
-        SysExMidiEvent.build_data_buffer(self)
-        if self.procedure_id != -1 and self.version != -1:
-            self.data_buffer = list(self.MANUFACTURER_ID)
-            self.data_buffer.append(self.channel)
-            self.data_buffer.append(self.PRODUCT_ID)
-            self.data_buffer.append(self.procedure_id)
-            self.data_buffer += \
-                self.helper.get_split_bytes_from_value(self.version)
+    def build_data_buffer(self, pre_len_data=None, post_len_data=None):
+        if self.procedure_id == -1:
+            self.procedure_id = self.PROCEDURE_ID
+        if self.version == -1:
+            self.version = self.VERSION
 
-            if data_before_len:
-                for value in data_before_len:
-                    self.data_buffer += \
-                        self.helper.get_split_bytes_from_value(value)
+        self.is_right_product = True
 
-            if data_after_len:
-                self.data_buffer += self.helper.get_split_bytes_from_value(
-                        len(data_after_len), 4
-                    )
+        self.data_buffer = list(self.MANUFACTURER_ID)
+        self.data_buffer.append(self.channel)
+        self.data_buffer.append(self.PRODUCT_ID)
+        self.data_buffer.append(self.procedure_id)
+        self.data_buffer += \
+            self.helper.get_split_bytes_from_value(self.version)
 
-                for value in data_after_len:
-                    self.data_buffer += \
-                        self.helper.get_split_bytes_from_value(value)
+        if pre_len_data:
+            for value in pre_len_data:
+                self.data_buffer += \
+                    self.helper.get_split_bytes_from_value(value)
 
-            self.is_valid = True
-        else:
-            print('procedure id and/or version not defined for JStationSysEx')
-            self.is_valid = False
+        if post_len_data != None:
+            self.data_buffer += self.helper.get_split_bytes_from_value(
+                    len(post_len_data), 4
+                )
+
+            for value in post_len_data:
+                self.data_buffer += \
+                    self.helper.get_split_bytes_from_value(value)
+
+        self.is_valid = True
 
 
     # Common
     def __str__(self):
-        product = ''
-        if self.manufacturer_id != self.MANUFACTURER_ID and \
-           self.product_id != self.PRODUCT_ID:
-            product = 'product: %s/%d '%(self.manufacturer_id, self.product_id)
-        event_type = 'Uknonw sysex'
         valid = ''
+        event_type = 'Uknonw sysex'
         if not type(self) is JStationSysExEvent:
             event_type = self.__class__.__name__
-            if not self.is_valid:
+            if self.is_right_product and not self.is_valid:
                 valid = ' - not valid'
-        return '%s%s (x%02x)%s. Version: %d'\
-                %(product, event_type, self.procedure_id, valid, self.version)
+
+        prefix = '%s (x%02x)%s. Version: %d'%(event_type,
+                                              self.procedure_id & 0xff,
+                                              valid,
+                                              self.version)
+        if not self.is_right_product:
+            prefix = 'product: %s/x%02x '\
+                %(['x%02x'%(val & 0xff) for val in self.manufacturer_id],
+                  self.product_id)
+
+        data = ''
+        if self.data_buffer and not self.is_valid:
+            data = ', data: %s'%(
+                ['x%02x'%(val & 0xff) for val in self.data_buffer[self.data_index:]])
+
+        return '%s%s'%(prefix, data)

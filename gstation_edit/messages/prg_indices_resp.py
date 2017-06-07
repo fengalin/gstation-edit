@@ -23,23 +23,17 @@ class PRGIndicesResponse(JStationSysExEvent):
     PROCEDURE_ID = 0x14
     VERSION = 1
 
-    def __init__(self, channel=-1, seq_event=None):
-        JStationSysExEvent.__init__(self, channel, seq_event)
-
+    def __init__(self, channel=-1, seq_event=None, sysex_buffer=None):
         self.prg_indices = list()
-        if seq_event and self.is_valid:
-            data_length = self.read_next_bytes(4)
 
-            if len(self.data_buffer) >= 2*data_length+4:
-                while self.data_index < data_length:
-                    self.prg_indices.append(self.read_next_bytes(2))
-                self.is_valid = True
-            else:
-                self.is_valid = False
-                data_buffer = None
-                print('Inconsistent data len declared (%d) '\
-                      'and left for data (%d)'%(data_len,
-                                                len(self.data_buffer)-4))
+        JStationSysExEvent.__init__(self, channel, seq_event=seq_event,
+                                    sysex_buffer=sysex_buffer)
+
+    def parse_data_buffer(self):
+        JStationSysExEvent.parse_data_buffer(self, read_len=True)
+        if self.is_valid:
+            for index in range(0, self.data_length):
+                self.prg_indices.append(self.read_next_bytes(2))
 
 
     # Build to send

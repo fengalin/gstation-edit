@@ -31,6 +31,8 @@ from gstation_edit.midi_select_dlg import MidiSelectDlg
 from gstation_edit.utilities_dlg import UtilitiesDlg
 from gstation_edit.jstation_interface import JStationInterface
 
+from gstation_edit.messages.one_prg_dump import OneProgramDump
+
 
 class MainWindow:
     def __init__(self, app_name, gtk_builder):
@@ -160,10 +162,10 @@ class MainWindow:
             self.context_menu_widget.insert(self.menu_item_undo, 1)
             self.menu_item_undo.set_sensitive(False)
 
-            menu_item_export = Gtk.MenuItem('Export...')
-            menu_item_export.connect('activate', self.context_menu_export)
-            self.context_menu_widget.insert(menu_item_export, 2)
-            menu_item_export.set_sensitive(False)
+            self.menu_item_export = Gtk.MenuItem('Export...')
+            self.menu_item_export.connect('activate', self.context_menu_export)
+            self.context_menu_widget.insert(self.menu_item_export, 2)
+            self.menu_item_export.set_sensitive(False)
 
             menu_item_import = Gtk.MenuItem('Import...')
             menu_item_import.connect('activate', self.context_menu_import)
@@ -242,6 +244,7 @@ class MainWindow:
                     self.set_program_has_changed(False)
             self.current_program = program
             self.init_parameters()
+            self.menu_item_export.set_sensitive(True)
         else:
             # TODO: factory banks can be accessed outside of the user banks
             print('Unknown program selection %d out of bounds'%(program))
@@ -357,8 +360,10 @@ class MainWindow:
         print('Import clicked %s'%(args))
 
     def context_menu_export(self, widget, *args):
-        # TODO: implement !
-        print('Export clicked %s'%(args))
+        prg_dump = OneProgramDump(program=self.current_program, isolated=True)
+        prg_dump.build_sysex_buffer()
+        print('Export: %s'%(prg_dump))
+
 
     def context_menu_copy(self, widget, *args):
         # TODO: implement !

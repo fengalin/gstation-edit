@@ -26,17 +26,16 @@ class WhoAmIRequest(JStationSysExEvent):
     RESP_ON_CHANNEL = 0
     RESP_ON_7f = 1
 
-    def __init__(self, channel=JStationSysExEvent.ALL_CHANNELS, seq_event=None):
-        JStationSysExEvent.__init__(self, channel, seq_event)
+    def __init__(self, channel=JStationSysExEvent.ALL_CHANNELS,
+                 seq_event=None, sysex_buffer=None):
         self.response_on = self.RESP_ON_7f
 
-        if seq_event and self.is_valid:
-            if len(self.data_buffer) >= 2:
-                self.response_on = self.read_next_bytes(2)
-                self.is_valid = True
-            else:
-                print('Data buffer is too short to get response_on_7f')
-                self.is_valid = False
+        JStationSysExEvent.__init__(self, channel, seq_event=seq_event,
+                                    sysex_buffer=sysex_buffer)
+
+    def parse_data_buffer(self):
+        JStationSysExEvent.parse_data_buffer(self)
+        self.response_on = self.read_next_bytes(2)
 
 
     # Build to send
@@ -44,7 +43,7 @@ class WhoAmIRequest(JStationSysExEvent):
         if self.RESP_ON_CHANNEL == self.response_on or \
                 self.RESP_ON_7f == self.response_on:
             JStationSysExEvent.build_data_buffer(
-                self, data_after_len=[self.response_on]
+                self, post_len_data=[self.response_on]
             )
         else:
             self.data_buffer = list()

@@ -38,21 +38,23 @@ class ToMessageResponse(JStationSysExEvent):
         11: 'Wrong Mode for OS Command'
     }
 
-    def __init__(self, channel=-1, seq_event=None,
+    def __init__(self, channel=-1, seq_event=None, sysex_buffer=None,
                  req_procedure=-1, error_code=-1):
-        JStationSysExEvent.__init__(self, channel, seq_event)
         self.req_procedure = req_procedure
         self.error_code = error_code
         self.error_msg = ''
 
-        if seq_event and self.is_valid:
-            # no length in this message
-            self.req_procedure = self.read_next_bytes(2)
-            self.error_code = self.read_next_bytes(2)
-            self.error_msg = self.ERRORS.get(self.error_code)
-            if self.error_msg == None:
-                 self.error_msg = '*Unknown code*'
-            self.is_valid = True
+        JStationSysExEvent.__init__(self, channel, seq_event=seq_event,
+                                    sysex_buffer=sysex_buffer)
+
+    def parse_data_buffer(self):
+        JStationSysExEvent.parse_data_buffer(self)
+        # no length in this message
+        self.req_procedure = self.read_next_bytes(2)
+        self.error_code = self.read_next_bytes(2)
+        self.error_msg = self.ERRORS.get(self.error_code)
+        if self.error_msg == None:
+             self.error_msg = '*Unknown code*'
 
 
     # Build to send

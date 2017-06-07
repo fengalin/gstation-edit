@@ -23,24 +23,21 @@ class WhoAmIResponse(JStationSysExEvent):
     PROCEDURE_ID = 0x41
     VERSION = 1
 
-    def __init__(self, channel=-1, seq_event=None,
+    def __init__(self, channel=-1, seq_event=None, sysex_buffer=None,
                  receive_channel=-1, transmit_channel=-1, sysex_channel=-1):
-        JStationSysExEvent.__init__(self, channel, seq_event)
         self.receive_channel = receive_channel
         self.transmit_channel = transmit_channel
         self.sysex_channel = sysex_channel
 
-        if seq_event and self.is_valid:
-            data_length = self.read_next_bytes(4)
-            if len(self.data_buffer) >= 2*data_length+4:
-                self.receive_channel = self.read_next_bytes(2)
-                self.transmit_channel = self.read_next_bytes(2)
-                self.sysex_channel = self.read_next_bytes(2)
-                self.is_valid = True
-            else:
-                print('Incorrect data buffer with len %d. Expecting %d'\
-                      %(len(self.data_buffer), 2*data_length+4))
-                self.m_is_valid = False
+        JStationSysExEvent.__init__(self, channel, seq_event=seq_event,
+                                    sysex_buffer=sysex_buffer)
+
+    def parse_data_buffer(self):
+        JStationSysExEvent.parse_data_buffer(self, read_len=True)
+        if self.is_valid:
+            self.receive_channel = self.read_next_bytes(2)
+            self.transmit_channel = self.read_next_bytes(2)
+            self.sysex_channel = self.read_next_bytes(2)
 
 
     # Build to send

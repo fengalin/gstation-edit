@@ -24,21 +24,25 @@ class OneProgramRequest(JStationSysExEvent):
     PROCEDURE_ID = 0x01
     VERSION = 1
 
-    def __init__(self, channel=-1, seq_event=None, bank_nb=-1, prg_nb=-1):
-        JStationSysExEvent.__init__(self, channel, seq_event)
-
+    def __init__(self, channel=-1, seq_event=None, sysex_buffer=None,
+                 bank_nb=-1, prg_nb=-1):
         self.bank_nb = bank_nb
         self.prg_nb = prg_nb
 
-        if seq_event and self.is_valid:
-            self.bank_nb = self.read_next_bytes(2)
-            self.prg_nb = self.read_next_bytes(2)
+        JStationSysExEvent.__init__(self, channel, seq_event=seq_event,
+                                    sysex_buffer=sysex_buffer)
+
+    def parse_data_buffer(self):
+        JStationSysExEvent.parse_data_buffer(self)
+        self.bank_nb = self.read_next_bytes(2)
+        self.prg_nb = self.read_next_bytes(2)
+
 
     # Build to send
     def build_data_buffer(self):
         JStationSysExEvent.build_data_buffer(
             self,
-            data_before_len=[self.bank_nb, self.prg_nb]
+            pre_len_data=[self.bank_nb, self.prg_nb]
         )
 
 
