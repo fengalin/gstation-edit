@@ -2,14 +2,15 @@
 
 ### Version 0.6.0 (in progress)
 #### User
-- Make program names editable in bank list
-- Scales display the human readable value instead of the raw value
-- Scales can now be set to their max value
-- Fixed incorrect ranges for some parameters
+- Editable program names in bank list
+- Human readable value for scales instead of the raw value
 - Effect scales adapt their range depending on the selected effect
+- Fixed scales not going to their full range
+- Fixed incorrect ranges for some parameters
 
 #### Development
-- Simplify UI signals connection
+- Simplified UI signals connection
+- Factorized MIDI select dialog for main application and sniffer
 
 
 ### Version 0.5.0 (20170603)
