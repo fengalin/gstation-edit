@@ -102,8 +102,11 @@ class MidiSelectDlg:
         port_out = None
         for port_in_index in range(0 , len(self.midi_port_in_list)):
             for port_out_index in range( 0, len(self.midi_port_out_list)):
+                self.midi_in_cbx.set_active(port_in_index)
+                self.midi_out_cbx.set_active(port_out_index)
                 port_in = self.midi_port_in_list[port_in_index]
                 port_out = self.midi_port_out_list[port_out_index]
+                self.widget.set_active(port_in_index)
                 if self.attempt_to_connect(port_in, port_out):
                     is_connected = True
                     break
@@ -118,14 +121,12 @@ class MidiSelectDlg:
         self.post_connection_actions()
 
     def pre_connection_actions(self):
-        # TDOO: fix cursor
-        #self.gtk_dlg.set_cursor(Gtk.gdk.Cursor(Gtk.gdk.WATCH))
+        self.msg_spin_satck.set_visible_child_name('spinner')
         self.midi_select_msg_lbl.set_text('')
         #self.gtk_dlg.set_sensitive(False)
 
     def post_connection_actions(self):
-        # TDOO: fix cursor
-        #self.gtk_dlg.set_cursor(None)
+        self.msg_spin_satck.set_visible_child_name('message')
         self.gtk_dlg.set_sensitive(True)
 
     def on_cancel_btn_clicked(self, widget):

@@ -2667,7 +2667,7 @@
         <property name="orientation">vertical</property>
         <property name="spacing">5</property>
         <child>
-          <object class="GtkGrid">
+          <object class="GtkGrid" id="midi-grid">
             <property name="visible">True</property>
             <property name="can_focus">False</property>
             <property name="row_spacing">10</property>
@@ -2790,10 +2790,32 @@
           </packing>
         </child>
         <child>
-          <object class="GtkLabel" id="midi-select_message-lbl">
+          <object class="GtkStack" id="midi-message-spinner-stack">
             <property name="visible">True</property>
             <property name="can_focus">False</property>
-            <property name="label" translatable="yes">label</property>
+            <child>
+              <object class="GtkLabel" id="midi-select-message-lbl">
+                <property name="visible">True</property>
+                <property name="can_focus">False</property>
+                <property name="label" translatable="yes">label</property>
+              </object>
+              <packing>
+                <property name="name">message</property>
+                <property name="title" translatable="yes">message</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkSpinner" id="midi-connect-spn">
+                <property name="visible">True</property>
+                <property name="can_focus">False</property>
+                <property name="active">True</property>
+              </object>
+              <packing>
+                <property name="name">spinner</property>
+                <property name="title" translatable="yes">spinner</property>
+                <property name="position">1</property>
+              </packing>
+            </child>
           </object>
           <packing>
             <property name="expand">False</property>
@@ -2802,7 +2824,7 @@
           </packing>
         </child>
         <child>
-          <object class="GtkButtonBox" id="buttonbox1">
+          <object class="GtkButtonBox" id="midi-button-box">
             <property name="visible">True</property>
             <property name="can_focus">False</property>
             <property name="spacing">5</property>
