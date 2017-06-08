@@ -1,6 +1,6 @@
 ## Change Log
 
-### Version 0.6.0 (in progress)
+### Version 0.6.0 (20170608)
 #### User
 - Program can be **renamed** from the bank list
 - **Import and export** a single program in the same format as J-Edit.
