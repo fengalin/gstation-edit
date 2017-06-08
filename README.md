@@ -21,13 +21,14 @@ bass amp modeling and effect processing system.
 - Modify parameters/program from the J-Station and update the UI.
 - Rename a program.
 - Undo or Store changes from the UI.
+- Import and export a single program in the same format as J-Edit.
 - Update utility settings (digital output level, cabinet emulation, ...).
 - Track changes with a * in the bank list.
 
 
 # Not supported yet
-- The following items in the program list's context menu: export and import,
-copy / paste.
+- The following items in the program list's context menu: copy / paste.
+- Import and export the whole program bank.
 - Factory banks are selectable from the J-Station, but will not be reflected
 in the UI.
 - Only firmware 2.0 is supported. If someone uses firmware 1.0, please contact

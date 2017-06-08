@@ -2,13 +2,16 @@
 
 ### Version 0.6.0 (in progress)
 #### User
-- Editable program names in bank list
+- Program can be **renamed** from the bank list
+- **Import and export** a single program in the same format as J-Edit.
 - Human readable value for scales instead of the raw value
 - Effect scales adapt their range depending on the selected effect
 - Fixed scales not going to their full range
 - Fixed incorrect ranges for some parameters
 
 #### Development
+- Messages can be built from a sysex buffer, not just seq events.
+- Enhanced buffer parsing and building.
 - Simplified UI signals connection
 - Factorized MIDI select dialog for main application and sniffer
 
