@@ -223,13 +223,13 @@ class JStationInterface:
         else:
             print('req_bank_dump: not connected')
 
-    def req_program_update_req(self):
+    def req_program_update(self):
         if self.is_connected:
             self.send_event(RequestProgramUpdate(channel=self.sysex_channel))
         else:
-            print('req_program_update_req: not connected')
+            print('req_program_update: not connected')
 
-    def req_program_update(self, program):
+    def send_program_update(self, program):
         if self.is_connected:
             self.is_response_received_cndt.acquire()
             self.send_event(ReceiveProgramUpdate(program=program,
@@ -238,7 +238,7 @@ class JStationInterface:
             self.is_response_received_cndt.wait(self.RESPONSE_TIMEOUT)
             self.is_response_received_cndt.release()
         else:
-            print('req_program_update: not connected')
+            print('send_program_update: not connected')
 
     def req_program_change(self, program_nb):
         if self.is_connected:
@@ -333,11 +333,11 @@ class JStationInterface:
 
     def one_program_callback(self, event):
         self.default_event_callback(event)
-        self.main_window.receive_program_from_jstation(event.program)
+        self.main_window.receive_program(event.program)
 
     def end_bank_dump_callback(self, event):
         self.default_event_callback(event)
-        thread = Thread(target=self.req_program_update_req, name='send req prg up')
+        thread = Thread(target=self.req_program_update, name='send req prg up')
         thread.start()
 
     def one_parameter_cc_callback( self, event):

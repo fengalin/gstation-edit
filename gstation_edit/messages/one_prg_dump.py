@@ -1,5 +1,5 @@
 """
- gstation-edit OneProgramUDump definition
+ gstation-edit OneProgramDump definition
 """
 # this file is part of gstation-edit
 # Copyright (C) F LAIGNEL 2009-2017 <fengalin@free.fr>
@@ -17,8 +17,6 @@
 # You should have received a copy of the GNU General Public License along
 # with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from copy import copy
-
 from gstation_edit.messages.jstation_sysex_event import JStationSysExEvent
 from gstation_edit.messages.one_prg_resp import OneProgramResponse
 from gstation_edit.messages.program import Program
@@ -27,25 +25,36 @@ class OneProgramDump(JStationSysExEvent):
     PROCEDURE_ID = 0x70
     VERSION = 1
 
+    HEADER_LEN = 21
+
     def __init__(self, sysex_buffer=None, program=None, isolated=False):
         self.bank = -1
         self.number = -1
-        self.program = program
+        self.program = None
         self.isolated = isolated
-        if self.program:
+        if program:
+            self.program = program.copy()
             if isolated:
-                self.program = copy(program)
                 self.program.number = 0
 
             self.bank = self.program.bank
             self.number = self.program.number
 
+        self.sysex_buffer = None
+        self.rem_sysex_buffer = None
+        if sysex_buffer:
+            # buffer should consist in 2 messages
+            # first part is a header of 21 bytes
+            # second part is a OneProgramResponse
+            if len(sysex_buffer) > self.HEADER_LEN:
+                self.sysex_buffer = sysex_buffer[:self.HEADER_LEN]
+                self.rem_sysex_buffer = sysex_buffer[self.HEADER_LEN:]
 
         JStationSysExEvent.__init__(self, JStationSysExEvent.ALL_CHANNELS,
-                                    sysex_buffer=sysex_buffer)
+                                    sysex_buffer=self.sysex_buffer)
 
     def parse_data_buffer(self):
-        JStationSysExEvent.parse_data_buffer(self, read_len=True)
+        JStationSysExEvent.parse_data_buffer(self)
         if self.is_valid:
             self.bank = self.read_next_bytes(2)
             self.number = self.read_next_bytes(2)
@@ -55,14 +64,15 @@ class OneProgramDump(JStationSysExEvent):
                 self.isolated = (self.number == 0)
 
                 # expecting a OneProgramResponse in the rest of the buffer
-                rem_data = self.data_buffer[self.data_index:]
-                if len(rem_data) > JStationSysExEvent.PROCEDURE_ID_POS:
-                    proc_id = \
-                        rem_data.data_buffer[JStationSysExEvent.PROCEDURE_ID_POS]
+                if len(self.rem_sysex_buffer) > \
+                        JStationSysExEvent.PROCEDURE_ID_POS:
+                    proc_id = self.rem_sysex_buffer[
+                            JStationSysExEvent.PROCEDURE_ID_POS
+                        ]
                     if proc_id == OneProgramResponse.PROCEDURE_ID:
                         one_prg_resp = OneProgramResponse(
                                 JStationSysExEvent.ALL_CHANNELS,
-                                sysex_buffer=rem_data
+                                sysex_buffer=self.rem_sysex_buffer
                             )
                         if one_prg_resp.is_valid:
                             self.program = one_prg_resp.program
@@ -73,9 +83,9 @@ class OneProgramDump(JStationSysExEvent):
                         self.is_valid = False
                         print('Expected proc_id: x%02x, found: x%02x'\
                               %(OneProgramResponse.PROCEDURE_ID, proc_id))
-            else:
-                self.is_valid = False
-                print('Too short buffer to read nested event proc_id')
+                else:
+                    self.is_valid = False
+                    print('Too short buffer to read nested event proc_id')
 
     # Build to send
     def build_data_buffer(self):

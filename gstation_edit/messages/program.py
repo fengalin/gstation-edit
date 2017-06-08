@@ -76,6 +76,9 @@ class Program:
         self.name = str(self.original_name)
         self.has_changed = has_changed
 
+    def copy(self):
+        return Program(bank=self.bank, number=self.number,
+                       data=list(self.data), name=str(self.name))
 
     def get_data_buffer(self, with_has_changed=False):
         data = list()
@@ -107,6 +110,12 @@ class Program:
                 )
             else:
                 self.has_changed = True
+
+    def change_to(self, other_program):
+        if not self.is_same_as(other_program):
+            self.name = other_program.name
+            self.data = other_program.data
+            self.has_changed = True
 
     def restore_original(self):
         self.name = str(self.original_name)

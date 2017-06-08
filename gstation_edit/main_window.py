@@ -18,6 +18,8 @@
 # with this program.    If not, see <http://www.gnu.org/licenses/>.
 
 
+import struct
+
 from gi.repository import Gtk
 
 from gstation_edit.rack.amp import AmpUnit
@@ -167,10 +169,10 @@ class MainWindow:
             self.context_menu_widget.insert(self.menu_item_export, 2)
             self.menu_item_export.set_sensitive(False)
 
-            menu_item_import = Gtk.MenuItem('Import...')
-            menu_item_import.connect('activate', self.context_menu_import)
-            self.context_menu_widget.insert(menu_item_import, 3)
-            menu_item_import.set_sensitive(False)
+            self.menu_item_import = Gtk.MenuItem('Import...')
+            self.menu_item_import.connect('activate', self.context_menu_import)
+            self.context_menu_widget.insert(self.menu_item_import, 3)
+            self.menu_item_import.set_sensitive(False)
 
             menu_item_copy = Gtk.MenuItem('Copy')
             menu_item_copy.connect('activate', self.context_menu_copy)
@@ -220,15 +222,15 @@ class MainWindow:
         self.program_count = program_count
         self.bank_list_model.clear()
 
-    def receive_program_from_jstation(self, program):
+    def receive_program(self, program):
         local_program = self.programs.get(program.number)
         if local_program == None:
             loc_str = '%d.%d' %(program.number//3, program.number%3 + 1)
             self.bank_list_model.append([program.number, loc_str, '', program.name])
         self.programs[program.number] = program
-        if self.current_program:
-            if self.current_program.number == program.number:
-                self.init_parameters()
+        if self.current_program and self.current_program.number == program.number:
+            self.current_program = program
+            self.init_parameters()
 
     def select_program_from_its_number(self, program_nb):
         self.set_current_program(program_nb)
@@ -245,6 +247,7 @@ class MainWindow:
             self.current_program = program
             self.init_parameters()
             self.menu_item_export.set_sensitive(True)
+            self.menu_item_import.set_sensitive(True)
         else:
             # TODO: factory banks can be accessed outside of the user banks
             print('Unknown program selection %d out of bounds'%(program))
@@ -356,13 +359,84 @@ class MainWindow:
         self.on_undo_clicked(widget)
 
     def context_menu_import(self, widget, *args):
-        # TODO: implement !
-        print('Import clicked %s'%(args))
+        # TODO: remember file folder between sessions
+        file_chooser = Gtk.FileChooserDialog(
+                'Import a program', self.gtk_window,
+                Gtk.FileChooserAction.OPEN,
+                (Gtk.STOCK_CANCEL, Gtk.ResponseType.CANCEL,
+                 Gtk.STOCK_OPEN, Gtk.ResponseType.OK)
+            )
+        filter_sysex = Gtk.FileFilter()
+        filter_sysex.set_name('Sysex files (.syx)')
+        filter_sysex.add_pattern('*.syx')
+        file_chooser.add_filter(filter_sysex)
+
+        result = file_chooser.run()
+        if result == Gtk.ResponseType.OK:
+            content = None
+            # TODO: catch exception and notify to the user
+            with open(file_chooser.get_filename(), 'rb') as sysex_file:
+                content = sysex_file.read()
+            if content:
+                sysex_buffer = list()
+                # TODO; use bytes
+                byte_content = struct.unpack('B'*len(content), content)
+                for value in byte_content:
+                    sysex_buffer.append(value)
+                self.import_program_buffer(sysex_buffer)
+        # else: canceled
+        file_chooser.destroy()
+
+    def import_program_buffer(self, sysex_buffer):
+        prg_dump = OneProgramDump(sysex_buffer=sysex_buffer, isolated=True)
+        if prg_dump.is_valid and self.current_program:
+            self.current_program.change_to(prg_dump.program)
+            if self.current_program.has_changed:
+                self.init_parameters()
+                self.set_current_name(self.current_program.name)
+
+                self.jstation_interface.send_program_update(
+                    self.current_program)
+                self.set_program_has_changed(True)
+        else:
+            # TODO: feedback to user - use notification?
+            print('Couldn\'t import program from buffer')
 
     def context_menu_export(self, widget, *args):
-        prg_dump = OneProgramDump(program=self.current_program, isolated=True)
-        prg_dump.build_sysex_buffer()
-        print('Export: %s'%(prg_dump))
+        # TODO: remember file folder between sessions
+        file_chooser = Gtk.FileChooserDialog(
+                'Export a program', self.gtk_window,
+                Gtk.FileChooserAction.SAVE,
+                (Gtk.STOCK_CANCEL, Gtk.ResponseType.CANCEL,
+                 Gtk.STOCK_SAVE, Gtk.ResponseType.OK)
+            )
+        file_chooser.set_do_overwrite_confirmation(True)
+
+        filter_sysex = Gtk.FileFilter()
+        filter_sysex.set_name('Sysex files (.syx)')
+        filter_sysex.add_pattern('*.syx')
+        file_chooser.add_filter(filter_sysex)
+
+        file_chooser.set_current_name('%s.syx'%(self.current_program.name))
+
+        result = file_chooser.run()
+        if result == Gtk.ResponseType.OK:
+            prg_dump = OneProgramDump(
+                    program=self.current_program, isolated=True
+                )
+            prg_dump.build_sysex_buffer()
+
+            if prg_dump.is_valid:
+                # TODO: catch exception and notify to the user
+                with open(file_chooser.get_filename(), 'wb') as sysex_file:
+                    # TODO; use bytes
+                    for value in prg_dump.sysex_buffer:
+                        sysex_file.write(struct.pack('B', value))
+            else:
+                # TODO: feedback to user - use notification?
+                print('Couldn\'t export program')
+        # else: canceled
+        file_chooser.destroy()
 
 
     def context_menu_copy(self, widget, *args):
