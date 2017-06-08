@@ -1,10 +1,30 @@
 # Description
-**GStation-Edit** is a linux replacement for the Windows based J-Edit software
-from Johnson Amplification. J-Edit is an interface for the J-Station guitar /
-bass amp modeling and effect processing system.
+**GStation-Edit** is a linux replacement for the J-Edit software from Johnson
+Amplification. J-Edit is an interface for the J-Station guitar / bass amp
+modeling and effect processing system.
 
-**GStation-Edit** development started in 2009
-[at sourceforge](https://sourceforge.net/projects/gstation-edit/)
+The J-Station features a dozen of knobs to access the most common parameters.
+However, to get the full potential of the device, it is more convenient to use
+a computer based application. The application also allows saving / restoring
+parameters as / from files. The manufaturer ships the device with J-Edit,
+a Windows based application for that purpose.
+
+Until recently, J-Edit couldn't be used properly on
+[Wine](https://www.winehq.org/). In 2009, I started implementing the basic
+functions in a Linux application. As of today, all parameters can be accessed,
+from GStation-Edit and the most important features are available (including
+J-Edit interoperable program export and import).
+
+The application communicates with the J-Station over a MIDI connection,
+exchanging sysex and CC events. By design, sysex events are proprietary. As a
+consequence, most of the development effort was focused on understanding the
+exchanges, designing a communication framework and implementing the messages
+necessary for the application.
+
+For latest versions, make sure to check the project at
+[github](https://github.com/fengalin/gstation-edit). For archeology, you can
+check the initial project's page at sourceforge.
+
 
 # Screenshots
 ## With default GNOME theme
@@ -27,7 +47,7 @@ bass amp modeling and effect processing system.
 
 
 # Not supported yet
-- The following items in the program list's context menu: copy / paste.
+- Program copy / paste.
 - Import and export the whole program bank.
 - Factory banks are selectable from the J-Station, but will not be reflected
 in the UI.
@@ -45,8 +65,9 @@ is stucked to Python 2)
 - pygobject or python-gobject
 - pyalsa or python-alsa
 
-## Runing from source
-You can launch GStation-Edit from the download root directory:
+## <a name='running_from_source'></a>Running from source
+You can launch GStation-Edit from the download root directory (do this if you
+face problems as you will get log messages):
 
     $ ./gstation-edit
 
@@ -66,7 +87,7 @@ From the dowload root directory:
     $ sudo ./setup.py install
 
 
-# Troubleshooting (WIP)
+# Troubleshooting
 ## Could not connect to J-Station
 There are many reasons for not being able to connect to J-Station. 
 This could range from a simple physical connection to conflicts
@@ -84,10 +105,10 @@ be vertically aligned with the top mark next to the MIDI IN label.
 #### The main window and MIDI select dialog doesn't show up
 If nothing happens when you launch GStation-Edit (see **How to run
 GStation-Edit** above), you probably forgot to install a dependency. 
-This should be explicit on the command line if you run GStation-Edit
-from source (see **Runing from source** above).
-If you get something not that obvious, don't hesitate to drop me a message
-with the output from the command line.
+This should be explicit on the command line if you [run GStation-Edit
+from source](#running_from_source).
+If you get something not that obvious, drop me a message with the output from
+the command line.
 
 #### The main window shows up
 The MIDI ports detected by Py-ALSA should display In the comboboxes. 
