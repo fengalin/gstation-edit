@@ -4,16 +4,16 @@ Amplification. J-Edit is an interface for the J-Station guitar / bass amp
 modeling and effect processing system.
 
 The J-Station features a dozen of knobs to access the most common parameters.
-However, to get the full potential of the device, it is more convenient to use
-a computer based application. The application also allows saving / restoring
-parameters as / from files. The manufaturer ships the device with J-Edit,
-a Windows based application for that purpose.
+To get the full potential of the device, it is more convenient to use a computer
+based application. The application also allows saving / restoring parameters
+to / from files. The manufaturer ships the device with J-Edit, a Windows based
+application for that purpose.
 
 Until recently, J-Edit couldn't be used properly on
 [Wine](https://www.winehq.org/). In 2009, I started implementing the basic
-functions in a Linux application. As of today, all parameters can be accessed,
-from GStation-Edit and the most important features are available (including
-J-Edit interoperable program export and import).
+functions in a Linux application. As of today, all parameters can be accessed
+from GStation-Edit and the most important features are available (see the
+[feature list below](#features)).
 
 The application communicates with the J-Station over a MIDI connection,
 exchanging sysex and CC events. By design, sysex events are proprietary. As a
@@ -34,7 +34,7 @@ check the initial project's page at sourceforge.
 ![Dark theme](assets/gstation-edit_dark-theme.png)
 
 
-# Features
+# <a name='features'></a>Features
 - Search the J-Station on the available MIDI ports.
 - Load user's bank programs.
 - Modify parameters/program from the UI and update the J-Station.
