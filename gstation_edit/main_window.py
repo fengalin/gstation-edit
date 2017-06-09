@@ -403,20 +403,48 @@ class MainWindow:
     def context_menu_undo(self, widget, *args):
         self.on_undo_clicked(widget)
 
-    def context_menu_import(self, widget, *args):
-        # TODO: remember file folder between sessions
+
+    def run_file_chooser(self, action, proposed_name=None):
+        folder = None
+        if self.config.has_section('Import-Export'):
+            folder = self.config.get('Import-Export', 'folder')
+
+        title = 'Import'
+        stock_ok = Gtk.STOCK_OPEN
+        if action == Gtk.FileChooserAction.SAVE:
+            stock_ok = Gtk.STOCK_SAVE
+            title = 'Export'
+
         file_chooser = Gtk.FileChooserDialog(
-                'Import a program', self.gtk_window,
-                Gtk.FileChooserAction.OPEN,
+                '%s a program'%(title), self.gtk_window, action,
                 (Gtk.STOCK_CANCEL, Gtk.ResponseType.CANCEL,
-                 Gtk.STOCK_OPEN, Gtk.ResponseType.OK)
+                 stock_ok, Gtk.ResponseType.OK)
             )
         filter_sysex = Gtk.FileFilter()
         filter_sysex.set_name('Sysex files (.syx)')
         filter_sysex.add_pattern('*.syx')
         file_chooser.add_filter(filter_sysex)
 
+        if Gtk.FileChooserAction.SAVE:
+            file_chooser.set_do_overwrite_confirmation(True)
+
+        if folder:
+            file_chooser.set_current_folder(folder)
+        if proposed_name:
+            file_chooser.set_current_name('%s.syx'%(proposed_name))
+
         result = file_chooser.run()
+        filename = None
+        if result == Gtk.ResponseType.OK:
+            filename = file_chooser.get_filename()
+            if not self.config.has_section('Import-Export'):
+                self.config.add_section('Import-Export')
+            self.config.set('Import-Export', 'folder', path.dirname(filename))
+
+        return (result, file_chooser)
+
+    def context_menu_import(self, widget, *args):
+        result, file_chooser = self.run_file_chooser(Gtk.FileChooserAction.OPEN)
         if result == Gtk.ResponseType.OK:
             content = None
             # TODO: catch exception and notify to the user
@@ -448,23 +476,8 @@ class MainWindow:
             print('Couldn\'t import program from buffer')
 
     def context_menu_export(self, widget, *args):
-        # TODO: remember file folder between sessions
-        file_chooser = Gtk.FileChooserDialog(
-                'Export a program', self.gtk_window,
-                Gtk.FileChooserAction.SAVE,
-                (Gtk.STOCK_CANCEL, Gtk.ResponseType.CANCEL,
-                 Gtk.STOCK_SAVE, Gtk.ResponseType.OK)
-            )
-        file_chooser.set_do_overwrite_confirmation(True)
-
-        filter_sysex = Gtk.FileFilter()
-        filter_sysex.set_name('Sysex files (.syx)')
-        filter_sysex.add_pattern('*.syx')
-        file_chooser.add_filter(filter_sysex)
-
-        file_chooser.set_current_name('%s.syx'%(self.current_program.name))
-
-        result = file_chooser.run()
+        result, file_chooser = self.run_file_chooser(Gtk.FileChooserAction.SAVE,
+                                                     self.current_program.name)
         if result == Gtk.ResponseType.OK:
             prg_dump = OneProgramDump(
                     program=self.current_program, isolated=True
