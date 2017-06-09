@@ -17,6 +17,9 @@
 import sys
 import os
 
+from ConfigParser import SafeConfigParser
+
+
 import gi
 gi.require_version('Gtk', '3.0')
 from gi.repository import Gtk
@@ -32,6 +35,14 @@ class JStationSnifferApp:
     def __init__( self ):
         GObject.threads_init()
 
+        self.config = SafeConfigParser(allow_no_value=True)
+        config_base_path = os.path.expanduser('~/.config/gstation-edit')
+        if not os.path.isdir(config_base_path):
+            os.makedirs(config_base_path)
+        self.config_path = os.path.join(config_base_path, 'settings.cfg')
+        self.config.read(self.config_path)
+
+
         gtk_builder_file = os.path.join('gstation_edit/resources',
                                         'gstation-edit-one-window.ui')
 
@@ -39,22 +50,46 @@ class JStationSnifferApp:
         self.gtk_builder.add_from_file(gtk_builder_file)
 
         self.js_sniffer = JStationSniffer(sys.argv[0])
-        self.main_window = MidiSelectDlg(self.gtk_builder, self,
-                                         self.js_sniffer,
-                                         self.start_sniffing, self.quit)
+        self.midi_dlg = MidiSelectDlg(self.gtk_builder, self,
+                                      self.js_sniffer,
+                                      self.start_sniffing, self.quit)
+        self.midi_dlg.gtk_dlg.connect('destroy', self.quit)
 
-        self.main_window.gtk_dlg.connect('destroy', self.quit)
+        self.connect()
 
-        self.main_window.present()
+    def connect(self):
+        midi_port_in = None
+        midi_port_out = None
+        if self.config.has_section('MIDI'):
+            midi_port_in = self.config.get('MIDI', 'port_in')
+            midi_port_out = self.config.get('MIDI', 'port_out')
+
+        if midi_port_in and midi_port_out:
+            self.js_sniffer.connect(midi_port_in, midi_port_out, 1)
+            if self.js_sniffer.is_connected:
+                self.midi_dlg.set_defaults(midi_port_in, midi_port_out)
+                self.midi_dlg.set_connected()
+                self.start_sniffing(midi_port_in, midi_port_out)
+
+        self.midi_dlg.present()
 
     def start_sniffing(self, midi_port_in, midi_port_out):
+        if self.js_sniffer.is_connected:
+            if not self.config.has_section('MIDI'):
+                self.config.add_section('MIDI')
+            self.config.set('MIDI', 'port_in', midi_port_in)
+            self.config.set('MIDI', 'port_out', midi_port_out)
+
         self.js_sniffer.start_sniffer(midi_port_in, midi_port_out)
-        self.main_window.msg_lbl.set_text('Sniffing events...')
+        self.midi_dlg.msg_lbl.set_text('Sniffing events...')
 
     def quit(self, window=None):
         print('Quitting jstation-sniffer')
+        with open(self.config_path, 'wb') as configfile:
+            self.config.write(configfile)
+
         self.js_sniffer.disconnect()
-        Gtk.main_quit(self.main_window)
+        Gtk.main_quit(self.midi_dlg)
 
 def run():
     jstation_sniffer = JStationSnifferApp()

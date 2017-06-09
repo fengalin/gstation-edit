@@ -32,10 +32,10 @@ class MidiSelectDlg:
         self.gtk_builder = gtk_builder
 
         self.gtk_dlg = self.get_widget('midi-select-dlg')
-        connect_btn = self.get_widget('midi-connect-btn')
-        connect_btn.connect('clicked', self.on_btn_connect_clicked)
-        auto_connect_btn = self.get_widget('midi-auto-connect-btn')
-        auto_connect_btn.connect('clicked', self.on_auto_connect_btn_clicked)
+        self.connect_btn = self.get_widget('midi-connect-btn')
+        self.connect_btn.connect('clicked', self.on_btn_connect_clicked)
+        self.auto_connect_btn = self.get_widget('midi-auto-connect-btn')
+        self.auto_connect_btn.connect('clicked', self.on_auto_connect_btn_clicked)
         cancel_btn = self.get_widget('midi-cancel-btn')
         cancel_btn.connect('clicked', self.on_cancel_btn_clicked)
 
@@ -48,10 +48,10 @@ class MidiSelectDlg:
 
         self.msg_lbl.set_text('')
 
-        self.midi_port_in_list = self.js_interface.midi_in_ports
-        self.midi_port_out_list = self.js_interface.midi_out_ports
-        self.populate_combo_box(self.midi_in_cbx, self.midi_port_in_list)
-        self.populate_combo_box(self.midi_out_cbx, self.midi_port_out_list)
+        self.midi_in_ports = self.js_interface.midi_in_ports.keys()
+        self.midi_out_ports = self.js_interface.midi_out_ports.keys()
+        self.populate_combo_box(self.midi_in_cbx, self.midi_in_ports)
+        self.populate_combo_box(self.midi_out_cbx, self.midi_out_ports)
 
         self.port_in = None
         self.port_out = None
@@ -62,7 +62,7 @@ class MidiSelectDlg:
     def populate_combo_box(self, combo_box, midi_ports):
             midi_cbx_model = combo_box.get_model()
             for port in midi_ports:
-                midi_cbx_model.append([port.port_name])
+                midi_cbx_model.append([port])
             cell = Gtk.CellRendererText()
             combo_box.pack_start(cell, True)
             combo_box.add_attribute(cell, 'text', 0)
@@ -77,6 +77,21 @@ class MidiSelectDlg:
             print('Could not find widget %s'%(widget_name))
         return widget
 
+    def set_defaults(self, midi_port_in, midi_port_out):
+        # TODO: also set MIDI and sysex channels
+        self.port_in = midi_port_in
+        self.port_out = midi_port_out
+
+        for index in range(0, len(self.midi_in_ports)):
+            if self.port_in == self.midi_in_ports[index]:
+                self.midi_in_cbx.set_active(index)
+                break
+
+        for index in range(0, len(self.midi_out_ports)):
+            if self.port_out == self.midi_out_ports[index]:
+                self.midi_out_cbx.set_active(index)
+                break
+
 
     def present(self, widget=None):
         self.gtk_dlg.present()
@@ -87,14 +102,18 @@ class MidiSelectDlg:
 
     def on_btn_connect_clicked(self, widget):
         self.pre_connection_actions()
-        Thread(target=self.connect, name='connect').start()
+        Thread(target=self.connect_disconnect, name='(dis)connect').start()
 
-    def connect(self):
-        port_in_cbx_index = self.midi_in_cbx.get_active()
-        self.port_in  = self.midi_port_in_list[port_in_cbx_index]
-        port_out_cbx_index = self.midi_out_cbx.get_active()
-        self.port_out = self.midi_port_out_list[port_out_cbx_index]
-        self.attempt_to_connect(self.port_in, self.port_out)
+    def connect_disconnect(self):
+        if not self.is_connected:
+            port_in_cbx_index = self.midi_in_cbx.get_active()
+            self.port_in  = self.midi_in_ports[port_in_cbx_index]
+            port_out_cbx_index = self.midi_out_cbx.get_active()
+            self.port_out = self.midi_out_ports[port_out_cbx_index]
+            self.attempt_to_connect(self.port_in, self.port_out)
+        else:
+            self.js_interface.disconnect()
+            self.set_disconnected()
         self.post_connection_actions()
 
     def on_auto_connect_btn_clicked(self, widget):
@@ -103,12 +122,12 @@ class MidiSelectDlg:
 
     def auto_connect(self):
         is_connected = False
-        for port_in_index in range(0, len(self.midi_port_in_list)):
-            for port_out_index in range(0, len(self.midi_port_out_list)):
+        for port_in_index in range(0, len(self.midi_in_ports)):
+            for port_out_index in range(0, len(self.midi_out_ports)):
                 self.midi_in_cbx.set_active(port_in_index)
                 self.midi_out_cbx.set_active(port_out_index)
-                self.port_in = self.midi_port_in_list[port_in_index]
-                self.port_out = self.midi_port_out_list[port_out_index]
+                self.port_in = self.midi_in_ports[port_in_index]
+                self.port_out = self.midi_out_ports[port_out_index]
                 self.attempt_to_connect(self.port_in, self.port_out)
                 if self.is_connected:
                     break
@@ -123,11 +142,25 @@ class MidiSelectDlg:
 
     def post_connection_actions(self):
         if self.is_connected:
+            self.set_connected()
             self.on_connected(self.port_in, self.port_out)
         else:
-            self.msg_lbl.set_text('Could not connect to J-Station')
+            self.msg_lbl.set_text('Disconnect from J-Station')
         self.msg_spin_satck.set_visible_child_name('message')
         self.gtk_dlg.set_sensitive(True)
+
+
+    def set_connected(self):
+        self.is_connected = True
+        self.connect_btn.set_label('Disconnect')
+        self.connect_btn.set_sensitive(True)
+        self.auto_connect_btn.set_sensitive(False)
+
+    def set_disconnected(self):
+        self.is_connected = False
+        self.connect_btn.set_label('Connect')
+        self.connect_btn.set_sensitive(True)
+        self.auto_connect_btn.set_sensitive(True)
 
     def on_cancel_btn_clicked(self, widget):
         self.gtk_dlg.hide()

@@ -18,7 +18,12 @@
 # with this program.    If not, see <http://www.gnu.org/licenses/>.
 
 
+from os import path
+from os import makedirs
+
 import struct
+
+from ConfigParser import SafeConfigParser
 
 from gi.repository import Gtk
 
@@ -38,6 +43,14 @@ from gstation_edit.messages.one_prg_dump import OneProgramDump
 
 class MainWindow:
     def __init__(self, app_name, gtk_builder):
+
+        self.config = SafeConfigParser(allow_no_value=True)
+        config_base_path = path.expanduser('~/.config/gstation-edit')
+        if not path.isdir(config_base_path):
+            makedirs(config_base_path)
+        self.config_path = path.join(config_base_path, 'settings.cfg')
+        self.config.read(self.config_path)
+
         self.gtk_builder = gtk_builder
         self.gtk_window = self.gtk_builder.get_object('main-window')
 
@@ -56,15 +69,36 @@ class MainWindow:
 
 
     def connect(self):
-        # TODO: use a property file to store the midi connection ports
-        self.midi_select_dlg.present()
+        midi_port_in = None
+        midi_port_out = None
+        if self.config.has_section('MIDI'):
+            midi_port_in = self.config.get('MIDI', 'port_in')
+            midi_port_out = self.config.get('MIDI', 'port_out')
+
+        if midi_port_in and midi_port_out:
+            self.jstation_interface.connect(midi_port_in, midi_port_out, 1)
+            self.midi_select_dlg.set_defaults(midi_port_in, midi_port_out)
+            self.midi_select_dlg.set_connected()
+            self.on_connected(midi_port_in, midi_port_out)
+        else:
+            self.midi_select_dlg.present()
 
     def on_connected(self, midi_port_in, midi_port_out):
         if self.jstation_interface.is_connected:
+            if not self.config.has_section('MIDI'):
+                self.config.add_section('MIDI')
+            self.config.set('MIDI', 'port_in', midi_port_in)
+            self.config.set('MIDI', 'port_out', midi_port_out)
+
+            self.clear()
+
             self.jstation_interface.req_bank_dump()
         self.midi_select_dlg.hide()
 
     def quit(self):
+        with open(self.config_path, 'wb') as configfile:
+            self.config.write(configfile)
+
         self.jstation_interface.disconnect()
 
     def init_widgets(self):
@@ -149,6 +183,15 @@ class MainWindow:
             self.bank_list_model = None
             print('Could not find widget for bank list')
 
+
+    def clear(self):
+        self.bank_list_model.clear()
+        self.programs = dict()
+        self.program_count = 0
+        self.current_program = None
+        self.current_selected_iter = None
+
+
     def init_context_menu_widget(self):
         self.context_menu_widget = self.gtk_builder.get_object('context-menu')
         self.context_menu_widget.attach_to_widget(self.bank_list_widget)
@@ -186,6 +229,7 @@ class MainWindow:
             menu_item_paste.set_sensitive(False)
         else:
             print('Could not find widget for context menu')
+
 
     def init_parameters_dictionnaries(self):
         for unit in self.units:
@@ -294,20 +338,21 @@ class MainWindow:
             print('Updating isolated parameters other than with CC command not implemented')
 
     def select_program_from_ui(self, widget):
-        tree_iter = self.bank_list_widget.get_selection().get_selected()[1]
-        selected_program_nb = int(self.bank_list_model.get_value(tree_iter, 0))
-        cur_program_nb = int(self.bank_list_model.get_value(
-                self.current_selected_iter, 0)
-            )
-        if selected_program_nb != cur_program_nb:
-            if self.current_program.has_changed:
-                self.undo_changes()
+        if self.current_selected_iter != None:
+            tree_iter = self.bank_list_widget.get_selection().get_selected()[1]
+            selected_program_nb = int(self.bank_list_model.get_value(tree_iter, 0))
+            cur_program_nb = int(self.bank_list_model.get_value(
+                    self.current_selected_iter, 0)
+                )
+            if selected_program_nb != cur_program_nb:
+                if self.current_program.has_changed:
+                    self.undo_changes()
 
-            self.set_current_program(selected_program_nb)
-            self.current_selected_iter = \
-                self.bank_list_widget.get_selection().get_selected()[1]
-            self.jstation_interface.req_program_change(selected_program_nb)
-        # else: program hasn't changed
+                self.set_current_program(selected_program_nb)
+                self.current_selected_iter = \
+                    self.bank_list_widget.get_selection().get_selected()[1]
+                self.jstation_interface.req_program_change(selected_program_nb)
+            # else: program hasn't changed
 
 
     def undo_changes(self):

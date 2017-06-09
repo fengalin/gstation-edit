@@ -138,8 +138,8 @@ class JStationInterface:
 
     def get_clients(self):
         connections = self.seq.connection_list()
-        self.midi_in_ports = list()
-        self.midi_out_ports = list()
+        self.midi_in_ports = dict()
+        self.midi_out_ports = dict()
 
         for (cname, cid, ports) in connections:
             for port in ports:
@@ -148,22 +148,24 @@ class JStationInterface:
                 if port_info['type'] & alsaseq.SEQ_PORT_TYPE_PORT:
                     port_cap = port_info['capability']
                     if port_cap & alsaseq.SEQ_PORT_CAP_SUBS_READ:
-                        self.midi_in_ports.append(MidiPort(cid, port_id, port_name))
+                        self.midi_in_ports[port_name] = \
+                            MidiPort(cid, port_id, port_name)
                     if port_cap & alsaseq.SEQ_PORT_CAP_WRITE:
-                        self.midi_out_ports.append(MidiPort(cid, port_id, port_name))
+                        self.midi_out_ports[port_name] = \
+                            MidiPort(cid, port_id, port_name)
 
 
     def connect(self, midi_port_in, midi_port_out, sysex_channel):
         self.is_connected = False
         self.sysex_channel = sysex_channel
-        self.js_port_in = midi_port_in
+        self.js_port_in = self.midi_in_ports[midi_port_in]
         self.seq.connect_ports(
             (self.seq.client_id, self.port_out),
-            (midi_port_in.client, midi_port_in.port)
+            (self.js_port_in.client, self.js_port_in.port)
         )
-        self.js_port_out = midi_port_out
+        self.js_port_out = self.midi_out_ports[midi_port_out]
         self.seq.connect_ports(
-            (midi_port_out.client, midi_port_out.port),
+            (self.js_port_out.client, self.js_port_out.port),
             (self.seq.client_id, self.port_in)
         )
 
