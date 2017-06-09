@@ -77,9 +77,14 @@ class MainWindow:
 
         if midi_port_in and midi_port_out:
             self.jstation_interface.connect(midi_port_in, midi_port_out, 1)
-            self.midi_select_dlg.set_defaults(midi_port_in, midi_port_out)
-            self.midi_select_dlg.set_connected()
-            self.on_connected(midi_port_in, midi_port_out)
+            if self.jstation_interface.is_connected:
+                self.midi_select_dlg.set_defaults(midi_port_in, midi_port_out)
+                self.midi_select_dlg.set_connected()
+                self.on_connected(midi_port_in, midi_port_out)
+            else:
+                # could not connect using settings
+                self.midi_select_dlg.post_connection_actions()
+                self.midi_select_dlg.present()
         else:
             self.midi_select_dlg.present()
 

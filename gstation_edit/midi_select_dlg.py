@@ -145,7 +145,7 @@ class MidiSelectDlg:
             self.set_connected()
             self.on_connected(self.port_in, self.port_out)
         else:
-            self.msg_lbl.set_text('Disconnect from J-Station')
+            self.msg_lbl.set_text('Disconnected from J-Station')
         self.msg_spin_satck.set_visible_child_name('message')
         self.gtk_dlg.set_sensitive(True)
 
