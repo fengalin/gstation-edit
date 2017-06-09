@@ -1,5 +1,10 @@
 ## Change Log
 
+### Version 0.7.0 (in progress)
+
+#### Development
+- Persist settings: MIDI in/out ports and import/export folder.
+
 ### Version 0.6.0 (20170608)
 #### User
 - Program can be **renamed** from the bank list
