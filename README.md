@@ -55,7 +55,7 @@ in the UI.
 me and we could have GStation-Edit compatible with both firmwares.
 
 
-# How to run GStation-Edit
+# <a name='how_to_run'></a>How to run GStation-Edit
 ## Dependencies
 Make sure your system includes the following dependencies:
 - python-2.7 (Python 3 can't be used due to the dependency on PyAlsa which
@@ -103,15 +103,15 @@ be vertically aligned with the top mark next to the MIDI IN label.
 ### Check that the MIDI interface is detected
 
 #### The main window and MIDI select dialog doesn't show up
-If nothing happens when you launch GStation-Edit (see **How to run
-GStation-Edit** above), you probably forgot to install a dependency. 
+If nothing happens when you launch GStation-Edit (see [how to run
+GStation-Edit](how_to_run) above), you probably forgot to install a dependency.
 This should be explicit on the command line if you [run GStation-Edit
 from source](#running_from_source).
 If you get something not that obvious, drop me a message with the output from
 the command line.
 
 #### The main window shows up
-The MIDI ports detected by Py-ALSA should display In the comboboxes. 
+The MIDI ports detected by pyALSA should display In the comboboxes.
 If the comboboxes are empty, you probably have an issue with your MIDI interface.
 Drop me a message with any relevant information if you think your MIDI interface
 is properly installed and recognized by the OS.
