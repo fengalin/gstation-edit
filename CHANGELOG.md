@@ -1,10 +1,11 @@
 ## Change Log
 
-### Version 0.7.0 (in progress)
+### Version 0.7.0 (20170610)
 
 #### User
 - Persist settings: MIDI in/out ports and import/export folder.
 - Fixed digital out level throwing an exception when changing value.
+- Minor changes to the UI.
 
 #### Development
 - Automatically fill seq_event when building a message from data (this is the
