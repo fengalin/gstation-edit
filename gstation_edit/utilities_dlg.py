@@ -118,4 +118,6 @@ class UtilitiesDlg:
             elif widget == self.midi_loopback_switch:
                 self.settings.midi_merge = value
 
+            # a value has changed => update seq event
+            self.settings.fill_seq_event()
             self.main_window.send_settings(self.settings)

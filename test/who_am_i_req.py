@@ -22,9 +22,8 @@ from gstation_edit.messages.who_am_i_req import *
 def test():
     print('\n==== WhoAmIRequest test')
     sysex_event = WhoAmIRequest()
-    sysex_event.fill_seq_event()
     is_valid = sysex_event.is_valid
-    print('event is valid ?: %d'%(is_valid))
+    print('Event is valid? %d'%(is_valid))
     if is_valid:
         print(sysex_event.get_seq_event().get_data())
         print(sysex_event.data_buffer)

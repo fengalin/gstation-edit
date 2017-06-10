@@ -62,6 +62,8 @@ class CCMidiEvent(MidiEvent):
                 self.is_valid = False
             else:
                 self.is_valid = True
+        else:
+            self.fill_seq_event()
 
 
     def fill_seq_event(self):

@@ -169,21 +169,31 @@ class JStationSysExEvent(SysExMidiEvent):
         self.data_buffer += \
             self.helper.get_split_bytes_from_value(self.version)
 
+        self.is_valid = True
+
         if pre_len_data:
             for value in pre_len_data:
-                self.data_buffer += \
-                    self.helper.get_split_bytes_from_value(value)
+                if value >= 0:
+                    self.data_buffer += \
+                        self.helper.get_split_bytes_from_value(value)
+                else:
+                    self.is_valid = False
+                    self.data_buffer = None
+                    break
 
-        if post_len_data != None:
+        if self.is_valid and post_len_data != None:
             self.data_buffer += self.helper.get_split_bytes_from_value(
                     len(post_len_data), 4
                 )
 
             for value in post_len_data:
-                self.data_buffer += \
-                    self.helper.get_split_bytes_from_value(value)
-
-        self.is_valid = True
+                if value >= 0:
+                    self.data_buffer += \
+                        self.helper.get_split_bytes_from_value(value)
+                else:
+                    self.is_valid = False
+                    self.data_buffer = None
+                    break
 
 
     # Common

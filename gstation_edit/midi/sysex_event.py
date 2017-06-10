@@ -49,6 +49,9 @@ class SysExMidiEvent(MidiEvent):
 
         if self.sysex_buffer:
             self.parse_sysex_buffer()
+        else:
+            self.fill_seq_event()
+
 
     def parse_sysex_buffer(self):
         # SysEx data expected structure: 0xf0 ... data ... checksum 0xf7

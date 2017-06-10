@@ -2,8 +2,13 @@
 
 ### Version 0.7.0 (in progress)
 
-#### Development
+#### User
 - Persist settings: MIDI in/out ports and import/export folder.
+
+#### Development
+- Automatically fill seq_event when building a message from data (this is the
+parallel behaviour to how messages are parsed from seq_events or sysex buffers)
+
 
 ### Version 0.6.0 (20170608)
 #### User

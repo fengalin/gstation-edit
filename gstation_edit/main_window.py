@@ -487,8 +487,6 @@ class MainWindow:
             prg_dump = OneProgramDump(
                     program=self.current_program, isolated=True
                 )
-            prg_dump.build_sysex_buffer()
-
             if prg_dump.is_valid:
                 # TODO: catch exception and notify to the user
                 with open(file_chooser.get_filename(), 'wb') as sysex_file:

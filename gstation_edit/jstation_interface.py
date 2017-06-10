@@ -370,7 +370,6 @@ class JStationInterface:
 
     def send_event(self, event):
         success = False
-        event.fill_seq_event()
         if event.is_valid:
 #            print('<== sending %s'%(event))
             self.seq.output_event(event.get_seq_event())

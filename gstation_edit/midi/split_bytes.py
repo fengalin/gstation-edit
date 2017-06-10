@@ -34,17 +34,18 @@ class SplitBytesHelpher:
 
     def get_split_bytes_from_value(self, value, expected_bytes=2):
         split_bytes = list()
-        remainder = value
-        value_left_to_read = True
-        while value_left_to_read or expected_bytes>len(split_bytes):
-            current_byte = remainder & 0xff
-            if current_byte & 0x80:
-                split_bytes.append(1)
-            else:
-                split_bytes.append(0)
-            split_bytes.append(current_byte & 0x7f)
-            remainder = remainder >> 8
-            if remainder == 0:
-                value_left_to_read = False
+        if value >= 0:
+            remainder = value
+            value_left_to_read = True
+            while value_left_to_read or expected_bytes>len(split_bytes):
+                current_byte = remainder & 0xff
+                if current_byte & 0x80:
+                    split_bytes.append(1)
+                else:
+                    split_bytes.append(0)
+                split_bytes.append(current_byte & 0x7f)
+                remainder = remainder >> 8
+                if remainder == 0:
+                    value_left_to_read = False
 
         return split_bytes

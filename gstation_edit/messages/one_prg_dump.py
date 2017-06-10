@@ -105,7 +105,6 @@ class OneProgramDump(JStationSysExEvent):
         if self.is_valid:
             one_prg_resp = OneProgramResponse(JStationSysExEvent.ALL_CHANNELS,
                                               program=self.program)
-            one_prg_resp.build_sysex_buffer()
             if one_prg_resp.is_valid:
                 self.sysex_buffer += one_prg_resp.sysex_buffer
 
