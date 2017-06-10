@@ -4,6 +4,7 @@
 
 #### User
 - Persist settings: MIDI in/out ports and import/export folder.
+- Fixed digital out level throwing an exception when changing value.
 
 #### Development
 - Automatically fill seq_event when building a message from data (this is the
