@@ -1441,7 +1441,7 @@
                     <property name="can_focus">False</property>
                     <property name="halign">end</property>
                     <property name="vexpand">True</property>
-                    <property name="label" translatable="yes">Time fine (0.1 s):</property>
+                    <property name="label" translatable="yes">Time fine (x0.1s):</property>
                     <property name="single_line_mode">True</property>
                   </object>
                   <packing>
