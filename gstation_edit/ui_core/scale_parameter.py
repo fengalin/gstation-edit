@@ -57,6 +57,11 @@ class ScaleParameter(Parameter):
         Parameter.set_value(self, value)
         self.value_lbl.set_text(self.str_value)
 
+    def set_sensitive(self, is_sensitive):
+        Parameter.set_sensitive(self, is_sensitive)
+        if self.value_lbl:
+            self.value_lbl.set_sensitive(is_sensitive)
+
     def handle_change_value(self, widget, scroll_jump, value):
         int_value = int(value)
         if int_value <= self.min_value:
