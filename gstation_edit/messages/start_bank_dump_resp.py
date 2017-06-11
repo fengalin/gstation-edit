@@ -17,31 +17,43 @@
 # You should have received a copy of the GNU General Public License along
 # with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from gstation_edit.messages.jstation_sysex_event import JStationSysExEvent
+from gstation_edit.messages.jstation_sysex_event import JStationSysexEvent
 
-class StartBankDumpResponse(JStationSysExEvent):
+class StartBankDumpResponse(JStationSysexEvent):
     PROCEDURE_ID = 0x25
     VERSION = 1
 
-    def __init__(self, channel=-1, seq_event=None, total_length=-1):
-        self.total_length = total_length
+    def __init__(self, channel=-1, sysex_buffer=None, total_len=-1):
+        self.total_len = total_len
 
-        JStationSysExEvent.__init__(self, channel, seq_event=seq_event)
+        JStationSysexEvent.__init__(self, channel, sysex_buffer=sysex_buffer)
 
 
     def parse_data_buffer(self):
-        JStationSysExEvent.parse_data_buffer(self)
+        JStationSysexEvent.parse_data_buffer(self)
         data_len = self.read_next_bytes(4)
+        if data_len > 2:
+            # For some reasons, data len in an bank export from J-Edit
+            # is 4 when the actual size to read is 2 just like
+            # for the regular StartBankDumpResponse sent by the J-Station
+            print('Fixing data len %d for StartBankDumpResponse'%(data_len))
+            data_len = 2
 
         if self.is_valid():
-            self.total_length = self.read_next_bytes(2*data_len)
+            self.total_len = self.read_next_bytes(2*data_len)
 
 
     # Build to send
     def build_data_buffer(self):
-        print('Not implemented yet')
+        # TODO: verify if the actual len should be incorrectly set to 4
+        # for export (see above)
+        JStationSysexEvent.build_data_buffer(
+            self,
+            post_len_data=[self.total_len]
+        )
+
 
 
     def __str__(self):
-        return '%s, total length: %d'%(JStationSysExEvent.__str__(self),
-                                       self.total_length)
+        return '%s, total total_len: %d'%(JStationSysexEvent.__str__(self),
+                                       self.total_len)

@@ -17,9 +17,9 @@
 # You should have received a copy of the GNU General Public License along
 # with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from gstation_edit.messages.jstation_sysex_event import JStationSysExEvent
+from gstation_edit.messages.jstation_sysex_event import JStationSysexEvent
 
-class ToMessageResponse(JStationSysExEvent):
+class ToMessageResponse(JStationSysexEvent):
     PROCEDURE_ID = 0x7f
     VERSION = 1
 
@@ -38,16 +38,16 @@ class ToMessageResponse(JStationSysExEvent):
         11: 'Wrong Mode for OS Command'
     }
 
-    def __init__(self, channel=-1, seq_event=None,
+    def __init__(self, channel=-1, sysex_buffer=None,
                  req_procedure=-1, error_code=-1):
         self.req_procedure = req_procedure
         self.error_code = error_code
         self.error_msg = ''
 
-        JStationSysExEvent.__init__(self, channel, seq_event=seq_event)
+        JStationSysexEvent.__init__(self, channel, sysex_buffer=sysex_buffer)
 
     def parse_data_buffer(self):
-        JStationSysExEvent.parse_data_buffer(self)
+        JStationSysexEvent.parse_data_buffer(self)
         # no length in this message
         self.req_procedure = self.read_next_bytes(2)
         self.error_code = self.read_next_bytes(2)
@@ -63,6 +63,5 @@ class ToMessageResponse(JStationSysExEvent):
 
     def __str__(self):
         return '%s, request procedure: x%02x, message: %s (%d)'\
-                %(JStationSysExEvent.__str__(self),
+                %(JStationSysexEvent.__str__(self),
                   self.req_procedure, self.error_msg, self.error_code)
-

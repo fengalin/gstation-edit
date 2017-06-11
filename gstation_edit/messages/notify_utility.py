@@ -17,15 +17,15 @@
 # You should have received a copy of the GNU General Public License along
 # with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from gstation_edit.messages.jstation_sysex_event import JStationSysExEvent
+from gstation_edit.messages.jstation_sysex_event import JStationSysexEvent
 
-class NotifyUtility(JStationSysExEvent):
+class NotifyUtility(JStationSysexEvent):
     PROCEDURE_ID = 0x23
     VERSION = 1
 
-    def __init__(self, channel=-1, seq_event=None):
-        JStationSysExEvent.__init__(self, channel, seq_event)
+    def __init__(self, channel=-1, sysex_buffer=None):
+        JStationSysexEvent.__init__(self, channel, sysex_buffer)
 
 
-    # Build to send defined in JStationSysExEvent
+    # Build to send defined in JStationSysexEvent
 

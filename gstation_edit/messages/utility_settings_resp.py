@@ -17,13 +17,13 @@
 # You should have received a copy of the GNU General Public License along
 # with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from gstation_edit.messages.jstation_sysex_event import JStationSysExEvent
+from gstation_edit.messages.jstation_sysex_event import JStationSysexEvent
 
-class UtilitySettingsResponse(JStationSysExEvent):
+class UtilitySettingsResponse(JStationSysexEvent):
     PROCEDURE_ID = 0x12
     VERSION = 1
 
-    def __init__(self, channel=-1, seq_event=None,
+    def __init__(self, channel=-1, sysex_buffer=None,
                  stereo_mono=-1, dry_track=-1, digital_out_level=-1,
                  global_cabinet=-1, midi_merge=-1, midi_channel=-1):
         self.stereo_mono = stereo_mono
@@ -33,11 +33,11 @@ class UtilitySettingsResponse(JStationSysExEvent):
         self.midi_merge = midi_merge
         self.midi_channel = midi_channel
 
-        JStationSysExEvent.__init__(self, channel, seq_event=seq_event)
+        JStationSysexEvent.__init__(self, channel, sysex_buffer=sysex_buffer)
 
 
     def parse_data_buffer(self):
-        JStationSysExEvent.parse_data_buffer(self)
+        JStationSysexEvent.parse_data_buffer(self)
         data_len = self.read_next_bytes(4)
 
         if self.is_valid():
@@ -63,14 +63,14 @@ class UtilitySettingsResponse(JStationSysExEvent):
         data.append(self.midi_merge)
         data.append(self.midi_channel)
 
-        JStationSysExEvent.build_data_buffer(self, post_len_data=data)
+        JStationSysexEvent.build_data_buffer(self, post_len_data=data)
 
 
     def __str__( self ):
         return '%s, stereo mono: %d, dry track: %d, '\
                'digital out level: %d, global cabinet: %d, '\
                'midi merge: %d, midi channel: %d'\
-               %(JStationSysExEvent.__str__(self),
+               %(JStationSysexEvent.__str__(self),
                  self.stereo_mono, self.dry_track,
                  self.digital_out_level, self.global_cabinet,
                  self.midi_merge, self.midi_channel)

@@ -17,29 +17,29 @@
 # You should have received a copy of the GNU General Public License along
 # with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from gstation_edit.messages.jstation_sysex_event import JStationSysExEvent
+from gstation_edit.messages.jstation_sysex_event import JStationSysexEvent
 from gstation_edit.messages.program import Program
 
-class OneProgramRequest(JStationSysExEvent):
+class OneProgramRequest(JStationSysexEvent):
     PROCEDURE_ID = 0x01
     VERSION = 1
 
-    def __init__(self, channel=-1, seq_event=None, bank_nb=-1, prg_nb=-1):
+    def __init__(self, channel=-1, sysex_buffer=None, bank_nb=-1, prg_nb=-1):
         self.bank_nb = bank_nb
         self.prg_nb = prg_nb
 
-        JStationSysExEvent.__init__(self, channel, seq_event=seq_event)
+        JStationSysexEvent.__init__(self, channel, sysex_buffer=sysex_buffer)
 
 
     def parse_data_buffer(self):
-        JStationSysExEvent.parse_data_buffer(self)
+        JStationSysexEvent.parse_data_buffer(self)
         self.bank_nb = self.read_next_bytes(2)
         self.prg_nb = self.read_next_bytes(2)
 
 
     # Build to send
     def build_data_buffer(self):
-        JStationSysExEvent.build_data_buffer(
+        JStationSysexEvent.build_data_buffer(
             self,
             pre_len_data=[self.bank_nb, self.prg_nb]
         )
@@ -47,6 +47,5 @@ class OneProgramRequest(JStationSysExEvent):
 
     def __str__(self):
         return '%s, %s bank, prg nb: %d'\
-                %(JStationSysExEvent.__str__(self),
+                %(JStationSysexEvent.__str__(self),
                   Program.get_bank_name(self.bank_nb), self.prg_nb)
-

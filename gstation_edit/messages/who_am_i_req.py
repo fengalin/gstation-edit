@@ -17,24 +17,24 @@
 # You should have received a copy of the GNU General Public License along
 # with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from gstation_edit.messages.jstation_sysex_event import JStationSysExEvent
+from gstation_edit.messages.jstation_sysex_event import JStationSysexEvent
 
-class WhoAmIRequest(JStationSysExEvent):
+class WhoAmIRequest(JStationSysexEvent):
     PROCEDURE_ID = 0x40
     VERSION = 1
 
     RESP_ON_CHANNEL = 0
     RESP_ON_7f = 1
 
-    def __init__(self, channel=JStationSysExEvent.ALL_CHANNELS,
-                 seq_event=None):
+    def __init__(self, channel=JStationSysexEvent.ALL_CHANNELS,
+                 sysex_buffer=None):
         self.response_on = self.RESP_ON_7f
 
-        JStationSysExEvent.__init__(self, channel, seq_event=seq_event)
+        JStationSysexEvent.__init__(self, channel, sysex_buffer=sysex_buffer)
 
 
     def parse_data_buffer(self):
-        JStationSysExEvent.parse_data_buffer(self)
+        JStationSysexEvent.parse_data_buffer(self)
         self.response_on = self.read_next_bytes(2)
 
 
@@ -42,7 +42,7 @@ class WhoAmIRequest(JStationSysExEvent):
     def build_data_buffer(self):
         if self.RESP_ON_CHANNEL == self.response_on or \
                 self.RESP_ON_7f == self.response_on:
-            JStationSysExEvent.build_data_buffer(
+            JStationSysexEvent.build_data_buffer(
                 self, post_len_data=[self.response_on]
             )
         else:
@@ -53,5 +53,5 @@ class WhoAmIRequest(JStationSysExEvent):
 
     # Common
     def __str__(self):
-        return '%s, response on: %d'%(JStationSysExEvent.__str__(self),
+        return '%s, response on: %d'%(JStationSysexEvent.__str__(self),
                                       self.response_on)

@@ -17,11 +17,11 @@
 # You should have received a copy of the GNU General Public License along
 # with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from gstation_edit.messages.jstation_sysex_event import JStationSysExEvent
+from gstation_edit.messages.jstation_sysex_event import JStationSysexEvent
 from gstation_edit.messages.one_prg_resp import OneProgramResponse
 from gstation_edit.messages.program import Program
 
-class OneProgramDump(JStationSysExEvent):
+class OneProgramDump(JStationSysexEvent):
     PROCEDURE_ID = 0x70
     VERSION = 1
 
@@ -38,14 +38,14 @@ class OneProgramDump(JStationSysExEvent):
             self.bank = self.program.bank
             self.number = self.program.number
 
-        JStationSysExEvent.__init__(self, JStationSysExEvent.ALL_CHANNELS,
+        JStationSysexEvent.__init__(self, JStationSysexEvent.ALL_CHANNELS,
                                     sysex_buffer=sysex_buffer)
 
         if sysex_buffer != None and self.is_valid():
             # first part is a header (already parsed)
             # second part is a OneProgramResponse
             one_prg_resp = OneProgramResponse(
-                    JStationSysExEvent.ALL_CHANNELS,
+                    JStationSysexEvent.ALL_CHANNELS,
                     sysex_buffer=self.sysex_buffer
                 )
             if one_prg_resp.is_valid():
@@ -56,7 +56,7 @@ class OneProgramDump(JStationSysExEvent):
 
 
     def parse_data_buffer(self):
-        JStationSysExEvent.parse_data_buffer(self)
+        JStationSysexEvent.parse_data_buffer(self)
         if self.is_valid():
             self.bank = self.read_next_bytes(2)
             self.number = self.read_next_bytes(2)
@@ -73,23 +73,23 @@ class OneProgramDump(JStationSysExEvent):
         data_set.append(self.number)
         data_set.append(1) # unknown data
 
-        JStationSysExEvent.build_data_buffer(
+        JStationSysexEvent.build_data_buffer(
             self,
             pre_len_data=data_set,
             post_len_data=[]
         )
 
     def build_sysex_buffer(self):
-        JStationSysExEvent.build_sysex_buffer(self)
+        JStationSysexEvent.build_sysex_buffer(self)
 
         if self.is_valid():
-            one_prg_resp = OneProgramResponse(JStationSysExEvent.ALL_CHANNELS,
+            one_prg_resp = OneProgramResponse(JStationSysexEvent.ALL_CHANNELS,
                                               program=self.program)
             if one_prg_resp.is_valid():
-                self.sysex_buffer.append(one_prg_resp.sysex_buffer)
+                self.JStationSysexEvent.append(one_prg_resp.sysex_buffer)
             else:
                 self.has_error = True
 
 
     def __str__(self):
-        return '%s\n%s'%(JStationSysExEvent.__str__(self), self.program.__str__())
+        return '%s\n%s'%(JStationSysexEvent.__str__(self), self.program)

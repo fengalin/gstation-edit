@@ -17,22 +17,20 @@
 # You should have received a copy of the GNU General Public License along
 # with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from gstation_edit.messages.jstation_sysex_event import JStationSysExEvent
+from gstation_edit.messages.jstation_sysex_event import JStationSysexEvent
 from gstation_edit.messages.program import Program
 
-class OneProgramResponse(JStationSysExEvent):
+class OneProgramResponse(JStationSysexEvent):
     PROCEDURE_ID = 0x02
     VERSION = 1
 
-    def __init__(self, channel=-1, seq_event=None, sysex_buffer=None,
-                 program=None):
+    def __init__(self, channel=-1, sysex_buffer=None, program=None):
         self.program = program
 
-        JStationSysExEvent.__init__(self, channel, seq_event=seq_event,
-                                    sysex_buffer=sysex_buffer)
+        JStationSysexEvent.__init__(self, channel, sysex_buffer=sysex_buffer)
 
     def parse_data_buffer(self):
-        JStationSysExEvent.parse_data_buffer(self)
+        JStationSysexEvent.parse_data_buffer(self)
 
         bank_nb = self.read_next_bytes(2)
         prg_nb = self.read_next_bytes(2)
@@ -48,7 +46,7 @@ class OneProgramResponse(JStationSysExEvent):
 
     # Build to send
     def build_data_buffer(self):
-        JStationSysExEvent.build_data_buffer(
+        JStationSysexEvent.build_data_buffer(
             self,
             pre_len_data=[self.program.bank, self.program.number],
             post_len_data=self.program.get_data_buffer()
@@ -56,5 +54,5 @@ class OneProgramResponse(JStationSysExEvent):
 
 
     def __str__(self):
-        return '%s, %s'%(JStationSysExEvent.__str__(self), self.program)
+        return '%s, %s'%(JStationSysexEvent.__str__(self), self.program)
 

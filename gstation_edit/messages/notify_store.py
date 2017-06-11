@@ -17,31 +17,31 @@
 # You should have received a copy of the GNU General Public License along
 # with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from gstation_edit.messages.jstation_sysex_event import JStationSysExEvent
+from gstation_edit.messages.jstation_sysex_event import JStationSysexEvent
 
-class NotifyStore(JStationSysExEvent):
+class NotifyStore(JStationSysexEvent):
     PROCEDURE_ID = 0x22
     VERSION = 1
 
-    def __init__(self, channel=-1, seq_event=None, prg_nb=-1):
+    def __init__(self, channel=-1, sysex_buffer=None, prg_nb=-1):
         self.prg_nb = prg_nb
 
-        JStationSysExEvent.__init__(self, channel, seq_event=seq_event)
+        JStationSysexEvent.__init__(self, channel, sysex_buffer=sysex_buffer)
 
 
     def parse_data_buffer(self):
-        JStationSysExEvent.parse_data_buffer(self)
+        JStationSysexEvent.parse_data_buffer(self)
         self.prg_nb = self.read_next_bytes(2)
 
 
     # Build to send
     def build_data_buffer(self):
-        JStationSysExEvent.build_data_buffer(
+        JStationSysexEvent.build_data_buffer(
             self,
             pre_len_data=[self.prg_nb]
         )
 
 
     def __str__(self):
-        return '%s, prg nb: %d'%(JStationSysExEvent.__str__(self), self.prg_nb)
+        return '%s, prg nb: %d'%(JStationSysexEvent.__str__(self), self.prg_nb)
 

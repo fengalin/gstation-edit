@@ -1,5 +1,5 @@
 """
- gstation-edit JStationSysExEvent definition
+ gstation-edit JStationSysexEvent definition
 """
 # this file is part of gstation-edit
 # Copyright (C) F LAIGNEL 2009-2017 <fengalin@free.fr>
@@ -18,10 +18,11 @@
 # with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from gstation_edit.midi.event import MidiEvent
+from gstation_edit.midi.sysex_buffer import SysexBuffer
 from gstation_edit.midi.sysex_event import SysexMidiEvent
 from gstation_edit.midi.event_factory import MidiEventFactory
 
-class JStationSysExEvent(SysexMidiEvent):
+class JStationSysexEvent(SysexMidiEvent):
     MANUFACTURER_ID = [0, 0, 0x10]
     PRODUCT_ID = 0x54
 
@@ -38,39 +39,48 @@ class JStationSysExEvent(SysexMidiEvent):
 
     @classmethod
     def register_event_type_builder(class_):
-        MidiEventFactory.register_event_type_builder(JStationSysExEvent)
+        MidiEventFactory.register_event_type_builder(JStationSysexEvent)
 
     @classmethod
     def register(class_, callback=None):
-        JStationSysExEvent.event_classes[class_.PROCEDURE_ID] = class_
+        JStationSysexEvent.event_classes[class_.PROCEDURE_ID] = class_
         if callback:
             MidiEvent.callbacks[class_.__name__] = callback
+
+    @classmethod
+    def build_from_sysex_buffer(class_, sysex_buffer):
+        result = None
+        next_proc_id_pos = sysex_buffer.data_index \
+                + JStationSysexEvent.PROCEDURE_ID_POS
+        if next_proc_id_pos < sysex_buffer.data_len:
+            proc_id = sysex_buffer.sysex_data[next_proc_id_pos]
+
+            event_class = JStationSysexEvent.event_classes.get(proc_id)
+            if event_class:
+                result = event_class(sysex_buffer=sysex_buffer)
+            if result == None:
+                result = JStationSysexEvent(sysex_buffer=sysex_buffer)
+                #print('Built generic sysex event for proc id: x%02x'%(proc_id))
+        else:
+            print('Sysex buffer too short to read procecdure id: %s'\
+                  %(sysex_buffer))
+        return result
 
     @classmethod
     def build_from_seq_event(class_, seq_event):
         result = None
         # assert: seq_event.type == SysExMidiEvent.EVENT_TYPE
-        sys_ex_data = seq_event.get_data().get(SysexMidiEvent.SYSEX_DATA_KEY)
-        if sys_ex_data:
-            if JStationSysExEvent.PROCEDURE_ID_POS < len(sys_ex_data):
-                proc_id = sys_ex_data[JStationSysExEvent.PROCEDURE_ID_POS]
-
-                event_class = JStationSysExEvent.event_classes.get(proc_id)
-                if event_class:
-                    result = event_class(seq_event=seq_event)
-                if result == None:
-                    result = JStationSysExEvent(seq_event=seq_event)
-            else:
-                print('Sysex data too short to read procecdure id: %s'\
-                      %(sys_ex_data))
+        sysex_data = seq_event.get_data().get(SysexMidiEvent.SYSEX_DATA_KEY)
+        if sysex_data:
+            result = JStationSysexEvent.build_from_sysex_buffer(
+                SysexBuffer(sysex_data))
         else:
             print('Couldn\'t find sysex data key in seq event: %s'%(seq_event))
-
         return result
 
 
     # constructor
-    def __init__(self, channel=-1, seq_event=None, sysex_buffer=None):
+    def __init__(self, channel=-1, sysex_buffer=None):
         self.manufacturer_id = []
         self.channel = channel
         self.product_id = -1
@@ -79,8 +89,7 @@ class JStationSysExEvent(SysexMidiEvent):
         self.procedure_id = -1
         self.version = -1
 
-        SysexMidiEvent.__init__(self, seq_event=seq_event,
-                                sysex_buffer=sysex_buffer)
+        SysexMidiEvent.__init__(self, sysex_buffer=sysex_buffer)
 
 
     def parse_data_buffer(self):
@@ -93,10 +102,10 @@ class JStationSysExEvent(SysexMidiEvent):
             if self.is_valid() and self.is_right_product:
                 self.procedure_id = self.sysex_buffer.pop_1_byte()
                 if self.procedure_id == self.PROCEDURE_ID or \
-                                            type(self) is JStationSysExEvent:
+                                            type(self) is JStationSysexEvent:
                     self.version = self.read_next_bytes(2)
 
-                    if type(self) is JStationSysExEvent:
+                    if type(self) is JStationSysexEvent:
                         # couldn't instantiate a specific class
                         # this is used to trace events which are not implemented yet
                         self.has_error = True
@@ -168,7 +177,7 @@ class JStationSysExEvent(SysexMidiEvent):
     def __str__(self):
         valid = ''
         event_type = 'Uknonw sysex'
-        if not type(self) is JStationSysExEvent:
+        if not type(self) is JStationSysexEvent:
             event_type = self.__class__.__name__
             if self.is_right_product and not self.is_valid():
                 valid = ' - not valid'

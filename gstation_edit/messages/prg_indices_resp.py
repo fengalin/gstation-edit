@@ -17,20 +17,20 @@
 # You should have received a copy of the GNU General Public License along
 # with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from gstation_edit.messages.jstation_sysex_event import JStationSysExEvent
+from gstation_edit.messages.jstation_sysex_event import JStationSysexEvent
 
-class PRGIndicesResponse(JStationSysExEvent):
+class PRGIndicesResponse(JStationSysexEvent):
     PROCEDURE_ID = 0x14
     VERSION = 1
 
-    def __init__(self, channel=-1, seq_event=None):
+    def __init__(self, channel=-1, sysex_buffer=None):
         self.prg_indices = list()
 
-        JStationSysExEvent.__init__(self, channel, seq_event=seq_event)
+        JStationSysexEvent.__init__(self, channel, sysex_buffer=sysex_buffer)
 
 
     def parse_data_buffer(self):
-        JStationSysExEvent.parse_data_buffer(self)
+        JStationSysexEvent.parse_data_buffer(self)
         data_length = self.read_next_bytes(4)
         if self.is_valid:
             for index in range(0, data_length):
@@ -43,6 +43,5 @@ class PRGIndicesResponse(JStationSysExEvent):
 
 
     def __str__(self):
-        return "%s, prg indices: %s"%(JStationSysExEvent.__str__(self),
+        return "%s, prg indices: %s"%(JStationSysexEvent.__str__(self),
                                       str(self.prg_indices))
-
