@@ -74,7 +74,7 @@ class CCMidiEvent(MidiEvent):
             if self.value >= 0:
                 event_data[self.VALUE_KEY] = self.value
             self.seq_event.set_data(event_data)
-            self.is_valid = True
+
 
     def __str__(self):
         param = ''
