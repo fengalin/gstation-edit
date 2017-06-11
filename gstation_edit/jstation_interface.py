@@ -256,10 +256,11 @@ class JStationInterface:
             print('reload_program: not connected')
 
 
-    def store_program(self, program):
+    def store_program(self, program, is_current=True):
         if self.is_connected:
-            self.send_event(ReceiveProgramUpdate(channel=self.sysex_channel,
-                                                 program=program))
+            if is_current:
+                self.send_event(ReceiveProgramUpdate(channel=self.sysex_channel,
+                                                     program=program))
             self.send_event(OneProgramResponse(channel=self.sysex_channel,
                                                program=program))
         else:

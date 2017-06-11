@@ -40,6 +40,7 @@ from gstation_edit.jstation_interface import JStationInterface
 
 from gstation_edit.midi.sysex_buffer import SysexBuffer
 
+from gstation_edit.messages.jstation_sysex_event import JStationSysexEvent
 from gstation_edit.messages.bank_dump import BankDump
 from gstation_edit.messages.one_prg_dump import OneProgramDump
 
@@ -169,7 +170,7 @@ class MainWindow:
 
         self.import_bank_btn = self.gtk_builder.get_object('import-bank-btn')
         self.import_bank_btn.set_sensitive(False)
-        #self.import_bank_btn.connect('clicked', self.on_store_clicked)
+        self.import_bank_btn.connect('clicked', self.import_prg_or_bank)
 
     def init_bank_list_widget(self):
         self.bank_list_widget = self.gtk_builder.get_object('bank-list-trv')
@@ -233,9 +234,8 @@ class MainWindow:
             self.context_menu_widget.insert(self.menu_item_export, 2)
             self.menu_item_export.set_sensitive(False)
 
-            self.menu_item_import = Gtk.MenuItem('Import program...')
-            self.menu_item_import.connect('activate',
-                                          self.context_menu_import_prg)
+            self.menu_item_import = Gtk.MenuItem('Import...')
+            self.menu_item_import.connect('activate', self.import_prg_or_bank)
             self.context_menu_widget.insert(self.menu_item_import, 3)
             self.menu_item_import.set_sensitive(False)
 
@@ -313,6 +313,7 @@ class MainWindow:
             self.current_program = program
             self.init_parameters()
             self.export_bank_btn.set_sensitive(True)
+            self.import_bank_btn.set_sensitive(True)
             self.menu_item_export.set_sensitive(True)
             self.menu_item_import.set_sensitive(True)
         else:
@@ -379,20 +380,39 @@ class MainWindow:
 
 
     def undo_changes(self):
+        # handle current program as J-Station must also be handle in this case
         self.current_program.restore_original()
         self.init_parameters()
         self.set_current_name(self.current_program.name)
         self.jstation_interface.reload_program()
+
+        # then, undo changes to other programs, if necessary
+        for prg_nb in self.programs:
+            prg = self.programs[prg_nb]
+            if prg.has_changed:
+                prg.restore_original()
+                tree_iter = self.bank_list_model.get_iter_from_string(str(prg_nb))
+                self.bank_list_model.set(tree_iter, 2, '')
+                self.bank_list_model.set(tree_iter, 3, prg.name)
+
 
     def on_undo_clicked(self, widget):
         if self.current_program:
             self.undo_changes()
 
     def on_store_clicked(self, widget):
-        if self.current_program:
-            self.current_program.apply_changes()
-            self.jstation_interface.store_program(self.current_program)
-            self.set_program_has_changed(False)
+        for prg_nb in self.programs:
+            prg = self.programs[prg_nb]
+            if prg.has_changed:
+                prg.apply_changes()
+                is_current = False
+                if prg_nb == self.current_program.number:
+                    is_current = True
+                self.jstation_interface.store_program(prg, is_current=is_current)
+                tree_iter = self.bank_list_model.get_iter_from_string(str(prg_nb))
+                self.bank_list_model.set(tree_iter, 2, '')
+                self.bank_list_model.set(tree_iter, 3, prg.name)
+        self.set_program_has_changed(False)
 
 
     def receive_settings(self, settings):
@@ -466,7 +486,8 @@ class MainWindow:
 
         return (result, file_chooser)
 
-    def context_menu_import_prg(self, widget, *args):
+
+    def import_prg_or_bank(self, widget, *args):
         result, file_chooser = self.run_file_chooser(Gtk.FileChooserAction.OPEN)
         if result == Gtk.ResponseType.OK:
             content = None
@@ -479,16 +500,39 @@ class MainWindow:
                 byte_content = struct.unpack('B'*len(content), content)
                 for value in byte_content:
                     sysex_data.append(value)
-                self.import_prg_buffer(sysex_data)
+                self.import_buffer(sysex_data)
         # else: canceled
         file_chooser.destroy()
 
-    def import_prg_buffer(self, sysex_data):
+    def import_buffer(self, sysex_data):
         # TODO: use a factory to very that the content is one program
-        prg_dump = OneProgramDump(sysex_buffer=SysexBuffer(sysex_data),
-                                  isolated=True)
-        if prg_dump.is_valid and self.current_program:
-            self.current_program.change_to(prg_dump.program)
+        sysex_event = JStationSysexEvent.build_from_sysex_buffer(
+            sysex_buffer=SysexBuffer(sysex_data))
+        if sysex_event and sysex_event.is_valid():
+
+            if type(sysex_event) is OneProgramDump:
+                self.import_current_prg(sysex_event.program)
+
+            elif type(sysex_event) is BankDump:
+                for program in sysex_event.programs:
+                    if program.number == self.current_program.number:
+                        self.import_current_prg(program)
+                    else:
+                        self.programs[program.number].change_to(program)
+                        if self.programs[program.number].has_changed:
+                            tree_iter = self.bank_list_model.get_iter_from_string(
+                                str(program.number))
+                            self.bank_list_model.set(tree_iter, 2, '*')
+                            self.bank_list_model.set(tree_iter, 3, program.name)
+            else:
+                print('Attempting to import %s'%(sysex_event))
+        else:
+            # TODO: feedback to user - use notification?
+            print('Couldn\'t import program from buffer')
+
+    def import_current_prg(self, new_prg):
+        if self.current_program:
+            self.current_program.change_to(new_prg)
             if self.current_program.has_changed:
                 self.init_parameters()
                 self.set_current_name(self.current_program.name)
@@ -496,9 +540,7 @@ class MainWindow:
                 self.jstation_interface.send_program_update(
                     self.current_program)
                 self.set_program_has_changed(True)
-        else:
-            # TODO: feedback to user - use notification?
-            print('Couldn\'t import program from buffer')
+
 
 
     def on_export_bank_clicked(self, widget):

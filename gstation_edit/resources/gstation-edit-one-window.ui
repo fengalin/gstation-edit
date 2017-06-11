@@ -332,7 +332,7 @@
         <property name="visible">True</property>
         <property name="can_focus">True</property>
         <property name="receives_default">True</property>
-        <property name="tooltip_markup" translatable="yes">Import bank</property>
+        <property name="tooltip_markup" translatable="yes">Import...</property>
         <child>
           <object class="GtkImage">
             <property name="visible">True</property>
@@ -347,7 +347,7 @@
         <property name="visible">True</property>
         <property name="can_focus">True</property>
         <property name="receives_default">True</property>
-        <property name="tooltip_markup" translatable="yes">Export bank</property>
+        <property name="tooltip_markup" translatable="yes">Export bank...</property>
         <child>
           <object class="GtkImage">
             <property name="visible">True</property>
@@ -365,7 +365,7 @@
         <property name="visible">True</property>
         <property name="can_focus">True</property>
         <property name="receives_default">True</property>
-        <property name="tooltip_markup" translatable="yes">MIDI connection</property>
+        <property name="tooltip_markup" translatable="yes">MIDI connection...</property>
         <child>
           <object class="GtkImage">
             <property name="visible">True</property>
@@ -384,7 +384,7 @@
         <property name="visible">True</property>
         <property name="can_focus">True</property>
         <property name="receives_default">True</property>
-        <property name="tooltip_markup" translatable="yes">Utilities settings</property>
+        <property name="tooltip_markup" translatable="yes">Utilities settings...</property>
         <child>
           <object class="GtkImage">
             <property name="visible">True</property>
