@@ -24,13 +24,12 @@ class OneProgramRequest(JStationSysExEvent):
     PROCEDURE_ID = 0x01
     VERSION = 1
 
-    def __init__(self, channel=-1, seq_event=None, sysex_buffer=None,
-                 bank_nb=-1, prg_nb=-1):
+    def __init__(self, channel=-1, seq_event=None, bank_nb=-1, prg_nb=-1):
         self.bank_nb = bank_nb
         self.prg_nb = prg_nb
 
-        JStationSysExEvent.__init__(self, channel, seq_event=seq_event,
-                                    sysex_buffer=sysex_buffer)
+        JStationSysExEvent.__init__(self, channel, seq_event=seq_event)
+
 
     def parse_data_buffer(self):
         JStationSysExEvent.parse_data_buffer(self)
@@ -46,7 +45,7 @@ class OneProgramRequest(JStationSysExEvent):
         )
 
 
-    def __str__( self ):
+    def __str__(self):
         return '%s, %s bank, prg nb: %d'\
                 %(JStationSysExEvent.__str__(self),
                   Program.get_bank_name(self.bank_nb), self.prg_nb)

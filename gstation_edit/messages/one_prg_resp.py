@@ -37,10 +37,13 @@ class OneProgramResponse(JStationSysExEvent):
         bank_nb = self.read_next_bytes(2)
         prg_nb = self.read_next_bytes(2)
 
-        self.read_data_len()
-        if self.is_valid:
-            prg_data = self.data_buffer[self.data_index:]
-            self.program = Program(bank_nb, prg_nb, data_buffer=prg_data)
+        data_len = self.read_next_bytes(4)
+        if self.is_valid():
+            self.program = Program(bank_nb, prg_nb,
+                                   sysex_buffer=self.sysex_buffer,
+                                   data_len=data_len)
+            if not self.program.is_valid:
+                self.has_error = True
 
 
     # Build to send

@@ -38,14 +38,13 @@ class ToMessageResponse(JStationSysExEvent):
         11: 'Wrong Mode for OS Command'
     }
 
-    def __init__(self, channel=-1, seq_event=None, sysex_buffer=None,
+    def __init__(self, channel=-1, seq_event=None,
                  req_procedure=-1, error_code=-1):
         self.req_procedure = req_procedure
         self.error_code = error_code
         self.error_msg = ''
 
-        JStationSysExEvent.__init__(self, channel, seq_event=seq_event,
-                                    sysex_buffer=sysex_buffer)
+        JStationSysExEvent.__init__(self, channel, seq_event=seq_event)
 
     def parse_data_buffer(self):
         JStationSysExEvent.parse_data_buffer(self)

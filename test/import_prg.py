@@ -1,7 +1,6 @@
 """
- gstation-edit Test suite launcher definition
+ gstation-edit ImportPrg test
 """
-
 # this file is part of gstation-edit
 # Copyright (C) F LAIGNEL 2009-2017 <fengalin@free.fr>
 #
@@ -18,17 +17,26 @@
 # You should have received a copy of the GNU General Public License along
 # with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from test import split_bytes
-split_bytes.test()
+import struct
 
-from test import event_factory
-event_factory.test()
+from gstation_edit.midi.sysex_buffer import SysexBuffer
 
-from test import who_am_i_req
-who_am_i_req.test()
+from gstation_edit.messages.one_prg_dump import OneProgramDump
 
-from test import jstation_interface
-jstation_interface.test()
+def test():
+    print('\n==== ImportPrg test')
 
-from test import import_prg
-import_prg.test()
+    content = None
+    # TODO: catch exception and notify to the user
+    with open('test/data/Thick Stack Solo.syx', 'rb') as sysex_file:
+        content = sysex_file.read()
+
+        sysex_data = list()
+        # TODO; use bytes
+        byte_content = struct.unpack('B'*len(content), content)
+        for value in byte_content:
+            sysex_data.append(value)
+
+        one_prg_dump = OneProgramDump(sysex_buffer=SysexBuffer(sysex_data))
+        print('one_prg_dump: %s'%one_prg_dump)
+

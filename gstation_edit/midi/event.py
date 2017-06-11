@@ -35,12 +35,15 @@ class MidiEvent(object):
 
 
     def __init__(self, event_type=-1, seq_event=None):
-        self.is_valid = False
+        self.has_error = False
         self.seq_event = seq_event
         if event_type == -1:
             self.event_type = seq_event.type
         else:
             self.event_type = event_type
+
+    def is_valid(self):
+        return not self.has_error
 
     def fill_seq_event(self):
         self.seq_event = alsaseq.SeqEvent(self.event_type)

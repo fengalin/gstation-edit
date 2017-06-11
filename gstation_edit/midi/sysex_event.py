@@ -1,5 +1,5 @@
 """
- gstation-edit SysExMidiEvent definition
+ gstation-edit SysexMidiEvent definition
 """
 # this file is part of gstation-edit
 # Copyright (C) F LAIGNEL 2009-2017 <fengalin@free.fr>
@@ -20,8 +20,9 @@
 from pyalsa import alsaseq
 
 from gstation_edit.midi.event import MidiEvent
+from gstation_edit.midi.sysex_buffer import SysexBuffer
 
-class SysExMidiEvent(MidiEvent):
+class SysexMidiEvent(MidiEvent):
     EVENT_TYPE = alsaseq.SEQ_EVENT_SYSEX
     PROCEDURE_ID = 0x00
     PROCEDURE_ID_POS = 0x06
@@ -34,72 +35,99 @@ class SysExMidiEvent(MidiEvent):
         MidiEvent.__init__(self, self.EVENT_TYPE, seq_event)
 
         self.sysex_buffer = sysex_buffer
-        self.data_buffer = None
-        self.data_index = -1
 
         if seq_event:
-            sysex_content = \
-                seq_event.get_data().get(SysExMidiEvent.SYSEX_DATA_KEY)
-            if sysex_content:
-                self.sysex_buffer = sysex_content
+            sysex_data = \
+                seq_event.get_data().get(SysexMidiEvent.SYSEX_DATA_KEY)
+            if sysex_data:
+                self.sysex_buffer = SysexBuffer(sysex_data)
             else:
-                self.sysex_buffer = None
-                print('Not a sysex event: %d'\
-                      %(seq_event.get_data().get(SysExMidiEvent.SYSEX_DATA_KEY)))
+                self.has_error = True
+                print('No data in sysex event')
 
-        if self.sysex_buffer:
-            self.parse_sysex_buffer()
+        if seq_event or sysex_buffer:
+            if self.is_valid():
+                self.parse_sysex_buffer()
+            else:
+                self.has_error = True
+                print('Invalid sysex buffer => didn\'t parse it')
         else:
             self.fill_seq_event()
 
 
+    def is_valid(self):
+        result = MidiEvent.is_valid(self)
+        if self.sysex_buffer:
+            result |= self.sysex_buffer.is_valid
+        return result
+
+    def get_check_sum(self):
+        check_sum = 0
+        data_to_check = self.sysex_buffer.get_from_marker()
+        for value in data_to_check:
+            check_sum = check_sum ^ value
+        return check_sum
+
+
+
     def parse_sysex_buffer(self):
         # SysEx data expected structure: 0xf0 ... data ... checksum 0xf7
-        len_sysex = len(self.sysex_buffer)
-        if len_sysex > 3:
-            if self.sysex_buffer[0] == self.SYSEX_DATA_START \
-                    and self.sysex_buffer[len_sysex-1] == self.SYSEX_DATA_END:
+        if self.sysex_buffer.pop_1_byte() == self.SYSEX_DATA_START:
+            self.sysex_buffer.set_marker()
 
-                self.data_buffer = self.sysex_buffer[1: len_sysex-2]
-                self.data_index = 0
+            self.parse_data_buffer()
 
-                check_sum = self.sysex_buffer[len_sysex-2]
-                self.is_valid = (check_sum == self.get_check_sum())
-                if self.is_valid:
-                    self.parse_data_buffer()
+            if self.is_valid():
+                check_sum = self.get_check_sum()
+                expected_check_sum = self.sysex_buffer.pop_1_byte()
+                if check_sum == expected_check_sum:
+                    if self.sysex_buffer.pop_1_byte() != self.SYSEX_DATA_END:
+                        self.has_error = True
+                        print('Expecting End tag, found x%02x sysex buffer: %s'%(
+                                  self.sysex_buffer[self.data_index],
+                                  self.sysex_buffer.get_readable_from_marker()
+                            )
+                        )
                 else:
-                    print('Incorrect checksum for sysex buffer: %s'
-                        %(['x%02x'%(val & 0xff) for val in self.sysex_buffer])
+                    self.has_error = True
+                    print('Incorrect checksum got: x%02x, expected, x%02x - %s'%(
+                        check_sum, expected_check_sum,
+                        self.sysex_buffer.get_readable_from_marker())
                     )
+                    print('full buffer: %s'%(self.sysex_buffer))
+
 
     def parse_data_buffer(self):
         # To be implemented in heirs
-        self.is_valid = False
+        pass
+
+    def read_next_bytes(self, nb_bytes):
+        result = self.sysex_buffer.pop_split_bytes(nb_bytes)
+        if result == None:
+            self.has_error = True
+        return result
 
 
     # Build to send
 
     def build_data_buffer(self):
         # To be implemented in heirs
-        self.is_valid = False
+        pass
 
     def build_sysex_buffer(self):
+        self.sysex_buffer = SysexBuffer()
+        self.sysex_buffer.push_1_byte(self.SYSEX_DATA_START)
+        self.sysex_buffer.set_marker()
+
         self.build_data_buffer()
-        if self.is_valid:
-            self.sysex_buffer = list()
-            self.sysex_buffer.append(self.SYSEX_DATA_START)
-            self.sysex_buffer += self.data_buffer
-            self.sysex_buffer.append(self.get_check_sum())
-            self.sysex_buffer.append(self.SYSEX_DATA_END)
+
+        if self.is_valid():
+            check_sum = self.get_check_sum()
+            self.sysex_buffer.push_raw_bytes([check_sum, self.SYSEX_DATA_END])
+
 
     def fill_seq_event(self):
         self.build_sysex_buffer()
-        if self.is_valid:
+        if self.is_valid():
             MidiEvent.fill_seq_event(self)
-            self.seq_event.set_data({self.SYSEX_DATA_KEY: self.sysex_buffer})
-
-    def get_check_sum(self):
-        check_sum = 0
-        for data in self.data_buffer:
-            check_sum = check_sum ^ data
-        return check_sum
+            self.seq_event.set_data({self.SYSEX_DATA_KEY: self.sysex_buffer.sysex_data})

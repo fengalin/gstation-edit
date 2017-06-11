@@ -25,8 +25,6 @@ class OneProgramDump(JStationSysExEvent):
     PROCEDURE_ID = 0x70
     VERSION = 1
 
-    HEADER_LEN = 21
-
     def __init__(self, sysex_buffer=None, program=None, isolated=False):
         self.bank = -1
         self.number = -1
@@ -40,52 +38,33 @@ class OneProgramDump(JStationSysExEvent):
             self.bank = self.program.bank
             self.number = self.program.number
 
-        self.sysex_buffer = None
-        self.rem_sysex_buffer = None
-        if sysex_buffer:
-            # buffer should consist in 2 messages
-            # first part is a header of 21 bytes
-            # second part is a OneProgramResponse
-            if len(sysex_buffer) > self.HEADER_LEN:
-                self.sysex_buffer = sysex_buffer[:self.HEADER_LEN]
-                self.rem_sysex_buffer = sysex_buffer[self.HEADER_LEN:]
-
         JStationSysExEvent.__init__(self, JStationSysExEvent.ALL_CHANNELS,
-                                    sysex_buffer=self.sysex_buffer)
+                                    sysex_buffer=sysex_buffer)
+
+        if sysex_buffer != None and self.is_valid():
+            # first part is a header (already parsed)
+            # second part is a OneProgramResponse
+            one_prg_resp = OneProgramResponse(
+                    JStationSysExEvent.ALL_CHANNELS,
+                    sysex_buffer=self.sysex_buffer
+                )
+            if one_prg_resp.is_valid():
+                self.program = one_prg_resp.program
+            else:
+                self.has_error = True
+                print('Invalid nested event: %s'%(one_prg_resp))
+
 
     def parse_data_buffer(self):
         JStationSysExEvent.parse_data_buffer(self)
-        if self.is_valid:
+        if self.is_valid():
             self.bank = self.read_next_bytes(2)
             self.number = self.read_next_bytes(2)
             self.unknown_data = self.read_next_bytes(2)
             self.null_len = self.read_next_bytes(4)
-            if self.is_valid:
-                self.isolated = (self.number == 0)
 
-                # expecting a OneProgramResponse in the rest of the buffer
-                if len(self.rem_sysex_buffer) > \
-                        JStationSysExEvent.PROCEDURE_ID_POS:
-                    proc_id = self.rem_sysex_buffer[
-                            JStationSysExEvent.PROCEDURE_ID_POS
-                        ]
-                    if proc_id == OneProgramResponse.PROCEDURE_ID:
-                        one_prg_resp = OneProgramResponse(
-                                JStationSysExEvent.ALL_CHANNELS,
-                                sysex_buffer=self.rem_sysex_buffer
-                            )
-                        if one_prg_resp.is_valid:
-                            self.program = one_prg_resp.program
-                        else:
-                            self.is_valid = False
-                            print('Invalid nested event: %s'%(one_prg_resp))
-                    else:
-                        self.is_valid = False
-                        print('Expected proc_id: x%02x, found: x%02x'\
-                              %(OneProgramResponse.PROCEDURE_ID, proc_id))
-                else:
-                    self.is_valid = False
-                    print('Too short buffer to read nested event proc_id')
+            self.isolated = (self.number == 0)
+
 
     # Build to send
     def build_data_buffer(self):
@@ -102,20 +81,15 @@ class OneProgramDump(JStationSysExEvent):
 
     def build_sysex_buffer(self):
         JStationSysExEvent.build_sysex_buffer(self)
-        if self.is_valid:
+
+        if self.is_valid():
             one_prg_resp = OneProgramResponse(JStationSysExEvent.ALL_CHANNELS,
                                               program=self.program)
-            if one_prg_resp.is_valid:
-                self.sysex_buffer += one_prg_resp.sysex_buffer
+            if one_prg_resp.is_valid():
+                self.sysex_buffer.append(one_prg_resp.sysex_buffer)
+            else:
+                self.has_error = True
 
 
     def __str__(self):
-        suffix = ''
-        if self.sysex_buffer:
-            suffix = '\n%s'%(['x%02x'%(val & 0xff) for val in self.sysex_buffer])
-
-        return '%s, %s%s'%(
-                JStationSysExEvent.__str__(self),
-                self.program.__str__(),
-                suffix
-            )
+        return '%s\n%s'%(JStationSysExEvent.__str__(self), self.program.__str__())

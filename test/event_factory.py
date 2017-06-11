@@ -38,7 +38,7 @@ def test():
             0xf0, 0, 0, 0x10, 0x7f, 0x54, 0x41,
             0, 1, 0, 3, 0, 0, 0, 0, 0, 0, 0, 1, 121, 0xf7
         ]
-    print(sysex_data)
+    print('input sysex data: %s'%['x%02x'%(val & 0xff) for val in sysex_data])
 
     sysex_seq_event = alsaseq.SeqEvent(alsaseq.SEQ_EVENT_SYSEX)
     sysex_evt_data = dict()
@@ -48,7 +48,7 @@ def test():
     factory = MidiEventFactory()
     sysex_event = factory.build_from_seq_event(sysex_seq_event)
     if sysex_event:
-        print(sysex_event.is_valid)
+        print(sysex_event.is_valid())
         print(str(sysex_event))
     else:
         print('sysex not recognised')
@@ -62,7 +62,7 @@ def test():
 
     cc_event = factory.build_from_seq_event(cc_seq_event)
     if cc_event:
-        print(cc_event.is_valid)
+        print(cc_event.is_valid())
         print(str(cc_event))
     else:
         print('cc not recognised')

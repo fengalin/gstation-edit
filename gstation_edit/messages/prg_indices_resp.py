@@ -23,16 +23,17 @@ class PRGIndicesResponse(JStationSysExEvent):
     PROCEDURE_ID = 0x14
     VERSION = 1
 
-    def __init__(self, channel=-1, seq_event=None, sysex_buffer=None):
+    def __init__(self, channel=-1, seq_event=None):
         self.prg_indices = list()
 
-        JStationSysExEvent.__init__(self, channel, seq_event=seq_event,
-                                    sysex_buffer=sysex_buffer)
+        JStationSysExEvent.__init__(self, channel, seq_event=seq_event)
+
 
     def parse_data_buffer(self):
-        JStationSysExEvent.parse_data_buffer(self, read_len=True)
+        JStationSysExEvent.parse_data_buffer(self)
+        data_length = self.read_next_bytes(4)
         if self.is_valid:
-            for index in range(0, self.data_length):
+            for index in range(0, data_length):
                 self.prg_indices.append(self.read_next_bytes(2))
 
 

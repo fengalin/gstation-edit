@@ -24,23 +24,27 @@ class ReceiveProgramUpdate(JStationSysExEvent):
     PROCEDURE_ID = 0x61
     VERSION = 2
 
-    def __init__(self, channel=-1, seq_event=None, sysex_buffer=None,
-                 program=None):
+    def __init__(self, channel=-1, seq_event=None, program=None):
         self.program = program
 
-        JStationSysExEvent.__init__(self, channel, seq_event=seq_event,
-                                    sysex_buffer=sysex_buffer)
+        JStationSysExEvent.__init__(self, channel, seq_event=seq_event)
+
 
     def parse_data_buffer(self):
-        JStationSysExEvent.parse_data_buffer(self, read_len=True)
-        if self.is_valid:
+        JStationSysExEvent.parse_data_buffer(self)
+        data_len = self.read_next_bytes(4)
+
+        if self.is_valid():
             has_changed = False
             if self.version == 2:
                 has_changed = self.read_next_bytes(2)
+                data_len -= 1
 
-            prg_buffer = self.data_buffer[self.data_index:]
-            self.program = Program(data_buffer=prg_buffer,
+            self.program = Program(sysex_buffer=self.sysex_buffer,
+                                   data_len=data_len,
                                    has_changed=has_changed)
+            if not self.program.is_valid:
+                self.has_error = True
 
 
     # Build to send

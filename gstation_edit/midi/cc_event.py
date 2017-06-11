@@ -59,9 +59,7 @@ class CCMidiEvent(MidiEvent):
                 self.value = value
 
             if self.param == -1 and self.channel == -1 and self.value == -1:
-                self.is_valid = False
-            else:
-                self.is_valid = True
+                self.has_error = True
         else:
             self.fill_seq_event()
 

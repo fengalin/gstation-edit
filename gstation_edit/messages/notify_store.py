@@ -23,12 +23,10 @@ class NotifyStore(JStationSysExEvent):
     PROCEDURE_ID = 0x22
     VERSION = 1
 
-    def __init__(self, channel=-1, seq_event=None, sysex_buffer=None,
-                 prg_nb=-1):
+    def __init__(self, channel=-1, seq_event=None, prg_nb=-1):
         self.prg_nb = prg_nb
 
-        JStationSysExEvent.__init__(self, channel, seq_event=seq_event,
-                                    sysex_buffer=sysex_buffer)
+        JStationSysExEvent.__init__(self, channel, seq_event=seq_event)
 
 
     def parse_data_buffer(self):
@@ -44,6 +42,6 @@ class NotifyStore(JStationSysExEvent):
         )
 
 
-    def __str__( self ):
+    def __str__(self):
         return '%s, prg nb: %d'%(JStationSysExEvent.__str__(self), self.prg_nb)
 

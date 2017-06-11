@@ -17,10 +17,8 @@
 # You should have received a copy of the GNU General Public License along
 # with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from gstation_edit.midi.split_bytes import SplitBytesHelpher
-
 class Program:
-    PROGRAM_BUFFER_LEN = 88
+    PARAM_COUNT = 44
 
     NAME_MAX_LEN = 20 # char count
 
@@ -41,40 +39,63 @@ class Program:
 
 
     def __init__(self, bank=-1, number=-1, data=None, name='',
-                 data_buffer=None, has_changed=False):
-        self.helper = SplitBytesHelpher()
-
+                 sysex_buffer=None, data_len=-1, has_changed=False):
         self.bank = bank
         self.number = number
         self.original_data = data
         self.original_name = name
 
-        if data_buffer:
+        self.data = None
+        self.name = None
+        self.has_changed = False
+
+        self.is_valid = True
+
+        if sysex_buffer and data_len > self.PARAM_COUNT:
             self.original_data = list()
             index = 0
-            while index < self.PROGRAM_BUFFER_LEN:
-                self.original_data.append(
-                    self.helper.get_value_from_split_bytes(
-                        data_buffer[index : index+2]
-                    )
-                )
-                index += 2
-
-            self.original_name = ''
-            index = self.PROGRAM_BUFFER_LEN
-            while index < len(data_buffer):
-                value = self.helper.get_value_from_split_bytes(
-                        data_buffer[index : index+2]
-                    )
-                if value != 0:
-                    self.original_name += chr(value)
+            for index in range(0, self.PARAM_COUNT):
+                value = sysex_buffer.pop_split_bytes(2)
+                if value != None:
+                    self.original_data.append(value)
                 else:
+                    self.is_valid = False
                     break
-                index += 2
 
-        self.data = list(self.original_data)
-        self.name = str(self.original_name)
-        self.has_changed = has_changed
+            index += 1
+
+            if self.is_valid:
+                is_complete = False
+                self.original_name = ''
+                while index < data_len:
+                    value = sysex_buffer.pop_split_bytes(2)
+                    if value != None:
+                        index += 1
+                        if not is_complete and value != 0:
+                            if value > 0 and value < 128:
+                                self.original_name += chr(value)
+                            else:
+                                self.is_valid = False
+                                break
+                        else:
+                            # end of string
+                            is_complete = True
+                    else:
+                        self.is_valid = False
+                        break
+
+        if self.is_valid:
+            self.data = list(self.original_data)
+            self.name = str(self.original_name)
+            self.has_changed = has_changed
+        else:
+            print('Could not parse program from buffer: '\
+                  'data len: %d, data index: %d - %s'%(
+                    data_len, index,
+                    sysex_buffer.get_readable_from_marker()
+                )
+            )
+
 
     def copy(self):
         return Program(bank=self.bank, number=self.number,
@@ -154,11 +175,14 @@ class Program:
         return result
 
     def __str__(self):
-        return 'prg bank: %s, prg nb: %d, '\
-                'has_changed: %d, prg name: %s, '\
-                'prg data: %s'\
-                %(self.get_bank_name(self.bank), self.number,
-                  self.has_changed, self.name,
-                  ["%02d: %02d"%(index, self.data[index]) \
+        prg_data = 'invalid'
+        if self.is_valid:
+            prg_data = 'prg data: %s'%(
+                ["%02d: %02d"%(index, self.data[index]) \
                    for index in range(0, len(self.data))])
+        return 'prg bank: %s, prg nb: %d, '\
+                'has_changed: %d, prg name: %s, %s'\
+                %(self.get_bank_name(self.bank), self.number,
+                  self.has_changed, self.name, prg_data
+                  )
 

@@ -38,6 +38,8 @@ from gstation_edit.midi_select_dlg import MidiSelectDlg
 from gstation_edit.utilities_dlg import UtilitiesDlg
 from gstation_edit.jstation_interface import JStationInterface
 
+from gstation_edit.midi.sysex_buffer import SysexBuffer
+
 from gstation_edit.messages.one_prg_dump import OneProgramDump
 
 
@@ -456,17 +458,18 @@ class MainWindow:
             with open(file_chooser.get_filename(), 'rb') as sysex_file:
                 content = sysex_file.read()
             if content:
-                sysex_buffer = list()
+                sysex_data = list()
                 # TODO; use bytes
                 byte_content = struct.unpack('B'*len(content), content)
                 for value in byte_content:
-                    sysex_buffer.append(value)
-                self.import_program_buffer(sysex_buffer)
+                    sysex_data.append(value)
+                self.import_program_buffer(sysex_data)
         # else: canceled
         file_chooser.destroy()
 
-    def import_program_buffer(self, sysex_buffer):
-        prg_dump = OneProgramDump(sysex_buffer=sysex_buffer, isolated=True)
+    def import_program_buffer(self, sysex_data):
+        prg_dump = OneProgramDump(sysex_buffer=SysexBuffer(sysex_data),
+                                  isolated=True)
         if prg_dump.is_valid and self.current_program:
             self.current_program.change_to(prg_dump.program)
             if self.current_program.has_changed:
@@ -487,15 +490,16 @@ class MainWindow:
             prg_dump = OneProgramDump(
                     program=self.current_program, isolated=True
                 )
-            if prg_dump.is_valid:
+            if prg_dump.is_valid():
                 # TODO: catch exception and notify to the user
                 with open(file_chooser.get_filename(), 'wb') as sysex_file:
                     # TODO; use bytes
-                    for value in prg_dump.sysex_buffer:
+                    for value in prg_dump.sysex_buffer.sysex_data:
                         sysex_file.write(struct.pack('B', value))
             else:
                 # TODO: feedback to user - use notification?
                 print('Couldn\'t export program')
+
         # else: canceled
         file_chooser.destroy()
 

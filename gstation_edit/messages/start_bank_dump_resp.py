@@ -23,17 +23,18 @@ class StartBankDumpResponse(JStationSysExEvent):
     PROCEDURE_ID = 0x25
     VERSION = 1
 
-    def __init__(self, channel=-1, seq_event=None, sysex_buffer=None,
-                 total_length=-1):
+    def __init__(self, channel=-1, seq_event=None, total_length=-1):
         self.total_length = total_length
 
-        JStationSysExEvent.__init__(self, channel, seq_event=seq_event,
-                                    sysex_buffer=sysex_buffer)
+        JStationSysExEvent.__init__(self, channel, seq_event=seq_event)
+
 
     def parse_data_buffer(self):
-        JStationSysExEvent.parse_data_buffer(self, read_len=True)
-        if self.is_valid:
-            self.total_length = self.read_next_bytes(self.data_length)
+        JStationSysExEvent.parse_data_buffer(self)
+        data_len = self.read_next_bytes(4)
+
+        if self.is_valid():
+            self.total_length = self.read_next_bytes(2*data_len)
 
 
     # Build to send

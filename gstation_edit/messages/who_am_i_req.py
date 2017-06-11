@@ -27,11 +27,11 @@ class WhoAmIRequest(JStationSysExEvent):
     RESP_ON_7f = 1
 
     def __init__(self, channel=JStationSysExEvent.ALL_CHANNELS,
-                 seq_event=None, sysex_buffer=None):
+                 seq_event=None):
         self.response_on = self.RESP_ON_7f
 
-        JStationSysExEvent.__init__(self, channel, seq_event=seq_event,
-                                    sysex_buffer=sysex_buffer)
+        JStationSysExEvent.__init__(self, channel, seq_event=seq_event)
+
 
     def parse_data_buffer(self):
         JStationSysExEvent.parse_data_buffer(self)

@@ -23,17 +23,19 @@ class WhoAmIResponse(JStationSysExEvent):
     PROCEDURE_ID = 0x41
     VERSION = 1
 
-    def __init__(self, channel=-1, seq_event=None, sysex_buffer=None,
+    def __init__(self, channel=-1, seq_event=None,
                  receive_channel=-1, transmit_channel=-1, sysex_channel=-1):
         self.receive_channel = receive_channel
         self.transmit_channel = transmit_channel
         self.sysex_channel = sysex_channel
 
-        JStationSysExEvent.__init__(self, channel, seq_event=seq_event,
-                                    sysex_buffer=sysex_buffer)
+        JStationSysExEvent.__init__(self, channel, seq_event=seq_event)
+
 
     def parse_data_buffer(self):
-        JStationSysExEvent.parse_data_buffer(self, read_len=True)
+        JStationSysExEvent.parse_data_buffer(self)
+        data_length = self.read_next_bytes(4)
+
         if self.is_valid:
             self.receive_channel = self.read_next_bytes(2)
             self.transmit_channel = self.read_next_bytes(2)

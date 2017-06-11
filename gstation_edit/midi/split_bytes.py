@@ -23,13 +23,15 @@ class SplitBytesHelpher:
         pass
 
     def get_value_from_split_bytes(self, split_bytes):
-        value = 0
-        split_bytes_range = len(split_bytes) / 2
-        for index in range(0, split_bytes_range):
-            byte_ = split_bytes[2*index + 1]
-            if split_bytes[2*index] != 0:
-                byte_ += 0x80
-            value = value + (byte_ << (8*index))
+        value = None
+        if split_bytes != None:
+            value = 0
+            split_bytes_range = len(split_bytes) / 2
+            for index in range(0, split_bytes_range):
+                byte_ = split_bytes[2*index + 1]
+                if split_bytes[2*index] != 0:
+                    byte_ += 0x80
+                value = value + (byte_ << (8*index))
         return value
 
     def get_split_bytes_from_value(self, value, expected_bytes=2):
