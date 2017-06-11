@@ -22,6 +22,7 @@ class SplitBytesHelpher:
     def __init__(self):
         pass
 
+    @classmethod
     def get_value_from_split_bytes(self, split_bytes):
         value = None
         if split_bytes != None:
@@ -34,6 +35,7 @@ class SplitBytesHelpher:
                 value = value + (byte_ << (8*index))
         return value
 
+    @classmethod
     def get_split_bytes_from_value(self, value, expected_bytes=2):
         split_bytes = list()
         if value >= 0:
