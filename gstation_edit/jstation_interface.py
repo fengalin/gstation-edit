@@ -27,7 +27,7 @@ from gstation_edit.midi.cc_event import CCMidiEvent
 from gstation_edit.midi.prg_change_event import PrgChangeEvent
 
 
-from gstation_edit.messages.jstation_sysex_event import JStationSysExEvent
+from gstation_edit.messages.jstation_sysex_event import JStationSysexEvent
 from gstation_edit.messages.program import Program
 
 from gstation_edit.messages.bank_dump_req import BankDumpRequest
@@ -71,7 +71,7 @@ class JStationInterface:
         PrgChangeEvent.register_event_type_builder()
         PrgChangeEvent.register(self.program_change_callback)
 
-        JStationSysExEvent.register_event_type_builder()
+        JStationSysexEvent.register_event_type_builder()
 
         BankDumpRequest.register()
         EndBankDumpResponse.register(self.end_bank_dump_callback)
