@@ -19,6 +19,10 @@
 
 from gstation_edit.midi.split_bytes import *
 
+def print_split_bytes(split_bytes):
+    print('%s'%(['x%02x'%val for val in split_bytes]))
+
+
 def test():
     print('\n==== SplitBytesHelpher test')
     helper = SplitBytesHelpher()
@@ -26,36 +30,42 @@ def test():
     value = 0
     print('Split Bytes for %d'%(value))
     split_bytes = helper.get_split_bytes_from_value(value)
-    print(split_bytes)
+    print_split_bytes(split_bytes)
     print(helper.get_value_from_split_bytes(split_bytes))
 
     value = 123
     print('Split Bytes for %d'%(value))
     split_bytes = helper.get_split_bytes_from_value(value)
-    print(split_bytes)
+    print_split_bytes(split_bytes)
     print(helper.get_value_from_split_bytes(split_bytes))
 
     value = 128 + 123
     print('Split Bytes for %d'%(value))
     split_bytes = helper.get_split_bytes_from_value(value)
-    print(split_bytes)
+    print_split_bytes(split_bytes)
     print(helper.get_value_from_split_bytes(split_bytes))
 
     value = 0x189
     print('Split Bytes for %d'%(value))
     split_bytes = helper.get_split_bytes_from_value(value)
-    print(split_bytes)
+    print_split_bytes(split_bytes)
     print(helper.get_value_from_split_bytes(split_bytes))
 
     value = 0xf089
     print('Split Bytes for %d'%(value))
     split_bytes = helper.get_split_bytes_from_value(value)
-    print(split_bytes)
+    print_split_bytes(split_bytes)
     print(helper.get_value_from_split_bytes(split_bytes))
 
     value = 123
     print('Split Bytes on 4 bytes for %d'%(value))
     split_bytes = helper.get_split_bytes_from_value(value, 4)
-    print(split_bytes)
+    print_split_bytes(split_bytes)
+    print(helper.get_value_from_split_bytes(split_bytes))
+
+    value = 4660
+    print('Split Bytes on 4 bytes for %d'%(value))
+    split_bytes = helper.get_split_bytes_from_value(value, 4)
+    print_split_bytes(split_bytes)
     print(helper.get_value_from_split_bytes(split_bytes))
 

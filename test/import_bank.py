@@ -1,5 +1,5 @@
 """
- gstation-edit ImportPrg test
+ gstation-edit ImportBank test
 """
 # this file is part of gstation-edit
 # Copyright (C) F LAIGNEL 2009-2017 <fengalin@free.fr>
@@ -21,13 +21,13 @@ import struct
 
 from gstation_edit.midi.sysex_buffer import SysexBuffer
 
-from gstation_edit.messages.one_prg_dump import OneProgramDump
+from gstation_edit.messages.bank_dump import BankDump
 
 def test():
-    print('\n==== ImportPrg test')
+    print('\n==== ImportBank test')
 
     content = None
-    with open('test/data/Thick Stack Solo.syx', 'rb') as sysex_file:
+    with open('test/data/J-Station Factory Bank.syx', 'rb') as sysex_file:
         content = sysex_file.read()
 
         sysex_data = list()
@@ -35,6 +35,6 @@ def test():
         for value in byte_content:
             sysex_data.append(value)
 
-        one_prg_dump = OneProgramDump(sysex_buffer=SysexBuffer(sysex_data))
-        print('one_prg_dump: %s'%one_prg_dump)
+        bank_dump = BankDump(sysex_buffer=SysexBuffer(sysex_data))
+        print('bank_dump: %s'%bank_dump)
 

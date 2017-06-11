@@ -19,11 +19,11 @@
 
 from pyalsa import alsaseq
 
-from gstation_edit.midi.event_factory import *
-from gstation_edit.midi.cc_event import *
+from gstation_edit.midi.event_factory import MidiEventFactory
+from gstation_edit.midi.cc_event import CCMidiEvent
 
-from gstation_edit.messages.jstation_sysex_event import *
-from gstation_edit.messages.who_am_i_resp import *
+from gstation_edit.messages.jstation_sysex_event import JStationSysexEvent
+from gstation_edit.messages.who_am_i_resp import WhoAmIResponse
 
 def test():
     print('\n==== MidiEventFactory test')
@@ -31,7 +31,7 @@ def test():
     CCMidiEvent.register_event_type_builder()
     CCMidiEvent.register()
 
-    JStationSysExEvent.register_event_type_builder()
+    JStationSysexEvent.register_event_type_builder()
     WhoAmIResponse.register()
 
     sysex_data = [

@@ -32,3 +32,6 @@ jstation_interface.test()
 
 from test import import_prg
 import_prg.test()
+
+from test import import_bank
+import_bank.test()
