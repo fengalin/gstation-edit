@@ -50,12 +50,11 @@ class MidiEvent(object):
         # MUST be ovrriden to add specific event data
 
     def get_seq_event(self):
-        if self.is_valid:
+        if self.is_valid():
             return self.seq_event
         else:
+            print('Event is not valid %s'%(self.seq_event))
             self.seq_event = None
-            print('event is not valid (did you call fill_seq_event ?)')
-            # TODO: raise something ?
             return dict()
 
     def process(self):
