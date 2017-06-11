@@ -92,7 +92,8 @@ class JStationSysExEvent(SysexMidiEvent):
             self.check_product()
             if self.is_valid() and self.is_right_product:
                 self.procedure_id = self.sysex_buffer.pop_1_byte()
-                if self.procedure_id == self.PROCEDURE_ID:
+                if self.procedure_id == self.PROCEDURE_ID or \
+                                            type(self) is JStationSysExEvent:
                     self.version = self.read_next_bytes(2)
 
                     if type(self) is JStationSysExEvent:

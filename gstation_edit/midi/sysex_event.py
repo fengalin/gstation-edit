@@ -58,7 +58,7 @@ class SysexMidiEvent(MidiEvent):
     def is_valid(self):
         result = MidiEvent.is_valid(self)
         if self.sysex_buffer:
-            result |= self.sysex_buffer.is_valid
+            result &= self.sysex_buffer.is_valid
         return result
 
     def get_check_sum(self):
