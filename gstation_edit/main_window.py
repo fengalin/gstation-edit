@@ -272,17 +272,21 @@ class MainWindow:
             flag = ''
             if has_changed:
                 flag = '*'
-                self.undo_btn.set_sensitive(True)
-                self.menu_item_undo.set_sensitive(True)
-                self.store_btn.set_sensitive(True)
-                self.menu_item_store.set_sensitive(True)
-            else:
-                self.undo_btn.set_sensitive(False)
-                self.menu_item_undo.set_sensitive(False)
-                self.store_btn.set_sensitive(False)
-                self.menu_item_store.set_sensitive(False)
-
             self.bank_list_model.set(self.current_selected_iter, 2, flag)
+            self.set_has_changes(has_changed)
+
+    def set_has_changes(self, has_changes):
+        if has_changes:
+            self.undo_btn.set_sensitive(True)
+            self.menu_item_undo.set_sensitive(True)
+            self.store_btn.set_sensitive(True)
+            self.menu_item_store.set_sensitive(True)
+        else:
+            self.undo_btn.set_sensitive(False)
+            self.menu_item_undo.set_sensitive(False)
+            self.store_btn.set_sensitive(False)
+            self.menu_item_store.set_sensitive(False)
+
 
     def set_program_count(self, program_count):
         self.program_count = program_count
@@ -317,7 +321,6 @@ class MainWindow:
             self.menu_item_export.set_sensitive(True)
             self.menu_item_import.set_sensitive(True)
         else:
-            # TODO: factory banks can be accessed outside of the user banks
             print('Unknown program selection %d out of bounds'%(program))
 
     def select_program_in_list(self, program_nb):
@@ -378,23 +381,25 @@ class MainWindow:
                 self.jstation_interface.req_program_change(selected_program_nb)
             # else: program hasn't changed
 
+    def update_program_in_list(self, program):
+        tree_iter = self.bank_list_model.get_iter_from_string(
+            str(program.number))
+        flag = ''
+        if program.has_changed:
+            flag = '*'
+        self.bank_list_model.set(tree_iter, 2, flag)
+        self.bank_list_model.set(tree_iter, 3, program.name)
 
     def undo_changes(self):
-        # handle current program as J-Station must also be handle in this case
-        self.current_program.restore_original()
-        self.init_parameters()
-        self.set_current_name(self.current_program.name)
-        self.jstation_interface.reload_program()
-
-        # then, undo changes to other programs, if necessary
         for prg_nb in self.programs:
             prg = self.programs[prg_nb]
             if prg.has_changed:
                 prg.restore_original()
-                tree_iter = self.bank_list_model.get_iter_from_string(str(prg_nb))
-                self.bank_list_model.set(tree_iter, 2, '')
-                self.bank_list_model.set(tree_iter, 3, prg.name)
-
+                if prg_nb == self.current_program.number:
+                    self.init_parameters()
+                    self.jstation_interface.reload_program()
+                self.update_program_in_list(prg)
+        self.set_has_changes(False)
 
     def on_undo_clicked(self, widget):
         if self.current_program:
@@ -409,10 +414,8 @@ class MainWindow:
                 if prg_nb == self.current_program.number:
                     is_current = True
                 self.jstation_interface.store_program(prg, is_current=is_current)
-                tree_iter = self.bank_list_model.get_iter_from_string(str(prg_nb))
-                self.bank_list_model.set(tree_iter, 2, '')
-                self.bank_list_model.set(tree_iter, 3, prg.name)
-        self.set_program_has_changed(False)
+                self.update_program_in_list(prg)
+        self.set_has_changes(False)
 
 
     def receive_settings(self, settings):
@@ -459,7 +462,7 @@ class MainWindow:
             title = 'Export'
 
         file_chooser = Gtk.FileChooserDialog(
-                '%s a program'%(title), self.gtk_window, action,
+                title, self.gtk_window, action,
                 (Gtk.STOCK_CANCEL, Gtk.ResponseType.CANCEL,
                  stock_ok, Gtk.ResponseType.OK)
             )
@@ -477,7 +480,6 @@ class MainWindow:
             file_chooser.set_current_name('%s.syx'%(proposed_name))
 
         result = file_chooser.run()
-        filename = None
         if result == Gtk.ResponseType.OK:
             filename = file_chooser.get_filename()
             if not self.config.has_section('Import-Export'):
@@ -491,12 +493,11 @@ class MainWindow:
         result, file_chooser = self.run_file_chooser(Gtk.FileChooserAction.OPEN)
         if result == Gtk.ResponseType.OK:
             content = None
-            # TODO: catch exception and notify to the user
+            # TODO: catch exception and notify the user
             with open(file_chooser.get_filename(), 'rb') as sysex_file:
                 content = sysex_file.read()
             if content:
                 sysex_data = list()
-                # TODO; use bytes
                 byte_content = struct.unpack('B'*len(content), content)
                 for value in byte_content:
                     sysex_data.append(value)
@@ -505,27 +506,28 @@ class MainWindow:
         file_chooser.destroy()
 
     def import_buffer(self, sysex_data):
-        # TODO: use a factory to very that the content is one program
         sysex_event = JStationSysexEvent.build_from_sysex_buffer(
             sysex_buffer=SysexBuffer(sysex_data))
         if sysex_event and sysex_event.is_valid():
-
+            has_changes = False
             if type(sysex_event) is OneProgramDump:
                 self.import_current_prg(sysex_event.program)
+                has_changes |= self.current_program.has_changed
 
             elif type(sysex_event) is BankDump:
                 for program in sysex_event.programs:
                     if program.number == self.current_program.number:
                         self.import_current_prg(program)
+                        has_changes |= self.current_program.has_changed
                     else:
                         self.programs[program.number].change_to(program)
                         if self.programs[program.number].has_changed:
-                            tree_iter = self.bank_list_model.get_iter_from_string(
-                                str(program.number))
-                            self.bank_list_model.set(tree_iter, 2, '*')
-                            self.bank_list_model.set(tree_iter, 3, program.name)
+                            self.update_program_in_list(program)
+                            has_changes = True
             else:
                 print('Attempting to import %s'%(sysex_event))
+
+            self.set_has_changes(has_changes)
         else:
             # TODO: feedback to user - use notification?
             print('Couldn\'t import program from buffer')
@@ -535,12 +537,9 @@ class MainWindow:
             self.current_program.change_to(new_prg)
             if self.current_program.has_changed:
                 self.init_parameters()
-                self.set_current_name(self.current_program.name)
-
+                self.update_program_in_list(self.current_program)
                 self.jstation_interface.send_program_update(
                     self.current_program)
-                self.set_program_has_changed(True)
-
 
 
     def on_export_bank_clicked(self, widget):
@@ -550,9 +549,8 @@ class MainWindow:
         if result == Gtk.ResponseType.OK:
             bank_dump = BankDump(programs=self.programs.values())
             if bank_dump.is_valid():
-                # TODO: catch exception and notify to the user
+                # TODO: catch exception and notify the user
                 with open(file_chooser.get_filename(), 'wb') as sysex_file:
-                    # TODO; use bytes
                     for value in bank_dump.sysex_buffer.sysex_data:
                         sysex_file.write(struct.pack('B', value))
             else:
@@ -570,9 +568,8 @@ class MainWindow:
                     program=self.current_program, isolated=True
                 )
             if prg_dump.is_valid():
-                # TODO: catch exception and notify to the user
+                # TODO: catch exception and notify the user
                 with open(file_chooser.get_filename(), 'wb') as sysex_file:
-                    # TODO; use bytes
                     for value in prg_dump.sysex_buffer.sysex_data:
                         sysex_file.write(struct.pack('B', value))
             else:
