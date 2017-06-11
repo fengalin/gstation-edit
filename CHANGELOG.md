@@ -1,5 +1,14 @@
 ## Change Log
 
+### Version 0.8.0 (In progress)
+
+#### User
+- Programs bank import and export.
+
+#### Development
+- Allow parsing multiple messages from a signel sysex buffer.
+
+
 ### Version 0.7.0 (20170610)
 
 #### User
