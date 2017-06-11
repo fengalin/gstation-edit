@@ -22,8 +22,6 @@ from gstation_edit.midi.split_bytes import SplitBytesHelpher
 class SysexBuffer():
 
     def __init__(self, sysex_data=None):
-        self.helper = SplitBytesHelpher()
-
         self.sysex_data = sysex_data
         self.data_len = -1
         self.data_index = -1
@@ -77,7 +75,7 @@ class SysexBuffer():
     def pop_split_bytes(self, nb_bytes):
         result = None
         raw_bytes = self.pop_raw_bytes(nb_bytes)
-        result = self.helper.get_value_from_split_bytes(raw_bytes)
+        result = SplitBytesHelpher.get_value_from_split_bytes(raw_bytes)
         return result
 
 
@@ -97,7 +95,7 @@ class SysexBuffer():
 
     def push_as_split_bytes(self, value, expected_bytes=2):
         raw_bytes = \
-            self.helper.get_split_bytes_from_value(value, expected_bytes)
+            SplitBytesHelpher.get_split_bytes_from_value(value, expected_bytes)
         self.push_raw_bytes(raw_bytes)
 
 
