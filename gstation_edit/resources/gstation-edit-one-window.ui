@@ -328,10 +328,44 @@
     <property name="has_subtitle">False</property>
     <property name="show_close_button">True</property>
     <child>
+      <object class="GtkButton" id="import-bank-btn">
+        <property name="visible">True</property>
+        <property name="can_focus">True</property>
+        <property name="receives_default">True</property>
+        <property name="tooltip_markup" translatable="yes">Import bank</property>
+        <child>
+          <object class="GtkImage">
+            <property name="visible">True</property>
+            <property name="can_focus">False</property>
+            <property name="stock">gtk-open</property>
+          </object>
+        </child>
+      </object>
+    </child>
+    <child>
+      <object class="GtkButton" id="export-bank-btn">
+        <property name="visible">True</property>
+        <property name="can_focus">True</property>
+        <property name="receives_default">True</property>
+        <property name="tooltip_markup" translatable="yes">Export bank</property>
+        <child>
+          <object class="GtkImage">
+            <property name="visible">True</property>
+            <property name="can_focus">False</property>
+            <property name="stock">gtk-save</property>
+          </object>
+        </child>
+      </object>
+      <packing>
+        <property name="position">1</property>
+      </packing>
+    </child>
+    <child>
       <object class="GtkButton" id="midi-options-btn">
         <property name="visible">True</property>
         <property name="can_focus">True</property>
         <property name="receives_default">True</property>
+        <property name="tooltip_markup" translatable="yes">MIDI connection</property>
         <child>
           <object class="GtkImage">
             <property name="visible">True</property>
@@ -342,6 +376,7 @@
       </object>
       <packing>
         <property name="pack_type">end</property>
+        <property name="position">1</property>
       </packing>
     </child>
     <child>
@@ -349,6 +384,7 @@
         <property name="visible">True</property>
         <property name="can_focus">True</property>
         <property name="receives_default">True</property>
+        <property name="tooltip_markup" translatable="yes">Utilities settings</property>
         <child>
           <object class="GtkImage">
             <property name="visible">True</property>
@@ -359,7 +395,7 @@
       </object>
       <packing>
         <property name="pack_type">end</property>
-        <property name="position">1</property>
+        <property name="position">2</property>
       </packing>
     </child>
     <child>
@@ -367,6 +403,7 @@
         <property name="visible">True</property>
         <property name="can_focus">True</property>
         <property name="receives_default">True</property>
+        <property name="tooltip_markup" translatable="yes">Store changes</property>
         <child>
           <object class="GtkImage">
             <property name="visible">True</property>
@@ -377,7 +414,7 @@
       </object>
       <packing>
         <property name="pack_type">end</property>
-        <property name="position">2</property>
+        <property name="position">3</property>
       </packing>
     </child>
     <child>
@@ -385,6 +422,7 @@
         <property name="visible">True</property>
         <property name="can_focus">True</property>
         <property name="receives_default">True</property>
+        <property name="tooltip_markup" translatable="yes">Undo changes</property>
         <child>
           <object class="GtkImage">
             <property name="visible">True</property>
@@ -395,7 +433,7 @@
       </object>
       <packing>
         <property name="pack_type">end</property>
-        <property name="position">3</property>
+        <property name="position">4</property>
       </packing>
     </child>
   </object>

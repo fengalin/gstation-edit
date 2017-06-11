@@ -21,6 +21,7 @@ from gstation_edit.messages.jstation_sysex_event import JStationSysexEvent
 
 class EndBankDumpResponse(JStationSysexEvent):
     PROCEDURE_ID = 0x26
+    VERSION = 1
 
     def __init__(self, channel=-1, sysex_buffer=None):
         JStationSysexEvent.__init__(self, channel, sysex_buffer)

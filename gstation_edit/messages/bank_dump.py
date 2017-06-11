@@ -17,6 +17,8 @@
 # You should have received a copy of the GNU General Public License along
 # with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+from gstation_edit.midi.sysex_buffer import SysexBuffer
+
 from gstation_edit.messages.jstation_sysex_event import JStationSysexEvent
 from gstation_edit.messages.start_bank_dump_resp import StartBankDumpResponse
 from gstation_edit.messages.end_bank_dump_resp import EndBankDumpResponse
@@ -31,14 +33,14 @@ class BankDump(JStationSysexEvent):
     EndBankDumpResponse.register()
 
 
-    def __init__(self, sysex_buffer=None, program_set=None):
+    def __init__(self, sysex_buffer=None, programs=None):
 
         self.value1 = 1 # TODO: find out what this is: bank nb?
         self.value2 = 1 # TODO: find out what this is
         self.bank = -1
-        self.program_set = None
-        if program_set:
-            self.bank = self.program_set[0].bank
+        self.programs = programs
+        if programs:
+            self.bank = self.programs[0].bank
 
         JStationSysexEvent.__init__(self, JStationSysexEvent.ALL_CHANNELS,
                                     sysex_buffer=sysex_buffer)
@@ -53,9 +55,8 @@ class BankDump(JStationSysexEvent):
                     sysex_buffer=self.sysex_buffer
                 )
             if start_bank_dump.is_valid():
-                print('start_bank_dump %s'%(start_bank_dump))
                 actual_len = 0
-                self.program_set = list()
+                self.programs = list()
                 last_event = None
                 while self.sysex_buffer.has_more() and \
                                    not type(last_event) is EndBankDumpResponse:
@@ -65,13 +66,12 @@ class BankDump(JStationSysexEvent):
                     if type(last_event) is OneProgramDump:
                         if last_event.is_valid():
                             actual_len += self.sysex_buffer.data_index - last_index
-                            self.program_set.append(last_event.program)
+                            self.programs.append(last_event.program)
                         else:
                             self.has_error = True
 
-                if self.program_set:
-                    self.bank = self.program_set[0].bank
-                    print('actual_len: %d'%(actual_len))
+                if self.programs:
+                    self.bank = self.programs[0].bank
             else:
                 self.has_error = False
 
@@ -101,38 +101,39 @@ class BankDump(JStationSysexEvent):
     def build_sysex_buffer(self):
         JStationSysexEvent.build_sysex_buffer(self)
         if self.is_valid():
-            start_bank_dump = StartBankDumpResponse(
-                    JStationSysexEvent.ALL_CHANNELS,
-                    program_set=self.program_set
-                )
-            if start_bank_dump.is_valid():
-                self.sysex_buffer.append(start_bank_dump.sysex_buffer)
+            data_buffer = SysexBuffer()
+            for program in self.programs:
+                prg_dump = OneProgramDump(program=program)
+                if prg_dump.is_valid():
+                    data_buffer.append(prg_dump.sysex_buffer)
+                else:
+                    self.has_error = True
+                    break
 
-                for program in self.program_set:
-                    prg_dump = OneProgramDump(program=program)
-                    if prg_dump.is_valid():
-                        self.sysex_buffer.append(prg_dump.sysex_buffer)
-                    else:
-                        self.has_error = True
-                        break
+            if self.is_valid():
+                start_bank_dump = StartBankDumpResponse(
+                        JStationSysexEvent.ALL_CHANNELS,
+                        total_len=data_buffer.data_len
+                    )
+                if start_bank_dump.is_valid():
+                    self.sysex_buffer.append(start_bank_dump.sysex_buffer)
 
-                if self.is_valid():
+                    self.sysex_buffer.append(data_buffer)
+
                     end_bank_dump = EndBankDumpResponse(
                         JStationSysexEvent.ALL_CHANNELS)
                     if end_bank_dump.is_valid():
                         self.sysex_buffer.append(end_bank_dump.sysex_buffer)
                     else:
                         self.has_error = True
-            else:
-                self.has_error = True
 
 
     def __str__(self):
-        programs = ''
-        if self.program_set:
-            programs = ', %d programs'%(len(self.program_set))
+        program_msg = ''
+        if self.programs:
+            program_msg = ', %d programs'%(len(self.programs))
 
         return '%s, value1: %d, value2: %d%s'%(
                 JStationSysexEvent.__str__(self),
-                self.value1, self.value2, programs,
+                self.value1, self.value2, program_msg,
             )

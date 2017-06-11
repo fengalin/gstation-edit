@@ -40,6 +40,7 @@ from gstation_edit.jstation_interface import JStationInterface
 
 from gstation_edit.midi.sysex_buffer import SysexBuffer
 
+from gstation_edit.messages.bank_dump import BankDump
 from gstation_edit.messages.one_prg_dump import OneProgramDump
 
 
@@ -64,6 +65,8 @@ class MainWindow:
         self.current_selected_iter = None
 
         self.jstation_interface = JStationInterface(app_name, self)
+        BankDump.register()
+        OneProgramDump.register()
 
         self.init_widgets()
 
@@ -116,6 +119,7 @@ class MainWindow:
         self.gtk_window.set_titlebar(header_bar)
 
         self.init_undo_store()
+        self.init_bank_buttons()
         self.init_utilities_dlg()
         self.init_midi_select_dlg()
 
@@ -157,6 +161,15 @@ class MainWindow:
         self.store_btn = self.gtk_builder.get_object('store-btn')
         self.store_btn.set_sensitive(False)
         self.store_btn.connect('clicked', self.on_store_clicked)
+
+    def init_bank_buttons(self):
+        self.export_bank_btn = self.gtk_builder.get_object('export-bank-btn')
+        self.export_bank_btn.set_sensitive(False)
+        self.export_bank_btn.connect('clicked', self.on_export_bank_clicked)
+
+        self.import_bank_btn = self.gtk_builder.get_object('import-bank-btn')
+        self.import_bank_btn.set_sensitive(False)
+        #self.import_bank_btn.connect('clicked', self.on_store_clicked)
 
     def init_bank_list_widget(self):
         self.bank_list_widget = self.gtk_builder.get_object('bank-list-trv')
@@ -214,13 +227,15 @@ class MainWindow:
             self.context_menu_widget.insert(self.menu_item_undo, 1)
             self.menu_item_undo.set_sensitive(False)
 
-            self.menu_item_export = Gtk.MenuItem('Export...')
-            self.menu_item_export.connect('activate', self.context_menu_export)
+            self.menu_item_export = Gtk.MenuItem('Export program...')
+            self.menu_item_export.connect('activate',
+                                          self.context_menu_export_prg)
             self.context_menu_widget.insert(self.menu_item_export, 2)
             self.menu_item_export.set_sensitive(False)
 
-            self.menu_item_import = Gtk.MenuItem('Import...')
-            self.menu_item_import.connect('activate', self.context_menu_import)
+            self.menu_item_import = Gtk.MenuItem('Import program...')
+            self.menu_item_import.connect('activate',
+                                          self.context_menu_import_prg)
             self.context_menu_widget.insert(self.menu_item_import, 3)
             self.menu_item_import.set_sensitive(False)
 
@@ -297,6 +312,7 @@ class MainWindow:
                     self.set_program_has_changed(False)
             self.current_program = program
             self.init_parameters()
+            self.export_bank_btn.set_sensitive(True)
             self.menu_item_export.set_sensitive(True)
             self.menu_item_import.set_sensitive(True)
         else:
@@ -450,7 +466,7 @@ class MainWindow:
 
         return (result, file_chooser)
 
-    def context_menu_import(self, widget, *args):
+    def context_menu_import_prg(self, widget, *args):
         result, file_chooser = self.run_file_chooser(Gtk.FileChooserAction.OPEN)
         if result == Gtk.ResponseType.OK:
             content = None
@@ -463,11 +479,12 @@ class MainWindow:
                 byte_content = struct.unpack('B'*len(content), content)
                 for value in byte_content:
                     sysex_data.append(value)
-                self.import_program_buffer(sysex_data)
+                self.import_prg_buffer(sysex_data)
         # else: canceled
         file_chooser.destroy()
 
-    def import_program_buffer(self, sysex_data):
+    def import_prg_buffer(self, sysex_data):
+        # TODO: use a factory to very that the content is one program
         prg_dump = OneProgramDump(sysex_buffer=SysexBuffer(sysex_data),
                                   isolated=True)
         if prg_dump.is_valid and self.current_program:
@@ -483,7 +500,27 @@ class MainWindow:
             # TODO: feedback to user - use notification?
             print('Couldn\'t import program from buffer')
 
-    def context_menu_export(self, widget, *args):
+
+    def on_export_bank_clicked(self, widget):
+        default_name = 'J-Station User Bank Backup'
+        result, file_chooser = self.run_file_chooser(Gtk.FileChooserAction.SAVE,
+                                                     default_name)
+        if result == Gtk.ResponseType.OK:
+            bank_dump = BankDump(programs=self.programs.values())
+            if bank_dump.is_valid():
+                # TODO: catch exception and notify to the user
+                with open(file_chooser.get_filename(), 'wb') as sysex_file:
+                    # TODO; use bytes
+                    for value in bank_dump.sysex_buffer.sysex_data:
+                        sysex_file.write(struct.pack('B', value))
+            else:
+                # TODO: feedback to user - use notification?
+                print('Couldn\'t export bank')
+
+        # else: canceled
+        file_chooser.destroy()
+
+    def context_menu_export_prg(self, widget, *args):
         result, file_chooser = self.run_file_chooser(Gtk.FileChooserAction.SAVE,
                                                      self.current_program.name)
         if result == Gtk.ResponseType.OK:

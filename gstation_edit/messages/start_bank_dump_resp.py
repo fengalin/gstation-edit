@@ -17,6 +17,8 @@
 # You should have received a copy of the GNU General Public License along
 # with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+from gstation_edit.midi.split_bytes import SplitBytesHelpher
+
 from gstation_edit.messages.jstation_sysex_event import JStationSysexEvent
 
 class StartBankDumpResponse(JStationSysexEvent):
@@ -33,7 +35,7 @@ class StartBankDumpResponse(JStationSysexEvent):
         JStationSysexEvent.parse_data_buffer(self)
         data_len = self.read_next_bytes(4)
         if data_len > 2:
-            # For some reasons, data len in an bank export from J-Edit
+            # For some reasons, data len in a bank export from J-Edit
             # is 4 when the actual size to read is 2 just like
             # for the regular StartBankDumpResponse sent by the J-Station
             print('Fixing data len %d for StartBankDumpResponse'%(data_len))
@@ -45,13 +47,11 @@ class StartBankDumpResponse(JStationSysexEvent):
 
     # Build to send
     def build_data_buffer(self):
-        # TODO: verify if the actual len should be incorrectly set to 4
-        # for export (see above)
+        total_len_2_bytes = [self.total_len%0x100, self.total_len//0x100]
         JStationSysexEvent.build_data_buffer(
             self,
-            post_len_data=[self.total_len]
+            post_len_data=total_len_2_bytes
         )
-
 
 
     def __str__(self):
