@@ -522,7 +522,8 @@ class MainWindow:
                     else:
                         self.programs[program.number].change_to(program)
                         if self.programs[program.number].has_changed:
-                            self.update_program_in_list(program)
+                            self.update_program_in_list(
+                                self.programs[program.number])
                             has_changes = True
             else:
                 print('Attempting to import %s'%(sysex_event))
