@@ -43,14 +43,12 @@ check the initial project's page at sourceforge.
 - Undo or Store changes from the UI.
 - Import and export a program in the same format as J-Edit.
 - Import and export a programs bank in the same format as J-Edit.
+- Program copy / paste.
 - Update utility settings (digital output level, cabinet emulation, ...).
 - Track changes with a * in the bank list.
 
 
-# Not supported yet
-- Program copy / paste.
-- Factory banks are selectable from the J-Station, but will not be reflected
-in the UI.
+# Not supported
 - Only firmware 2.0 is supported. If someone uses firmware 1.0, please contact
 me and we could have GStation-Edit compatible with both firmwares.
 

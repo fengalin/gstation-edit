@@ -19,7 +19,6 @@
 
 
 from os import path
-
 import struct
 
 from gi.repository import Gtk
@@ -227,16 +226,17 @@ class MainWindow:
             self.context_menu_widget.insert(self.menu_item_import, 3)
             self.menu_item_import.set_sensitive(False)
 
-            menu_item_copy = Gtk.MenuItem('Copy')
-            menu_item_copy.connect('activate', self.context_menu_copy)
-            self.context_menu_widget.insert(menu_item_copy, 4)
-            menu_item_copy.set_sensitive(False)
+            self.copied_program = None
+            self.menu_item_copy = Gtk.MenuItem('Copy')
+            self.menu_item_copy.connect('activate', self.context_menu_copy)
+            self.context_menu_widget.insert(self.menu_item_copy, 4)
+            self.menu_item_copy.set_sensitive(False)
 
-            menu_item_paste = Gtk.MenuItem('Paste')
-            menu_item_paste.set_sensitive(False)
-            menu_item_paste.connect('activate', self.context_menu_paste)
-            self.context_menu_widget.insert(menu_item_paste, 5)
-            menu_item_paste.set_sensitive(False)
+            self.menu_item_paste = Gtk.MenuItem('Paste')
+            self.menu_item_paste.set_sensitive(False)
+            self.menu_item_paste.connect('activate', self.context_menu_paste)
+            self.context_menu_widget.insert(self.menu_item_paste, 5)
+            self.menu_item_paste.set_sensitive(False)
         else:
             print('Could not find widget for context menu')
 
@@ -308,6 +308,7 @@ class MainWindow:
             self.import_bank_btn.set_sensitive(True)
             self.menu_item_export.set_sensitive(True)
             self.menu_item_import.set_sensitive(True)
+            self.menu_item_copy.set_sensitive(True)
         else:
             print('Unknown program selection %d out of bounds'%(program))
 
@@ -529,6 +530,7 @@ class MainWindow:
                 self.update_program_in_list(self.current_program)
                 self.jstation_interface.send_program_update(
                     self.current_program)
+            self.set_has_changes(self.current_program.has_changed)
 
 
     def on_export_bank_clicked(self, widget):
@@ -570,9 +572,8 @@ class MainWindow:
 
 
     def context_menu_copy(self, widget, *args):
-        # TODO: implement !
-        print('Copy clicked %s'%(args))
+        self.copied_program = self.current_program.copy()
+        self.menu_item_paste.set_sensitive(True)
 
     def context_menu_paste(self, widget, *args):
-        # TODO: implement !
-        print('Paste clicked %s'%(args))
+        self.import_current_prg(self.copied_program)

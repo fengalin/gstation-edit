@@ -1,12 +1,13 @@
 ## Change Log
 
-### Version 0.8.0 (In progress)
+### Version 1.0.0 (In progress)
 
 #### User
 - Programs bank import and export.
+- Program copy / paste.
 
 #### Development
-- Allow parsing multiple messages from a signel sysex buffer.
+- Allow parsing multiple messages from a single sysex buffer.
 
 
 ### Version 0.7.0 (20170610)
