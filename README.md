@@ -14,7 +14,7 @@ Until recently, J-Edit couldn't be used properly on
 functions in a Linux application. As of today, I think GStaton-Edit is feature
 complete (see the [feature list below](#features)). I still have plans for
 enhancements under the hood, but they are on a low priority list. If you have
-ideas for a new features, don't hesitate to
+ideas for new features, don't hesitate to
 [declare an issue](https://github.com/fengalin/gstation-edit/issues).
 
 The application communicates with the J-Station over a MIDI connection,
