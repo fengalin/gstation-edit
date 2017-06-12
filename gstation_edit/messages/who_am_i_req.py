@@ -43,7 +43,7 @@ class WhoAmIRequest(JStationSysexEvent):
         if self.RESP_ON_CHANNEL == self.response_on or \
                 self.RESP_ON_7f == self.response_on:
             JStationSysexEvent.build_data_buffer(
-                self, post_len_data=[self.response_on]
+                self, pre_len_data=[self.response_on]
             )
         else:
             self.data_buffer = list()
