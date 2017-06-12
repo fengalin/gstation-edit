@@ -312,6 +312,8 @@ class JStationInterface:
 
     def notify_store_callback(self, event):
         self.default_event_callback(event)
+        self.main_window.select_program_from_its_number(event.prg_nb)
+
         one_prg_req = OneProgramRequest(channel=self.sysex_channel,
                                         bank_nb=Program.BANK_USER,
                                         prg_nb=event.prg_nb)

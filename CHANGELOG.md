@@ -6,6 +6,7 @@
 - Programs bank import and export.
 - Program copy / paste.
 - Fixed sysex device id not being used.
+- Fixed moving a program from the J-Station not being reflected in the UI.
 
 #### Development
 - Allow parsing multiple messages from a single sysex buffer.

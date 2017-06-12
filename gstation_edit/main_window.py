@@ -291,11 +291,14 @@ class MainWindow:
         self.programs[program.number] = program
         if self.current_program and self.current_program.number == program.number:
             self.current_program = program
+            self.set_current_name(program.name)
             self.init_parameters()
 
     def select_program_from_its_number(self, program_nb):
-        self.set_current_program(program_nb)
-        self.select_program_in_list(program_nb)
+        if not self.current_program or \
+                                program_nb != self.current_program.number:
+            self.set_current_program(program_nb)
+            self.select_program_in_list(program_nb)
 
     def set_current_program(self, program_nb):
         program = self.programs.get(program_nb)
