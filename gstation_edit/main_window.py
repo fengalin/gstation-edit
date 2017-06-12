@@ -19,11 +19,8 @@
 
 
 from os import path
-from os import makedirs
 
 import struct
-
-from ConfigParser import SafeConfigParser
 
 from gi.repository import Gtk
 
@@ -46,14 +43,8 @@ from gstation_edit.messages.one_prg_dump import OneProgramDump
 
 
 class MainWindow:
-    def __init__(self, app_name, gtk_builder):
-
-        self.config = SafeConfigParser(allow_no_value=True)
-        config_base_path = path.expanduser('~/.config/gstation-edit')
-        if not path.isdir(config_base_path):
-            makedirs(config_base_path)
-        self.config_path = path.join(config_base_path, 'settings.cfg')
-        self.config.read(self.config_path)
+    def __init__(self, app_name, config, gtk_builder):
+        self.config = config
 
         self.gtk_builder = gtk_builder
         self.gtk_window = self.gtk_builder.get_object('main-window')
@@ -107,9 +98,6 @@ class MainWindow:
         self.midi_select_dlg.hide()
 
     def quit(self):
-        with open(self.config_path, 'wb') as configfile:
-            self.config.write(configfile)
-
         self.jstation_interface.disconnect()
 
     def init_widgets(self):

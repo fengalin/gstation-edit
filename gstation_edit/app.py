@@ -17,6 +17,8 @@
 import sys
 import os
 
+from ConfigParser import SafeConfigParser
+
 import gi
 gi.require_version('Gtk', '3.0')
 from gi.repository import Gtk
@@ -35,6 +37,13 @@ class GStationEdit:
     def __init__( self ):
         GObject.threads_init()
 
+        self.config = SafeConfigParser(allow_no_value=True)
+        config_base_path = os.path.expanduser('~/.config/gstation-edit')
+        if not os.path.isdir(config_base_path):
+            os.makedirs(config_base_path)
+        self.config_path = os.path.join(config_base_path, 'settings.cfg')
+        self.config.read(self.config_path)
+
         gtk_builder_file = os.path.join(DATA_ROOT_DIR,
                                         'gstation-edit-one-window.ui')
 
@@ -42,13 +51,16 @@ class GStationEdit:
         self.gtk_builder.add_from_file(gtk_builder_file)
 
         self.is_valid = False
-        self.main_window = MainWindow(sys.argv[0], self.gtk_builder)
+        self.main_window = MainWindow(sys.argv[0], self.config, self.gtk_builder)
         self.main_window.gtk_window.connect('destroy', self.quit)
 
         self.main_window.connect()
 
     def quit(self, window):
         print('quitting gstation-edit')
+        with open(self.config_path, 'wb') as configfile:
+            self.config.write(configfile)
+
         self.main_window.quit()
         Gtk.main_quit(window)
 
