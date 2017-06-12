@@ -11,9 +11,11 @@ application for that purpose.
 
 Until recently, J-Edit couldn't be used properly on
 [Wine](https://www.winehq.org/). In 2009, I started implementing the basic
-functions in a Linux application. As of today, all parameters can be accessed
-from GStation-Edit and the most important features are available (see the
-[feature list below](#features)).
+functions in a Linux application. As of today, I think GStaton-Edit is feature
+complete (see the [feature list below](#features)). I still have plans for
+enhancements under the hood, but they are on a low priority list. If you have
+ideas for a new features, don't hesitate to
+[declare an issue](https://github.com/fengalin/gstation-edit/issues).
 
 The application communicates with the J-Station over a MIDI connection,
 exchanging sysex and CC events. By design, sysex events are proprietary. As a
@@ -117,6 +119,9 @@ is properly installed and recognized by the OS.
 If you can see the MIDI ports in the comboboxes but the connection fails when
 you try to auto-connect:
 - Disconnect any other MIDI device
-- Try different combinaisons with the MIDI and Sysex channels.
-Since I never met this situation, it is possible that GStaton-Edit is not robust
-to all cases. Send me a message with the details.
+- Try different settings for the sysex device id.
+- Follow the J-Station User's Guide and change the MIDI channel (see Section 5 -
+Other Functions, p. 29 of the english version).
+
+I've never been in this situation, so it is possible that GStaton-Edit is not
+robust to all cases. Send me a message with the details.

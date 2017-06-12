@@ -39,11 +39,10 @@ class MidiSelectDlg:
         cancel_btn = self.get_widget('midi-cancel-btn')
         cancel_btn.connect('clicked', self.on_cancel_btn_clicked)
 
-        self.msg_spin_satck = self.get_widget('midi-message-spinner-stack')
+        self.msg_spinner_satck = self.get_widget('midi-message-spinner-stack')
         self.msg_lbl = self.get_widget('midi-select-message-lbl')
         self.midi_in_cbx = self.get_widget('midi-in-cbx')
         self.midi_out_cbx = self.get_widget('midi-out-cbx')
-        self.midi_channel_spbtn = self.get_widget('midi-channel-spbtn')
         self.sysex_device_id_spbtn = self.get_widget('sysex-device-id-spbtn')
 
         self.msg_lbl.set_text('')
@@ -136,17 +135,18 @@ class MidiSelectDlg:
         self.post_connection_actions()
 
     def pre_connection_actions(self):
-        self.msg_spin_satck.set_visible_child_name('spinner')
+        self.msg_spinner_satck.set_visible_child_name('spinner')
         self.msg_lbl.set_text('')
         self.gtk_dlg.set_sensitive(False)
 
     def post_connection_actions(self):
         if self.is_connected:
             self.set_connected()
-            self.on_connected(self.port_in, self.port_out)
+            sysex_chnl = self.sysex_device_id_spbtn.get_value_as_int()
+            self.on_connected(self.port_in, self.port_out, sysex_chnl)
         else:
             self.msg_lbl.set_text('Disconnected from J-Station')
-        self.msg_spin_satck.set_visible_child_name('message')
+        self.msg_spinner_satck.set_visible_child_name('message')
         self.gtk_dlg.set_sensitive(True)
 
 
@@ -168,7 +168,8 @@ class MidiSelectDlg:
             self.on_close()
 
     def attempt_to_connect(self, port_in, port_out):
-        # TODO: read sysexchannel too
-        print('Attempting to connect to %s and %s'%(port_in, port_out))
-        self.js_interface.connect(port_in, port_out, 1)
+        sysex_chnl = self.sysex_device_id_spbtn.get_value_as_int()
+        print('Attempting to connect to %s and %s - sysex channel: %d'\
+              %(port_in, port_out, sysex_chnl))
+        self.js_interface.connect(port_in, port_out, sysex_chnl)
         self.is_connected = self.js_interface.is_connected

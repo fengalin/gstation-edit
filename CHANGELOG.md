@@ -5,6 +5,7 @@
 #### User
 - Programs bank import and export.
 - Program copy / paste.
+- Fixed sysex device id not being used.
 
 #### Development
 - Allow parsing multiple messages from a single sysex buffer.

@@ -29,7 +29,7 @@ class JStationSniffer(JStationInterface):
         JStationInterface.__init__(self, app_name, None)
 
 
-    def start_sniffer(self, midi_port_in, midi_port_out):
+    def start_sniffer(self):
         # Note: connection to J-Station must have been established
         # using connect()
         if self.is_connected:

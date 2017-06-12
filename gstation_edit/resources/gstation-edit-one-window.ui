@@ -2782,37 +2782,6 @@
               </packing>
             </child>
             <child>
-              <object class="GtkLabel" id="midi-channel-lbl">
-                <property name="visible">True</property>
-                <property name="can_focus">False</property>
-                <property name="halign">end</property>
-                <property name="label" translatable="yes">MIDI channel:</property>
-              </object>
-              <packing>
-                <property name="left_attach">0</property>
-                <property name="top_attach">2</property>
-              </packing>
-            </child>
-            <child>
-              <object class="GtkSpinButton" id="midi-channel-spbtn">
-                <property name="visible">True</property>
-                <property name="can_focus">True</property>
-                <property name="halign">start</property>
-                <property name="max_length">2</property>
-                <property name="invisible_char">•</property>
-                <property name="text" translatable="yes">1</property>
-                <property name="xalign">1</property>
-                <property name="primary_icon_activatable">False</property>
-                <property name="secondary_icon_activatable">False</property>
-                <property name="adjustment">midi-channel-adj</property>
-                <property name="value">1</property>
-              </object>
-              <packing>
-                <property name="left_attach">1</property>
-                <property name="top_attach">2</property>
-              </packing>
-            </child>
-            <child>
               <object class="GtkLabel" id="sysex-device-id-lbl">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
@@ -2821,7 +2790,7 @@
               </object>
               <packing>
                 <property name="left_attach">0</property>
-                <property name="top_attach">3</property>
+                <property name="top_attach">2</property>
               </packing>
             </child>
             <child>
@@ -2840,7 +2809,7 @@
               </object>
               <packing>
                 <property name="left_attach">1</property>
-                <property name="top_attach">3</property>
+                <property name="top_attach">2</property>
               </packing>
             </child>
           </object>

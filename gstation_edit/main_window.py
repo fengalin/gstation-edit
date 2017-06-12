@@ -70,13 +70,15 @@ class MainWindow:
         if self.config.has_section('MIDI'):
             midi_port_in = self.config.get('MIDI', 'port_in')
             midi_port_out = self.config.get('MIDI', 'port_out')
+            sysex_channel = self.config.getint('MIDI', 'sysex_channel')
 
         if midi_port_in and midi_port_out:
-            self.jstation_interface.connect(midi_port_in, midi_port_out, 1)
+            self.jstation_interface.connect(
+                midi_port_in, midi_port_out, sysex_channel)
             if self.jstation_interface.is_connected:
                 self.midi_select_dlg.set_defaults(midi_port_in, midi_port_out)
                 self.midi_select_dlg.set_connected()
-                self.on_connected(midi_port_in, midi_port_out)
+                self.on_connected(midi_port_in, midi_port_out, sysex_channel)
             else:
                 # could not connect using settings
                 self.midi_select_dlg.post_connection_actions()
@@ -84,12 +86,13 @@ class MainWindow:
         else:
             self.midi_select_dlg.present()
 
-    def on_connected(self, midi_port_in, midi_port_out):
+    def on_connected(self, midi_port_in, midi_port_out, sysex_channel):
         if self.jstation_interface.is_connected:
             if not self.config.has_section('MIDI'):
                 self.config.add_section('MIDI')
             self.config.set('MIDI', 'port_in', midi_port_in)
             self.config.set('MIDI', 'port_out', midi_port_out)
+            self.config.set('MIDI', 'sysex_channel', '%d'%(sysex_channel))
 
             self.clear()
 
