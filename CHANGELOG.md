@@ -1,6 +1,6 @@
 ## Change Log
 
-### Version 1.0.0 (In progress)
+### Version 1.0.0 (20170612)
 
 #### User
 - Programs bank import and export.
