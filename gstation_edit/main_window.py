@@ -63,41 +63,13 @@ class MainWindow:
 
         self.init_parameters_dictionnaries()
 
+        self.init_midi_select_dlg()
 
-    def connect(self):
-        midi_port_in = None
-        midi_port_out = None
-        if self.config.has_section('MIDI'):
-            midi_port_in = self.config.get('MIDI', 'port_in')
-            midi_port_out = self.config.get('MIDI', 'port_out')
-            sysex_channel = self.config.getint('MIDI', 'sysex_channel')
 
-        if midi_port_in and midi_port_out:
-            self.jstation_interface.connect(
-                midi_port_in, midi_port_out, sysex_channel)
-            if self.jstation_interface.is_connected:
-                self.midi_select_dlg.set_defaults(midi_port_in, midi_port_out)
-                self.midi_select_dlg.set_connected()
-                self.on_connected(midi_port_in, midi_port_out, sysex_channel)
-            else:
-                # could not connect using settings
-                self.midi_select_dlg.post_connection_actions()
-                self.midi_select_dlg.present()
-        else:
-            self.midi_select_dlg.present()
-
-    def on_connected(self, midi_port_in, midi_port_out, sysex_channel):
-        if self.jstation_interface.is_connected:
-            if not self.config.has_section('MIDI'):
-                self.config.add_section('MIDI')
-            self.config.set('MIDI', 'port_in', midi_port_in)
-            self.config.set('MIDI', 'port_out', midi_port_out)
-            self.config.set('MIDI', 'sysex_channel', '%d'%(sysex_channel))
-
-            self.clear()
-
-            self.jstation_interface.req_bank_dump()
-        self.midi_select_dlg.hide()
+    def on_connected(self, midi_select_dlg):
+        self.clear()
+        self.jstation_interface.req_bank_dump()
+        midi_select_dlg.hide()
 
     def quit(self):
         self.jstation_interface.disconnect()
@@ -112,7 +84,6 @@ class MainWindow:
         self.init_undo_store()
         self.init_bank_buttons()
         self.init_utilities_dlg()
-        self.init_midi_select_dlg()
 
         self.units = list()
         self.units.append(CompressorGateUnit(self))
@@ -130,7 +101,7 @@ class MainWindow:
 
     def init_midi_select_dlg(self):
         midi_options_btn = self.gtk_builder.get_object('midi-options-btn')
-        self.midi_select_dlg = MidiSelectDlg(self.gtk_builder, self,
+        self.midi_select_dlg = MidiSelectDlg(self.gtk_builder, self.config, self,
                                              self.jstation_interface,
                                              self.on_connected)
         midi_options_btn.connect('clicked', self.midi_select_dlg.present)

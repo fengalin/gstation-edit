@@ -50,40 +50,15 @@ class JStationSnifferApp:
         self.gtk_builder.add_from_file(gtk_builder_file)
 
         self.js_sniffer = JStationSniffer(sys.argv[0])
-        self.midi_dlg = MidiSelectDlg(self.gtk_builder, self,
+        self.midi_dlg = MidiSelectDlg(self.gtk_builder, self.config, self,
                                       self.js_sniffer,
                                       self.on_connected, self.quit)
         self.midi_dlg.gtk_dlg.connect('destroy', self.quit)
 
-        self.connect()
-
-    def connect(self):
-        midi_port_in = None
-        midi_port_out = None
-        if self.config.has_section('MIDI'):
-            midi_port_in = self.config.get('MIDI', 'port_in')
-            midi_port_out = self.config.get('MIDI', 'port_out')
-            sysex_channel = self.config.getint('MIDI', 'sysex_channel')
-
-        if midi_port_in and midi_port_out:
-            self.js_sniffer.connect(midi_port_in, midi_port_out, sysex_channel)
-            if self.js_sniffer.is_connected:
-                self.midi_dlg.set_defaults(midi_port_in, midi_port_out)
-                self.midi_dlg.set_connected()
-                self.on_connected(midi_port_in, midi_port_out, sysex_channel)
-
-        self.midi_dlg.present()
-
-    def on_connected(self, midi_port_in, midi_port_out, sysex_channel):
-        if self.js_sniffer.is_connected:
-            if not self.config.has_section('MIDI'):
-                self.config.add_section('MIDI')
-            self.config.set('MIDI', 'port_in', midi_port_in)
-            self.config.set('MIDI', 'port_out', midi_port_out)
-            self.config.set('MIDI', 'sysex_channel', '%d'%(sysex_channel))
-
+    def on_connected(self, midi_dlg):
         self.js_sniffer.start_sniffer()
-        self.midi_dlg.msg_lbl.set_text('Sniffing events...')
+        midi_dlg.msg_lbl.set_text('Sniffing events...')
+        midi_dlg.present()
 
     def quit(self, window=None):
         print('Quitting jstation-sniffer')

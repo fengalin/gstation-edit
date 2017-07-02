@@ -50,11 +50,8 @@ class GStationEdit:
         self.gtk_builder = Gtk.Builder()
         self.gtk_builder.add_from_file(gtk_builder_file)
 
-        self.is_valid = False
         self.main_window = MainWindow(sys.argv[0], self.config, self.gtk_builder)
         self.main_window.gtk_window.connect('destroy', self.quit)
-
-        self.main_window.connect()
 
     def quit(self, window):
         print('quitting gstation-edit')

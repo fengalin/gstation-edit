@@ -22,7 +22,7 @@ from threading import Thread
 
 
 class MidiSelectDlg:
-    def __init__(self, gtk_builder, main_window, js_interface,
+    def __init__(self, gtk_builder, config, main_window, js_interface,
                  on_connected, on_close=None):
         self.main_window = main_window
         self.on_connected = on_connected
@@ -52,11 +52,31 @@ class MidiSelectDlg:
         self.populate_combo_box(self.midi_in_cbx, self.midi_in_ports)
         self.populate_combo_box(self.midi_out_cbx, self.midi_out_ports)
 
+        self.is_connected = False
+
+        self.config = config
         self.port_in = None
         self.port_out = None
+        self.sysex_channel = None
+        if self.config.has_section('MIDI'):
+            self.port_in = self.config.get('MIDI', 'port_in')
+            self.port_out = self.config.get('MIDI', 'port_out')
+            self.sysex_channel = self.config.getint('MIDI', 'sysex_channel')
 
-        self.is_connected = False
-        self.is_valid = True
+        if self.port_in and self.port_out and self.sysex_channel:
+            self.js_interface.connect(
+                self.port_in, self.port_out, self.sysex_channel)
+            if self.js_interface.is_connected:
+                self.set_defaults()
+                self.set_connected()
+                self.post_connection_actions()
+            else:
+                # could not connect using settings
+                self.post_connection_actions()
+                self.present()
+        else:
+            self.present()
+
 
     def populate_combo_box(self, combo_box, midi_ports):
             midi_cbx_model = combo_box.get_model()
@@ -72,15 +92,10 @@ class MidiSelectDlg:
     def get_widget(self, widget_name):
         widget = self.gtk_builder.get_object(widget_name)
         if widget == None:
-            self.is_valid = False
             print('Could not find widget %s'%(widget_name))
         return widget
 
-    def set_defaults(self, midi_port_in, midi_port_out):
-        # TODO: also set MIDI and sysex channels
-        self.port_in = midi_port_in
-        self.port_out = midi_port_out
-
+    def set_defaults(self):
         for index in range(0, len(self.midi_in_ports)):
             if self.port_in == self.midi_in_ports[index]:
                 self.midi_in_cbx.set_active(index)
@@ -91,6 +106,7 @@ class MidiSelectDlg:
                 self.midi_out_cbx.set_active(index)
                 break
 
+        self.sysex_device_id_spbtn.set_value(self.sysex_channel)
 
     def present(self, widget=None):
         self.gtk_dlg.present()
@@ -109,7 +125,8 @@ class MidiSelectDlg:
             self.port_in  = self.midi_in_ports[port_in_cbx_index]
             port_out_cbx_index = self.midi_out_cbx.get_active()
             self.port_out = self.midi_out_ports[port_out_cbx_index]
-            self.attempt_to_connect(self.port_in, self.port_out)
+            self.sysex_channel = self.sysex_device_id_spbtn.get_value_as_int()
+            self.attempt_to_connect()
         else:
             self.js_interface.disconnect()
             self.set_disconnected()
@@ -127,7 +144,8 @@ class MidiSelectDlg:
                 self.midi_out_cbx.set_active(port_out_index)
                 self.port_in = self.midi_in_ports[port_in_index]
                 self.port_out = self.midi_out_ports[port_out_index]
-                self.attempt_to_connect(self.port_in, self.port_out)
+                self.sysex_channel = self.sysex_device_id_spbtn.get_value_as_int()
+                self.attempt_to_connect()
                 if self.is_connected:
                     break
             if self.is_connected:
@@ -142,8 +160,14 @@ class MidiSelectDlg:
     def post_connection_actions(self):
         if self.is_connected:
             self.set_connected()
-            sysex_chnl = self.sysex_device_id_spbtn.get_value_as_int()
-            self.on_connected(self.port_in, self.port_out, sysex_chnl)
+
+            if not self.config.has_section('MIDI'):
+                self.config.add_section('MIDI')
+            self.config.set('MIDI', 'port_in', self.port_in)
+            self.config.set('MIDI', 'port_out', self.port_out)
+            self.config.set('MIDI', 'sysex_channel', '%d'%(self.sysex_channel))
+
+            self.on_connected(self)
         else:
             self.msg_lbl.set_text('Disconnected from J-Station')
         self.msg_spinner_satck.set_visible_child_name('message')
@@ -167,9 +191,8 @@ class MidiSelectDlg:
         if self.on_close:
             self.on_close()
 
-    def attempt_to_connect(self, port_in, port_out):
-        sysex_chnl = self.sysex_device_id_spbtn.get_value_as_int()
+    def attempt_to_connect(self):
         print('Attempting to connect to %s and %s - sysex channel: %d'\
-              %(port_in, port_out, sysex_chnl))
-        self.js_interface.connect(port_in, port_out, sysex_chnl)
+              %(self.port_in, self.port_out, self.sysex_channel))
+        self.js_interface.connect(self.port_in, self.port_out, self.sysex_channel)
         self.is_connected = self.js_interface.is_connected
