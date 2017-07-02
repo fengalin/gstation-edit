@@ -1,5 +1,14 @@
 ## Change Log
 
+### Version 1.0.1 (20170702)
+
+#### User
+- Fixed setup script version and categories.
+
+#### Development
+- Moved MIDI configuration to MIDI dialog, where it belonged.
+
+
 ### Version 1.0.0 (20170612)
 
 #### User

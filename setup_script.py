@@ -14,7 +14,7 @@
 # You should have received a copy of the GNU General Public License along
 # with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-VERSION='0.5'
+VERSION='1.0.1'
 
 from distutils.core import setup, Extension
 
@@ -26,15 +26,14 @@ setup(  name='gstation-edit',
         url='http://sourceforge.net/projects/gstation-edit/',
         license='GNU General Public License version 3.0 (GPLv3)',
         classifiers=[
-            'Development Status :: 4 - Beta',
-            'Environment :: X11 Applications',
+            'Development Status :: 5 - Production/Stable',
+            'Environment :: X11 Applications :: GTK',
             'Intended Audience :: End Users/Desktop',
-            'License :: GNU General Public License version 3.0 (GPLv3)',
-            'Operating System :: Linux',
+            'License :: OSI Approved :: GNU Lesser General Public License v3 or later (LGPLv3+)',
+            'Operating System :: Unix',
             'Programming Language :: Python :: 2',
             'Topic :: Multimedia :: Sound/Audio',
-            'Translations :: English',
-            'User Interface :: GTK-3',
+            'Natural Language :: English',
             ],
         packages=["gstation_edit", "gstation_edit.messages",
                   "gstation_edit.midi", "gstation_edit.rack",
