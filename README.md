@@ -11,17 +11,13 @@ application for that purpose.
 
 Until recently, J-Edit couldn't be used properly on
 [Wine](https://www.winehq.org/). In 2009, I started implementing the basic
-functions in a Linux application. As of today, I think GStaton-Edit is feature
-complete (see the [feature list below](#features)). I still have plans for
-enhancements under the hood, but they are on a low priority list. If you have
-ideas for new features, don't hesitate to
-[declare an issue](https://github.com/fengalin/gstation-edit/issues).
+functions in a Linux application. As of today, I consider GStaton-Edit is feature
+complete (see the [feature list below](#features)).
 
 The application communicates with the J-Station over a MIDI connection,
-exchanging sysex and CC events. By design, sysex events are proprietary. As a
-consequence, most of the development effort was focused on understanding the
-exchanges, designing a communication framework and implementing the messages
-necessary for the application.
+exchanging sysex and CC events. By definition, sysex events are proprietary.
+As a consequence, most of the development effort was focused on understanding the
+exchanges, designing a communication framework and implementing the messages.
 
 For latest versions, make sure to check the project at
 [github](https://github.com/fengalin/gstation-edit). For archeology, you can
@@ -68,8 +64,9 @@ is stucked to Python 2)
 ## <a name='running_from_source'></a>Running from source
 You can launch GStation-Edit from the download root directory (do this if you
 face problems as you will get log messages):
-
-    $ ./gstation-edit
+```
+./gstation-edit
+```
 
 
 ## Install
@@ -78,14 +75,15 @@ After the installation, there should be a "GStation-Edit" entry in
 the Audio and Video menu.
 ### User install
 From the dowload root directory:
-
-    $ ./setup.py install --user
+```
+./setup.py install --user
+```
 
 ### System wide install
 From the dowload root directory:
-
-    $ sudo ./setup.py install
-
+```
+sudo ./setup.py install
+```
 
 # Troubleshooting
 ## Could not connect to J-Station
