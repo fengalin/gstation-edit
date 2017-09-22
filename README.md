@@ -11,8 +11,8 @@ application for that purpose.
 
 Until recently, J-Edit couldn't be used properly on
 [Wine](https://www.winehq.org/). In 2009, I started implementing the basic
-functions in a Linux application. As of today, I consider GStaton-Edit is feature
-complete (see the [feature list below](#features)).
+functions in a Linux application. As of today, I consider GStaton-Edit to be
+feature complete (see the [feature list below](#features)).
 
 The application communicates with the J-Station over a MIDI connection,
 exchanging sysex and CC events. By definition, sysex events are proprietary.
