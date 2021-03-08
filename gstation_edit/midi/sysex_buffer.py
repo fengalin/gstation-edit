@@ -2,7 +2,7 @@
  gstation-edit SysexBuffer definition
 """
 # this file is part of gstation-edit
-# Copyright (C) F LAIGNEL 2009-2017 <fengalin@free.fr>
+# Copyright (C) F LAIGNEL 2009-2021 <fengalin@free.fr>
 #
 # gstation-edit is free software: you can redistribute it and/or modify it
 # under the terms of the GNU General Public License as published by the
@@ -28,7 +28,7 @@ class SysexBuffer():
         self.marker = -1
         self.is_valid = False
 
-        if sysex_data:
+        if not sysex_data is None:
             self.data_len = len(sysex_data)
             self.data_index = 0
             self.is_valid = True
@@ -68,7 +68,7 @@ class SysexBuffer():
 
     def pop_1_byte(self):
         result = self.pop_raw_bytes(1)
-        if result != None:
+        if not result is None:
             result = result[0]
         return result
 

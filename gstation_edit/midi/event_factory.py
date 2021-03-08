@@ -2,7 +2,7 @@
  gstation-edit MidiEventFactory definition
 """
 # this file is part of gstation-edit
-# Copyright (C) F LAIGNEL 2009-2017 <fengalin@free.fr>
+# Copyright (C) F LAIGNEL 2009-2021 <fengalin@free.fr>
 #
 # gstation-edit is free software: you can redistribute it and/or modify it
 # under the terms of the GNU General Public License as published by the
@@ -27,20 +27,20 @@ class MidiEventFactory:
     def register_event_type_builder(self_class, event_type_class):
 #        print('Registering MIDI  event type builder: %s'%(event_type_class))
         MidiEventFactory.event_type_builder_classes[
-                event_type_class.EVENT_TYPE.real
+                event_type_class.EVENT_TYPE
             ] = event_type_class
 
 
     @classmethod
     def build_from_seq_event(class_, seq_event):
         result = None
-        if seq_event:
+        if not seq_event is None:
 #            print('Received event with type %d'%(seq_event.type))
             event_type_builder = MidiEventFactory.\
-                event_type_builder_classes.get(seq_event.type.real)
-            if event_type_builder:
+                event_type_builder_classes.get(seq_event.type)
+            if not event_type_builder is None:
                 result = event_type_builder.build_from_seq_event(seq_event)
-                if result:
+                if not result is None:
 #                    print('Event identified as: %s'%(result))
                     pass
                 else:
