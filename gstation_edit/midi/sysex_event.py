@@ -2,7 +2,7 @@
  gstation-edit SysexMidiEvent definition
 """
 # this file is part of gstation-edit
-# Copyright (C) F LAIGNEL 2009-2017 <fengalin@free.fr>
+# Copyright (C) F LAIGNEL 2009-2021 <fengalin@free.fr>
 #
 # gstation-edit is free software: you can redistribute it and/or modify it
 # under the terms of the GNU General Public License as published by the
@@ -57,7 +57,7 @@ class SysexMidiEvent(MidiEvent):
 
     def is_valid(self):
         result = MidiEvent.is_valid(self)
-        if self.sysex_buffer:
+        if not self.sysex_buffer is None:
             result &= self.sysex_buffer.is_valid
         return result
 

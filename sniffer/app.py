@@ -1,5 +1,5 @@
 # this file is part of gstation-edit
-# Copyright (C) F LAIGNEL 2009-2017 <fengalin@free.fr>
+# Copyright (C) F LAIGNEL 2009-2021 <fengalin@free.fr>
 #
 # gstation-edit is free software: you can redistribute it and/or modify it
 # under the terms of the GNU General Public License as published by the
@@ -17,8 +17,7 @@
 import sys
 import os
 
-from ConfigParser import SafeConfigParser
-
+import configparser
 
 import gi
 gi.require_version('Gtk', '3.0')
@@ -35,7 +34,7 @@ class JStationSnifferApp:
     def __init__( self ):
         GObject.threads_init()
 
-        self.config = SafeConfigParser(allow_no_value=True)
+        self.config = configparser.ConfigParser(allow_no_value=True)
         config_base_path = os.path.expanduser('~/.config/gstation-edit')
         if not os.path.isdir(config_base_path):
             os.makedirs(config_base_path)
@@ -62,7 +61,7 @@ class JStationSnifferApp:
 
     def quit(self, window=None):
         print('Quitting jstation-sniffer')
-        with open(self.config_path, 'wb') as configfile:
+        with open(self.config_path, 'w') as configfile:
             self.config.write(configfile)
 
         self.js_sniffer.disconnect()

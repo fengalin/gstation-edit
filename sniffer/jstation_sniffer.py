@@ -2,7 +2,7 @@
  gstation-edit JStationSniffer definition
 """
 # this file is part of gstation-edit
-# Copyright (C) F LAIGNEL 2009-2017 <fengalin@free.fr>
+# Copyright (C) F LAIGNEL 2009-2021 <fengalin@free.fr>
 #
 # gstation-edit is free software: you can redistribute it and/or modify it
 # under the terms of the GNU General Public License as published by the
@@ -32,24 +32,24 @@ class JStationSniffer(JStationInterface):
     def start_sniffer(self):
         # Note: connection to J-Station must have been established
         # using connect()
-        if self.is_connected:
-            self.is_disconnecting.set()
-            if self.jstation_wait_for_events_thread:
-                # wait until waiting thread is terminated
-                self.jstation_wait_for_events_thread.join()
-                self.jstation_wait_for_events_thread = None
-                self.is_disconnecting.clear()
-                print('Terminated J-Station connection event loop')
-
-            print('\nSniffing events...')
-            self.jstation_wait_for_events_thread = Thread(
-                target = self.sniff_events,
-                name = 'sniff events'
-            )
-            self.jstation_wait_for_events_thread.start()
-        else:
+        if not self.is_connected:
             print('Establish connection to J-Station first')
+            return
 
+        self.is_disconnecting.set()
+        if self.jstation_wait_for_events_thread:
+            # wait until waiting thread is terminated
+            self.jstation_wait_for_events_thread.join()
+            self.jstation_wait_for_events_thread = None
+            self.is_disconnecting.clear()
+            print('Terminated J-Station connection event loop')
+
+        print('\nSniffing events...')
+        self.jstation_wait_for_events_thread = Thread(
+            target = self.sniff_events,
+            name = 'sniff events'
+        )
+        self.jstation_wait_for_events_thread.start()
 
     def sniff_events(self):
         jstation_cid = self.js_port_out.client
@@ -57,28 +57,27 @@ class JStationSniffer(JStationInterface):
         event_list = list()
         while not self.is_disconnecting.is_set():
             event_list = self.seq.receive_events(self.WAIT_SHUTDOWN_TIMEOUT, 1)
-            if len(event_list) > 0:
-                for seq_event in event_list:
-                    if seq_event:
-                        forward_event = False
-                        origin = 'J-Station'
-                        source_cid, source_port = seq_event.source
-                        if source_cid != jstation_cid:
-                            origin = 'J-Edit'
-                            forward_event = True
+            for seq_event in event_list:
+                if not seq_event is None:
+                    forward_event = False
+                    origin = 'J-Station'
+                    source_cid, source_port = seq_event.source
+                    if source_cid != jstation_cid:
+                        origin = 'J-Edit'
+                        forward_event = True
 
-                        event = self.factory.build_from_seq_event(seq_event)
-                        if event:
-                            print('\n- **%s** => %s'%(origin, event))
-                        else:
-#                            print('\n** Could not build event')
-                            pass
-
-                        if forward_event:
-                            seq_event.dest = (jstation_cid, jstation_in_port)
-                            self.seq.output_event(seq_event)
-                            self.seq.drain_output()
+                    event = self.factory.build_from_seq_event(seq_event)
+                    if not event is None:
+                        print('\n- **%s** => %s'%(origin, event))
                     else:
-                        print('seq event is null')
-                event_list = list()
-            # else: no response received (timed out)
+#                            print('\n** Could not build event')
+                        pass
+
+                    if forward_event:
+                        seq_event.dest = (jstation_cid, jstation_in_port)
+                        self.seq.output_event(seq_event)
+                        self.seq.drain_output()
+                else:
+                    print('seq event is null')
+            event_list = list()
+

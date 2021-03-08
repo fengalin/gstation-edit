@@ -2,7 +2,7 @@
  gstation-edit JStationInterface definition
 """
 # this file is part of gstation-edit
-# Copyright (C) F LAIGNEL 2009-2017 <fengalin@free.fr>
+# Copyright (C) F LAIGNEL 2009-2021 <fengalin@free.fr>
 #
 # gstation-edit is free software: you can redistribute it and/or modify it
 # under the terms of the GNU General Public License as published by the
@@ -119,18 +119,19 @@ class JStationInterface:
         self.seq = alsaseq.Sequencer('hw', app_name,
                                      alsaseq.SEQ_OPEN_DUPLEX,
                                      alsaseq.SEQ_NONBLOCK, 1)
-        if self.seq == None:
+        if self.seq is None:
             print('Error while opening sequencer')
             exit(1)
 
         self.get_clients()
 
         self.port_out = self.seq.create_simple_port(
-            'Output',
+            'gstation-edit Output',
+            alsaseq.SEQ_PORT_TYPE_APPLICATION,
             alsaseq.SEQ_PORT_CAP_READ | alsaseq.SEQ_PORT_CAP_SUBS_READ
         )
         self.port_in = self.seq.create_simple_port(
-            'Input',
+            'gstation-edit Input',
             alsaseq.SEQ_PORT_TYPE_APPLICATION,
             alsaseq.SEQ_PORT_CAP_WRITE | alsaseq.SEQ_PORT_CAP_SUBS_WRITE
         )
@@ -174,6 +175,7 @@ class JStationInterface:
             target = self.wait_for_events,
             name = 'wait for events'
         )
+
         self.jstation_wait_for_events_thread.start()
         self.send_event(WhoAmIRequest())
 
@@ -182,12 +184,15 @@ class JStationInterface:
 
         if not self.is_connected:
             self.disconnect()
-        else:
-            if self.main_window:
-                self.is_response_received_cndt.acquire()
-                self.send_event(UtilitySettingsRequest(self.sysex_channel))
-                self.is_response_received_cndt.wait(self.RESPONSE_TIMEOUT)
-                self.is_response_received_cndt.release()
+            return
+
+        if self.main_window is None:
+            return
+
+        self.is_response_received_cndt.acquire()
+        self.send_event(UtilitySettingsRequest(self.sysex_channel))
+        self.is_response_received_cndt.wait(self.RESPONSE_TIMEOUT)
+        self.is_response_received_cndt.release()
 
 
     def disconnect(self):
@@ -198,17 +203,17 @@ class JStationInterface:
 
         self.is_disconnecting.set()
 
-        if self.jstation_wait_for_events_thread:
+        if not self.jstation_wait_for_events_thread is None:
             # wait until waiting thread is terminated
             self.jstation_wait_for_events_thread.join()
             self.jstation_wait_for_events_thread = None
 
-        if self.js_port_in:
+        if not self.js_port_in is None:
             self.seq.disconnect_ports(
                 (self.seq.client_id, self.port_out),
                 (self.js_port_in.client, self.js_port_in.port)
             )
-        if self.js_port_out:
+        if not self.js_port_out is None:
             self.seq.disconnect_ports(
                 (self.js_port_out.client, self.js_port_out.port),
                 (self.seq.client_id, self.port_in)
@@ -220,83 +225,88 @@ class JStationInterface:
 
 
     def req_bank_dump(self):
-        if self.is_connected:
-            self.send_event(BankDumpRequest(channel=self.sysex_channel))
-        else:
+        if not self.is_connected:
             print('req_bank_dump: not connected')
+            return
+
+        self.send_event(BankDumpRequest(channel=self.sysex_channel))
 
     def req_program_update(self):
-        if self.is_connected:
-            self.send_event(RequestProgramUpdate(channel=self.sysex_channel))
-        else:
+        if not self.is_connected:
             print('req_program_update: not connected')
+            return
+
+        self.send_event(RequestProgramUpdate(channel=self.sysex_channel))
 
     def send_program_update(self, program):
-        if self.is_connected:
-            self.is_response_received_cndt.acquire()
-            self.send_event(ReceiveProgramUpdate(program=program,
-                                                 channel=self.sysex_channel)
-            )
-            self.is_response_received_cndt.wait(self.RESPONSE_TIMEOUT)
-            self.is_response_received_cndt.release()
-        else:
+        if not self.is_connected:
             print('send_program_update: not connected')
+            return
+
+        self.is_response_received_cndt.acquire()
+        self.send_event(ReceiveProgramUpdate(program=program,
+                                             channel=self.sysex_channel)
+        )
+        self.is_response_received_cndt.wait(self.RESPONSE_TIMEOUT)
+        self.is_response_received_cndt.release()
 
     def req_program_change(self, program_nb):
-        if self.is_connected:
-            self.send_event(PrgChangeEvent(channel=self.receive_channel,
-                                           value=program_nb))
-        else:
+        if not self.is_connected:
             print('req_program_change: not connected')
+            return
+
+        self.send_event(PrgChangeEvent(channel=self.receive_channel,
+                                           value=program_nb))
 
     def reload_program(self):
-        if self.is_connected:
-            self.send_event(ReloadProgram(channel=self.sysex_channel))
-        else:
+        if not self.is_connected:
             print('reload_program: not connected')
+            return
 
+        self.send_event(ReloadProgram(channel=self.sysex_channel))
 
     def store_program(self, program, is_current=True):
-        if self.is_connected:
-            if is_current:
-                self.send_event(ReceiveProgramUpdate(channel=self.sysex_channel,
-                                                     program=program))
-            self.send_event(OneProgramResponse(channel=self.sysex_channel,
-                                               program=program))
-        else:
-            print('store_program: not connected')
+        if not self.is_connected:
+            print('reload_program: not connected')
+            return
+
+        if is_current:
+            self.send_event(ReceiveProgramUpdate(channel=self.sysex_channel,
+                                                 program=program))
+        self.send_event(OneProgramResponse(channel=self.sysex_channel,
+                                           program=program))
 
 
     def wait_for_events(self):
-        event_list = list()
         while not self.is_disconnecting.is_set():
             event_list = self.seq.receive_events(self.WAIT_SHUTDOWN_TIMEOUT, 1)
-            if len(event_list) > 0:
-                for seq_event in event_list:
-                    if seq_event:
-#                        print('==> Received event: %s'%(seq_event))
-                        event = self.factory.build_from_seq_event(seq_event)
-                        if event and event.is_valid:
-#                            print('\t%s'%(event))
-                            event.process()
-                        else:
-                            if event:
-                                print(event)
-                            # else: seq event is dumped in the factory
-                    else:
-                        print('Seq event is null')
-                event_list = list()
-            # else: no response received (timed out)
+            for seq_event in event_list:
+                if seq_event is None:
+                    print('Seq event is null')
+                    continue
+
+#                print('==> Received event: %s'%(seq_event.type))
+                event = self.factory.build_from_seq_event(seq_event)
+                if event is None:
+                    continue
+
+                if not event.is_valid():
+                    # else: seq event is dumped in the factory
+                    print(event)
+                    continue
+
+#                print('\t%s'%(event))
+                event.process()
 
     def default_event_callback(self, event):
-        if event.is_valid:
-#            print('==> received %s'%(event))
-            pass
-        else:
+        if not event.is_valid:
             print('Event is invalid %s'%(event))
+            return
+
+#        print('==> received %s'%(event))
 
     def who_am_i_callback_req(self, event):
-#        print('Received WhoAmIRequest: am I calling myself?')
+#        print('Received WhoAmIRequest: I don't have time to play with myself?')
         pass
 
     def who_am_i_callback(self, event):
@@ -307,7 +317,7 @@ class JStationInterface:
         self.is_connected = True
         self.is_response_received_cndt.notify()
         self.is_response_received_cndt.release()
-        print('Found JStation on input %s and output %s '\
+        print('Found JStation on input %s and output %s'\
               %(str(self.js_port_in ), str( self.js_port_out)))
 
     def notify_store_callback(self, event):
@@ -342,17 +352,18 @@ class JStationInterface:
 
     def end_bank_dump_callback(self, event):
         self.default_event_callback(event)
-        thread = Thread(target=self.req_program_update, name='send req prg up')
+        thread = Thread(target=self.req_program_update, name="send req prg up")
         thread.start()
 
     def one_parameter_cc_callback( self, event):
         self.default_event_callback(event)
-        if self.main_window:
-            self.main_window.update_parameter_from_jstation(event.param,
-                                                            event.value,
-                                                            is_cc=True)
-        else:
+        if self.main_window is None:
             print('Skipping: %s'%(event))
+            return
+
+        self.main_window.update_parameter_from_jstation(event.param,
+                                                        event.value,
+                                                        is_cc=True)
 
     def program_change_callback(self, event):
         self.default_event_callback(event)
@@ -360,7 +371,7 @@ class JStationInterface:
 
     def program_update_response(self, event):
         self.default_event_callback(event)
-        # TODO: handle 'has changed' flag also
+        # TODO: handle "has changed" flag too
         self.main_window.select_program_from_its_content(event.program)
 
     def response_to_message_callback(self, event):
@@ -372,17 +383,15 @@ class JStationInterface:
             print('Received error: %s'%(event))
 
     def send_event(self, event):
-        success = False
-        if event.is_valid:
-#            print('<== sending %s'%(event))
-            self.seq.output_event(event.get_seq_event())
-            self.seq.drain_output()
-#            print('...sent')
-            success = True
-        else:
+        if not event.is_valid:
             print('Failed to build seq event for: %s'%(event))
-        return success
+            return False
+
+#        print('<== sending %s'%(event))
+        self.seq.output_event(event.get_seq_event())
+        self.seq.drain_output()
+#        print('...sent')
+        return True
 
     def send_command(self, command, value):
-        success = False
         return self.send_event(CCMidiEvent(self.receive_channel, command, value))

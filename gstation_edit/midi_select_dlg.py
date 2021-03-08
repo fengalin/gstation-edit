@@ -2,7 +2,7 @@
  gstation-edit MidiSelectDlg definition
 """
 # this file is part of gstation-edit
-# Copyright (C) F LAIGNEL 2009-2017 <fengalin@free.fr>
+# Copyright (C) F LAIGNEL 2009-2021 <fengalin@free.fr>
 #
 # gstation-edit is free software: you can redistribute it and/or modify it
 # under the terms of the GNU General Public License as published by the
@@ -58,10 +58,11 @@ class MidiSelectDlg:
         self.port_in = None
         self.port_out = None
         self.sysex_channel = None
-        if self.config.has_section('MIDI'):
-            self.port_in = self.config.get('MIDI', 'port_in')
-            self.port_out = self.config.get('MIDI', 'port_out')
-            self.sysex_channel = self.config.getint('MIDI', 'sysex_channel')
+        if 'MIDI' in self.config:
+            midi_config = self.config['MIDI']
+            self.port_in = midi_config['port_in']
+            self.port_out = midi_config['port_out']
+            self.sysex_channel = int(midi_config['sysex_channel'])
 
         if self.port_in and self.port_out and self.sysex_channel:
             self.js_interface.connect(
@@ -79,30 +80,30 @@ class MidiSelectDlg:
 
 
     def populate_combo_box(self, combo_box, midi_ports):
-            midi_cbx_model = combo_box.get_model()
-            for port in midi_ports:
-                midi_cbx_model.append([port])
-            cell = Gtk.CellRendererText()
-            combo_box.pack_start(cell, True)
-            combo_box.add_attribute(cell, 'text', 0)
-            if midi_ports > 0:
-                combo_box.set_active(0)
+        midi_cbx_model = combo_box.get_model()
+        for port in midi_ports:
+            midi_cbx_model.append([port])
+        cell = Gtk.CellRendererText()
+        combo_box.pack_start(cell, True)
+        combo_box.add_attribute(cell, 'text', 0)
+        if len(midi_ports) > 0:
+            combo_box.set_active(0)
 
 
     def get_widget(self, widget_name):
         widget = self.gtk_builder.get_object(widget_name)
-        if widget == None:
+        if widget is None:
             print('Could not find widget %s'%(widget_name))
         return widget
 
     def set_defaults(self):
-        for index in range(0, len(self.midi_in_ports)):
-            if self.port_in == self.midi_in_ports[index]:
+        for (index, port_in) in enumerate(self.midi_in_ports):
+            if self.port_in == port_in:
                 self.midi_in_cbx.set_active(index)
                 break
 
-        for index in range(0, len(self.midi_out_ports)):
-            if self.port_out == self.midi_out_ports[index]:
+        for (index, port_out) in enumerate(self.midi_out_ports):
+            if self.port_out == port_out:
                 self.midi_out_cbx.set_active(index)
                 break
 
@@ -122,12 +123,13 @@ class MidiSelectDlg:
     def connect_disconnect(self):
         if not self.is_connected:
             port_in_cbx_index = self.midi_in_cbx.get_active()
-            self.port_in  = self.midi_in_ports[port_in_cbx_index]
+            self.port_in = list(self.midi_in_ports)[port_in_cbx_index]
             port_out_cbx_index = self.midi_out_cbx.get_active()
-            self.port_out = self.midi_out_ports[port_out_cbx_index]
+            self.port_out = list(self.midi_out_ports)[port_out_cbx_index]
             self.sysex_channel = self.sysex_device_id_spbtn.get_value_as_int()
             self.attempt_to_connect()
         else:
+            self.main_window.clear()
             self.js_interface.disconnect()
             self.set_disconnected()
         self.post_connection_actions()
@@ -138,12 +140,12 @@ class MidiSelectDlg:
 
     def auto_connect(self):
         is_connected = False
-        for port_in_index in range(0, len(self.midi_in_ports)):
-            for port_out_index in range(0, len(self.midi_out_ports)):
+        for (port_in_index, port_in) in enumerate(self.midi_in_ports):
+            for (port_out_index, port_out) in enumerate(self.midi_out_ports):
                 self.midi_in_cbx.set_active(port_in_index)
                 self.midi_out_cbx.set_active(port_out_index)
-                self.port_in = self.midi_in_ports[port_in_index]
-                self.port_out = self.midi_out_ports[port_out_index]
+                self.port_in = port_in
+                self.port_out = port_out
                 self.sysex_channel = self.sysex_device_id_spbtn.get_value_as_int()
                 self.attempt_to_connect()
                 if self.is_connected:
@@ -161,11 +163,11 @@ class MidiSelectDlg:
         if self.is_connected:
             self.set_connected()
 
-            if not self.config.has_section('MIDI'):
-                self.config.add_section('MIDI')
-            self.config.set('MIDI', 'port_in', self.port_in)
-            self.config.set('MIDI', 'port_out', self.port_out)
-            self.config.set('MIDI', 'sysex_channel', '%d'%(self.sysex_channel))
+            self.config['MIDI'] = {
+                'port_in': self.port_in,
+                'port_out': self.port_out,
+                'sysex_channel': '%d'%(self.sysex_channel)
+            }
 
             self.on_connected(self)
         else:

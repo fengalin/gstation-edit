@@ -2,7 +2,7 @@
  gstation-edit JStationSysexEvent definition
 """
 # this file is part of gstation-edit
-# Copyright (C) F LAIGNEL 2009-2017 <fengalin@free.fr>
+# Copyright (C) F LAIGNEL 2009-2021 <fengalin@free.fr>
 #
 # gstation-edit is free software: you can redistribute it and/or modify it
 # under the terms of the GNU General Public License as published by the
@@ -44,7 +44,7 @@ class JStationSysexEvent(SysexMidiEvent):
     @classmethod
     def register(class_, callback=None):
         JStationSysexEvent.event_classes[class_.PROCEDURE_ID] = class_
-        if callback:
+        if not callback is None:
             MidiEvent.callbacks[class_.__name__] = callback
 
     @classmethod
@@ -54,11 +54,10 @@ class JStationSysexEvent(SysexMidiEvent):
                 + JStationSysexEvent.PROCEDURE_ID_POS
         if next_proc_id_pos < sysex_buffer.data_len:
             proc_id = sysex_buffer.sysex_data[next_proc_id_pos]
-
             event_class = JStationSysexEvent.event_classes.get(proc_id)
-            if event_class:
+            if not event_class is None:
                 result = event_class(sysex_buffer=sysex_buffer)
-            if result == None:
+            if result is None:
                 result = JStationSysexEvent(sysex_buffer=sysex_buffer)
                 #print('Built generic sysex event for proc id: x%02x'%(proc_id))
         else:
@@ -71,7 +70,7 @@ class JStationSysexEvent(SysexMidiEvent):
         result = None
         # assert: seq_event.type == SysExMidiEvent.EVENT_TYPE
         sysex_data = seq_event.get_data().get(SysexMidiEvent.SYSEX_DATA_KEY)
-        if sysex_data:
+        if not sysex_data is None:
             result = JStationSysexEvent.build_from_sysex_buffer(
                 SysexBuffer(sysex_data))
         else:
@@ -154,7 +153,7 @@ class JStationSysexEvent(SysexMidiEvent):
         ])
         self.sysex_buffer.push_as_split_bytes(self.version)
 
-        if pre_len_data:
+        if not pre_len_data is None:
             for value in pre_len_data:
                 if value >= 0:
                     self.sysex_buffer.push_as_split_bytes(value)
@@ -162,7 +161,7 @@ class JStationSysexEvent(SysexMidiEvent):
                     self.has_error = True
                     break
 
-        if self.is_valid() and post_len_data != None:
+        if self.is_valid() and not post_len_data is None:
             self.sysex_buffer.push_as_split_bytes(len(post_len_data), 4)
 
             for value in post_len_data:

@@ -2,7 +2,7 @@
  gstation-edit MidiEvent definition
 """
 # this file is part of gstation-edit
-# Copyright (C) F LAIGNEL 2009-2017 <fengalin@free.fr>
+# Copyright (C) F LAIGNEL 2009-2021 <fengalin@free.fr>
 #
 # gstation-edit is free software: you can redistribute it and/or modify it
 # under the terms of the GNU General Public License as published by the
@@ -25,7 +25,7 @@ class MidiEvent(object):
 
     @classmethod
     def register(class_, callback=None):
-        if callback:
+        if not callback is None:
             MidiEvent.callbacks[class_.__name__] = callback
 
     @classmethod
@@ -59,7 +59,7 @@ class MidiEvent(object):
 
     def process(self):
         callback = MidiEvent.callbacks.get(self.__class__.__name__)
-        if callback:
+        if not callback is None:
             callback(self)
         else:
             print('Couldn\'t find callback for %s'%(self.__class__.__name__))

@@ -2,7 +2,7 @@
  gstation-edit SplitBytesHelpher definition
 """
 # this file is part of gstation-edit
-# Copyright (C) F LAIGNEL 2009-2017 <fengalin@free.fr>
+# Copyright (C) F LAIGNEL 2009-2021 <fengalin@free.fr>
 #
 # gstation-edit is free software: you can redistribute it and/or modify it
 # under the terms of the GNU General Public License as published by the
@@ -25,9 +25,9 @@ class SplitBytesHelpher:
     @classmethod
     def get_value_from_split_bytes(self, split_bytes):
         value = None
-        if split_bytes != None:
+        if not split_bytes is None:
             value = 0
-            split_bytes_range = len(split_bytes) / 2
+            split_bytes_range = int(len(split_bytes) / 2)
             for index in range(0, split_bytes_range):
                 byte_ = split_bytes[2*index + 1]
                 if split_bytes[2*index] != 0:
