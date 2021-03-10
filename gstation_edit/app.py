@@ -24,12 +24,13 @@ gi.require_version('Gtk', '3.0')
 from gi.repository import Gtk
 from gi.repository import GObject
 
-from gstation_edit.main_window import MainWindow
+import pkg_resources
+gstation_edit_ui = pkg_resources.resource_string(
+    __name__,
+    'resources/gstation-edit-one-window.ui',
+).decode('utf-8')
 
-try:
-    from config import DATA_ROOT_DIR
-except:
-    DATA_ROOT_DIR = os.path.join('gstation_edit', 'resources')
+from gstation_edit.main_window import MainWindow
 
 sys.argv[0] = 'gstation-edit'
 
@@ -44,11 +45,8 @@ class GStationEdit:
         self.config_path = os.path.join(config_base_path, 'settings.cfg')
         self.config.read(self.config_path)
 
-        gtk_builder_file = os.path.join(DATA_ROOT_DIR,
-                                        'gstation-edit-one-window.ui')
-
         self.gtk_builder = Gtk.Builder()
-        self.gtk_builder.add_from_file(gtk_builder_file)
+        self.gtk_builder.add_from_string(gstation_edit_ui)
 
         self.main_window = MainWindow(sys.argv[0], self.config, self.gtk_builder)
         self.main_window.gtk_window.connect('destroy', self.quit)
