@@ -2,7 +2,7 @@
 [Desktop Entry]
 Name=GStation-Edit
 Comment=A GTK replacement for Johnson J-Station J-Edit
-Exec=%scripts_path%/gstation-edit
+Exec=gstation-edit
 Terminal=false
 Type=Application
 Icon=multimedia-volume-control
