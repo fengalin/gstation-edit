@@ -159,12 +159,22 @@ class JStationInterface:
     def connect(self, midi_port_in, midi_port_out, sysex_channel):
         self.is_connected = False
         self.sysex_channel = sysex_channel
-        self.js_port_in = self.midi_in_ports[midi_port_in]
+
+        js_port_in = self.midi_in_ports.get(midi_port_in)
+        if js_port_in is None:
+            return
+        self.js_port_in = js_port_in
+
         self.seq.connect_ports(
             (self.seq.client_id, self.port_out),
             (self.js_port_in.client, self.js_port_in.port)
         )
-        self.js_port_out = self.midi_out_ports[midi_port_out]
+
+        js_port_out = self.midi_out_ports.get(midi_port_out)
+        if js_port_out is None:
+            return
+        self.js_port_out = js_port_out
+
         self.seq.connect_ports(
             (self.js_port_out.client, self.js_port_out.port),
             (self.seq.client_id, self.port_in)
