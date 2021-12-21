@@ -47,15 +47,15 @@ class CCMidiEvent(MidiEvent):
         if seq_event:
             seq_event_data = seq_event.get_data()
             value = seq_event_data.get(self.PARAM_KEY)
-            if value:
+            if not value is None:
                 self.param = value
 
             value = seq_event_data.get(self.CHANNEL_KEY)
-            if value:
+            if not value is None:
                 self.channel = value
 
             value = seq_event_data.get(self.VALUE_KEY)
-            if value:
+            if not value is None:
                 self.value = value
 
             if self.param == -1 and self.channel == -1 and self.value == -1:

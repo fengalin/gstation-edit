@@ -36,10 +36,10 @@ class SysexMidiEvent(MidiEvent):
 
         self.sysex_buffer = sysex_buffer
 
-        if seq_event:
+        if not seq_event is None:
             sysex_data = \
                 seq_event.get_data().get(SysexMidiEvent.SYSEX_DATA_KEY)
-            if sysex_data:
+            if not sysex_data is None:
                 self.sysex_buffer = SysexBuffer(sysex_data)
             else:
                 self.has_error = True

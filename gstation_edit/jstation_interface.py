@@ -365,7 +365,7 @@ class JStationInterface:
         thread = Thread(target=self.req_program_update, name="send req prg up")
         thread.start()
 
-    def one_parameter_cc_callback( self, event):
+    def one_parameter_cc_callback(self, event):
         self.default_event_callback(event)
         if self.main_window is None:
             print('Skipping: %s'%(event))
