@@ -1,5 +1,14 @@
 ## Change Log
 
+### Version 2.0.2 (20210203)
+
+Fix version in `setup.cfg` & `README.md`.
+
+### Version 2.0.1 (20211221)
+
+- Fix crash when starting when J-Station can't be found.
+- Fix 0 being interpreted as None for CC events value.
+
 ### Version 2.0.0 (20210310)
 
 Migrate to python 3.

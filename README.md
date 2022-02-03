@@ -77,7 +77,7 @@ From the dowload root directory:
 ```
 pip install build
 python -m build
-pip install dist/gstation_edit-2.0.0-py3-none-any.whl
+pip install dist/gstation_edit-2.0.2-py3-none-any.whl
 ```
 
 #### Execution
@@ -101,7 +101,7 @@ GStation-Edit appears in your DE.
 
 ### Could not connect to J-Station
 
-There are many reasons for not being able to connect to J-Station. 
+There are many reasons for not being able to connect to J-Station.
 This could range from a simple physical connection to conflicts
 with other MIDI devices.
 
