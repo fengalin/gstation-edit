@@ -76,7 +76,7 @@ From the dowload root directory:
 ```
 pip install build wheel
 python -m build
-pip install dist/gstation_edit-2.0.2-py3-none-any.whl
+pip install --force-reinstall dist/gstation_edit-2.0.3-py3-none-any.whl
 ```
 
 #### Execution
