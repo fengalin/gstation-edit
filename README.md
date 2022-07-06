@@ -62,8 +62,7 @@ Make sure your system includes the following dependencies:
 
 #### Virtual Environment Initialization
 
-If you want to install in a virtual environment, execute the following commands
-in the directory where you wish to add the venv:
+Execute the following commands in the directory where you wish to add the venv:
 
 ```
 python -m venv venv
@@ -75,7 +74,7 @@ source venv/bin/activate
 From the dowload root directory:
 
 ```
-pip install build
+pip install build wheel
 python -m build
 pip install dist/gstation_edit-2.0.2-py3-none-any.whl
 ```

@@ -1,5 +1,9 @@
 ## Change Log
 
+## Unreleased
+
+Update to latest upstream tag for pyalsa
+
 ### Version 2.0.2 (20210203)
 
 Fix version in `setup.cfg` & `README.md`.
