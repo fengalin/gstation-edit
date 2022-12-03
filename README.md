@@ -22,7 +22,6 @@ exchanges, designing a communication framework and implementing the messages.
 ### With default GNOME theme
 
 ![Default theme](assets/gstation-edit_default-theme.png)
-<br/>
 
 ### With dark GNOME theme
 
@@ -56,7 +55,23 @@ Make sure your system includes the following dependencies:
 - python-3
 - GTK 3.16 or higher
 - gobject-introspection-devel
+- alsa development files
 - The rest of the dependencies will be installed via python.
+
+Provided you already have `python-3` installed, use the following commands to
+pull the required dependencies:
+
+#### Fedora
+
+```
+sudo dnf install gtk3-devel alsa-lib-devel
+```
+
+#### Debian & Unbuntu
+
+```
+sudo apt-get install libgtk-3-dev libasound2-dev
+```
 
 ### Install
 
@@ -76,7 +91,7 @@ From the dowload root directory:
 ```
 pip install build wheel
 python -m build
-pip install --force-reinstall dist/gstation_edit-2.0.3-py3-none-any.whl
+pip install --force-reinstall dist/gstation_edit-2.0.4-py3-none-any.whl
 ```
 
 #### Execution
