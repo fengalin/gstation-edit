@@ -4,6 +4,10 @@
 
 -
 
+### Version 2.0.4 (20221203)
+
+Improve dependencies installation instructions.
+
 ### Version 2.0.3 (20220706)
 
 Update to latest upstream tag for pyalsa.
