@@ -1,5 +1,8 @@
 # GStation-Edit
 
+**WARNING** This application is no longer maintained. For a cross-platform
+equivalent with pre-built packages, see [`jstation-controller`](https://github.com/fengalin/jstation-controller).
+
 ## Description
 
 **GStation-Edit** is a linux replacement for the J-Edit software from Johnson
